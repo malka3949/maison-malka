@@ -4,7 +4,7 @@
 PHASE=3
 
 ## Status
-STATUS: READY_FOR_MANAGER
+STATUS: APPROVED
 
 ## Phase Goal
 
@@ -128,12 +128,55 @@ Enable daily order operations for the business owner: admin order list and calen
 - Keep Phase 4 out: no production hardening mandate beyond documenting Resend setup
 
 ## Architect Review
-ARCHITECT_REVIEW_STATUS: NOT_REVIEWED
+ARCHITECT_REVIEW_STATUS: APPROVED
 
 ### Review Notes
 
-(pending — after Developer delivery and Manager approval)
+**Review date:** 2026-07-14  
+**Reviewer:** Yuri (Software Architect)  
+**Artifacts reviewed:** `arch-phase3.md`, `manager-phase3.md` (MANAGER_REVIEW_STATUS: APPROVED), `dev-phase3.md` (STATUS: COMPLETE)
+
+#### Architecture alignment — PASS
+
+| Check | Verdict | Notes |
+|---|---|---|
+| Phase 3 goal | Pass | Admin order ops + approve/reject + Resend notifications |
+| Monolith extension | Pass | `/admin/(protected)/orders/*` alongside Phase 1–2 |
+| Order model reuse | Pass | No unnecessary schema churn; workflow on existing `OrderStatus` |
+| Admin list / detail / calendar | Pass | Routes and grouping by `requested_fulfillment_date` per contract |
+| Manual approval gate | Pass | `pending_approval` → `approved` \| `rejected` only; server-side guard |
+| Notification architecture §11 | Pass | `src/lib/notifications/` abstraction; Resend server-only |
+| Email events wired | Pass | Received on checkout; approved/rejected on admin action |
+| Email failure non-blocking | Pass | Order persist independent of send outcome (arch constraint) |
+| Security | Pass | `requireAdmin` on mutations; template HTML escaping in tests |
+| Scope boundaries | Pass | No payment gateway, WhatsApp, notification log table |
+| Phase 1–2 preservation | Pass | Checkout script + build include catalog and storefront routes |
+| Git workflow | Pass | `phase-3/order-operations` from `develop`; milestone commits |
+| Manager gate | Pass | All acceptance criteria satisfied or explicitly waived |
+
+#### Functional testability — PASS (with documented residuals)
+
+| Criterion | Verdict | Notes |
+|---|---|---|
+| Admin surfaces compile | Pass | `/admin/orders`, `[id]`, `calendar` in production build |
+| Order persistence | Pass | Guest order `cmrkgd9i00000vp1o79s1aged` — `pending_approval` |
+| Status transition logic | Pass | Unit tests on `assertTransition` / calendar grouping / templates |
+| Admin browser E2E | Partial | UI and server actions present; click-path not logged — accepted per Phase 2 precedent |
+| Live Resend delivery | Partial | Module + hooks implemented; keys not configured in verification env — **waiver accepted**; mandatory before production cutover |
+| Lint / unit tests | Pass | 18 tests; lint clean (Manager re-verified) |
+
+#### Accepted residuals for Phase 3 close
+
+| Item | Disposition |
+|---|---|
+| Live Resend message ids | Accepted with waiver — user configures `RESEND_API_KEY` + `RESEND_FROM_EMAIL` before production; architecture allows graceful skip in dev |
+| Admin approve/reject browser proof | Accepted — recommend smoke test before deploy |
+| `npm run build` prisma EPERM on Windows | Accepted — `npx next build` PASS documented |
+
+#### Verdict
+
+Phase 3 architecture intent is met. Business owner can manage orders in admin; customer notification path is structurally complete. Do **not** update `PHASE.md` until orchestrator receives explicit **G3** user approval to advance to Phase 4.
 
 ### Required Corrections
 
-(none — pre-review)
+(none)
