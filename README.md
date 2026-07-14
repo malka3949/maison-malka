@@ -1,6 +1,6 @@
 # Maison Malka
 
-Premium pastry e-commerce — **Phase 2** delivers the customer storefront (catalog, cart, guest checkout) on top of the Phase 1 admin foundation.
+Premium pastry e-commerce — **Phase 3** adds admin order operations (list, calendar, approve/reject) and Resend transactional emails on top of the Phase 2 storefront.
 
 ## Prerequisites
 
@@ -30,6 +30,7 @@ npm run dev
 - Storefront (Hebrew default): [http://localhost:3000/he](http://localhost:3000/he)
 - English: [http://localhost:3000/en](http://localhost:3000/en)
 - Admin: [http://localhost:3000/admin/login](http://localhost:3000/admin/login)
+- Admin orders: [http://localhost:3000/admin/orders](http://localhost:3000/admin/orders)
 
 ## Environment variables
 
@@ -40,6 +41,8 @@ npm run dev
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Client/server Supabase anon key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server-only uploads (never expose to client) |
 | `ADMIN_EMAIL` | Email that receives `admin` role on login |
+| `RESEND_API_KEY` | Server-only Resend API key (transactional email) |
+| `RESEND_FROM_EMAIL` | Verified sender address for Resend (e.g. `Maison Malka <onboarding@resend.dev>`) |
 
 ## Scripts
 
@@ -52,20 +55,29 @@ npm run dev
 | `npm run db:migrate` | Prisma migrate dev |
 | `npm run db:seed` | Seed sample catalog data |
 
+## Phase 3 admin order flow
+
+1. Customer places guest order (Phase 2 checkout) → `pending_approval`.
+2. Admin opens `/admin/orders` → filters / opens detail.
+3. Approve or reject → status updated; Resend sends email when configured.
+4. Calendar at `/admin/orders/calendar` groups orders by requested fulfillment date.
+
+Configure Resend: add `RESEND_API_KEY` and `RESEND_FROM_EMAIL` to `.env.local` (see [Resend](https://resend.com)).
+
 ## Phase 2 customer flow
 
 1. Browse `/he` → catalog → product.
 2. Add to cart (options supported).
 3. Checkout as guest (pickup/delivery, date ≥ 2 days, no Saturday).
-4. Order saved as `pending_approval` (no online payment; no email yet).
+4. Order saved as `pending_approval`; customer receives email when Resend is configured.
 
 Locale switcher: HE (RTL) ↔ EN (LTR). Optional customer register/login prefills checkout.
 
 ## Scope
 
-**In scope:** Public storefront Direction A, i18n HE/EN, cart, guest checkout → Order persistence, optional customer auth.
+**In scope:** Admin order list/calendar/detail, approve/reject workflow, Resend transactional emails (received/approved/rejected).
 
-**Out of scope:** Payment gateway, Resend emails, admin order approval UI (Phase 3).
+**Out of scope:** Payment gateway, WhatsApp/SMS, production hardening (Phase 4).
 
 ## Vercel deployment
 
