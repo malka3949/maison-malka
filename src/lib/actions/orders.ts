@@ -13,6 +13,7 @@ import { validateFulfillmentDate } from "@/lib/fulfillment";
 import { computeLineTotal, computeUnitPrice, sumMoney } from "@/lib/pricing";
 import { createClient } from "@/lib/supabase/server";
 import type { Locale } from "@/lib/i18n";
+import { sendOrderReceived } from "@/lib/notifications/resend";
 
 export type CheckoutCartLineInput = {
   productId: string;
@@ -197,6 +198,12 @@ export async function createGuestOrder(
         })),
       },
     },
+  });
+
+  void sendOrderReceived(order).then((result) => {
+    if (!result.ok && !result.skipped) {
+      console.error("[checkout] order received email failed", result.error);
+    }
   });
 
   return { ok: true, orderId: order.id };
