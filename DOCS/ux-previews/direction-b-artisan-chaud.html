@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>כיוון B — Artisan Chaud | Maison Malka</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600;700&family=Heebo:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #92400e;
+      --secondary: #b45309;
+      --cta: #78350f;
+      --cta-hover: #92400e;
+      --bg: #fef3c7;
+      --text: #78350f;
+      --accent: #f59e0b;
+      --card: #fffbeb;
+      --border: #fde68a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Heebo", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+    a { color: inherit; text-decoration: none; cursor: pointer; }
+    .wrap { max-width: 72rem; margin: 0 auto; padding: 0 1.25rem; }
+    .badge {
+      display: inline-block; margin: 1rem 1.25rem 0;
+      padding: 0.35rem 0.75rem; border-radius: 999px;
+      background: var(--primary); color: #fef3c7; font-size: 0.75rem;
+    }
+    header {
+      background: rgba(254, 243, 199, 0.9);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 10;
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; min-height: 4rem; }
+    .brand { font-family: "Fraunces", Georgia, serif; font-size: 1.6rem; font-weight: 600; }
+    .nav-links { display: flex; gap: 1.25rem; font-size: 0.95rem; }
+    .hero {
+      padding: 3rem 0 2rem;
+      display: grid; grid-template-columns: 1.1fr 1fr; gap: 2rem; align-items: center;
+    }
+    .hero img {
+      width: 100%; border-radius: 1rem; aspect-ratio: 4/5; object-fit: cover;
+      box-shadow: 0 12px 40px rgba(120, 53, 15, 0.18);
+    }
+    .hero h1 {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      margin: 0 0 1rem; line-height: 1.15;
+    }
+    .hero p { margin: 0 0 1.5rem; font-size: 1.05rem; }
+    .btn {
+      display: inline-block; background: var(--cta); color: #fef3c7;
+      padding: 0.9rem 1.6rem; border-radius: 0.75rem; font-weight: 600;
+      transition: background 200ms;
+    }
+    .btn:hover { background: var(--cta-hover); }
+    .story {
+      background: #fff7ed; border: 1px solid var(--border);
+      border-radius: 1rem; padding: 2rem; margin: 1rem 0 3rem;
+    }
+    section { padding: 1rem 0 3.5rem; }
+    h2 { font-family: "Fraunces", Georgia, serif; font-size: 2rem; margin: 0 0 1.25rem; }
+    .cats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .cat {
+      background: var(--card); border: 1px solid var(--border); border-radius: 1rem;
+      padding: 1.5rem; text-align: center; transition: transform 200ms, box-shadow 200ms;
+    }
+    .cat:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(146, 64, 14, 0.12); }
+    .cat strong { display: block; margin-top: 0.5rem; font-size: 1.1rem; }
+    .dot {
+      width: 2.5rem; height: 2.5rem; margin: 0 auto; border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+    }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+    .card {
+      background: #fff; border: 1px solid var(--border); border-radius: 1rem; overflow: hidden;
+    }
+    .card img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+    .card-body { padding: 1.1rem; }
+    .card h3 { margin: 0 0 0.4rem; font-size: 1.05rem; }
+    .price { color: var(--primary); font-weight: 600; }
+    .add {
+      margin-top: 0.75rem; display: inline-block; font-size: 0.85rem;
+      border: 1px solid var(--primary); padding: 0.4rem 0.8rem; border-radius: 0.75rem;
+    }
+    .cta {
+      text-align: center; padding: 3rem 1rem; margin-bottom: 2rem;
+      background: rgba(255,255,255,0.55); border-radius: 1rem; border: 1px solid var(--border);
+    }
+    footer {
+      background: var(--primary); color: #fef3c7; padding: 2.5rem 0; font-size: 0.9rem;
+    }
+    .chooser {
+      position: fixed; left: 1rem; bottom: 1rem; z-index: 50;
+      background: #fff; border: 1px solid var(--border); border-radius: 0.75rem;
+      padding: 0.75rem 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      font-size: 0.8rem; display: flex; gap: 0.5rem; align-items: center;
+    }
+    .chooser a {
+      padding: 0.35rem 0.6rem; border-radius: 0.375rem; background: var(--primary); color: #fef3c7;
+    }
+    .chooser a.alt { background: #fff; color: var(--primary); border: 1px solid var(--border); }
+    @media (max-width: 800px) {
+      .hero, .cats, .grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="badge">כיוון B · Artisan Chaud · חם ואותנטי</div>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#">Maison Malka</a>
+      <nav class="nav-links">
+        <a href="#">דף הבית</a>
+        <a href="#">קטלוג</a>
+        <a href="#">עגלה</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="wrap hero">
+    <div>
+      <h1>חם מהתנור בירושלים</h1>
+      <p>מאפים ועוגות בעבודת יד — חומרי גלם איכותיים, טעם ביתי, והזמנה פשוטה לאיסוף או משלוח.</p>
+      <a class="btn" href="#">גלו את התפריט</a>
+    </div>
+    <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=900&q=80" alt="מאפים טריים" />
+  </div>
+
+  <div class="wrap">
+    <div class="story">
+      <h2 style="margin-top:0">הסיפור שלנו</h2>
+      <p style="margin:0">Maison Malka נולדה מאהבה לאפייה מדויקת ולחוויית מתנה. כל עוגה ומארז מכינים בהזמנה — בלי פשרות על טריות או טעם.</p>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap">
+      <h2>קטגוריות</h2>
+      <div class="cats">
+        <a class="cat" href="#"><div class="dot"></div><strong>עוגות</strong></a>
+        <a class="cat" href="#"><div class="dot"></div><strong>מאפים</strong></a>
+        <a class="cat" href="#"><div class="dot"></div><strong>מארזי מתנה</strong></a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>נבחרים השבוע</h2>
+      <div class="grid">
+        <article class="card">
+          <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=700&q=80" alt="עוגה" />
+          <div class="card-body"><h3>עוגת שוקולד</h3><div class="price">₪120</div><a class="add" href="#">הוסף</a></div>
+        </article>
+        <article class="card">
+          <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=700&q=80" alt="קרואסון" />
+          <div class="card-body"><h3>קרואסון חמאה</h3><div class="price">₪18</div><a class="add" href="#">הוסף</a></div>
+        </article>
+        <article class="card">
+          <img src="https://images.unsplash.com/photo-1481391319762-47dff72954d9?auto=format&fit=crop&w=700&q=80" alt="מארז" />
+          <div class="card-body"><h3>מארז סוף שבוע</h3><div class="price">₪130</div><a class="add" href="#">הוסף</a></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="cta">
+      <h2>רוצים את כל התפריט?</h2>
+      <a class="btn" href="#">לצפייה בקטלוג</a>
+    </div>
+  </div>
+
+  <footer>
+    <div class="wrap">
+      <strong>Maison Malka</strong>
+      <p>ירושלים · אפייה אומנותית · הזמנות באישור ידני</p>
+    </div>
+  </footer>
+
+  <div class="chooser">
+    השוואה:
+    <a class="alt" href="direction-a-noir-gold.html">A</a>
+    <a href="direction-b-artisan-chaud.html">B</a>
+    <a class="alt" href="direction-c-editorial-blanc.html">C</a>
+  </div>
+</body>
+</html>

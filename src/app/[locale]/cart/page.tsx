@@ -15,8 +15,10 @@ export default async function CartPage({
   const messages = getMessages(locale);
 
   return (
-    <div className="space-y-6">
-      <h1 className="font-heading text-4xl text-mm-primary">{messages.cartTitle}</h1>
+    <div className="mm-wrap space-y-6">
+      <h1 className="font-heading text-4xl text-mm-primary md:text-5xl">
+        {messages.cartTitle}
+      </h1>
       <CartView locale={locale} messages={messages} />
     </div>
   );

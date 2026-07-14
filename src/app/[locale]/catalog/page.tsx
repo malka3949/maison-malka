@@ -24,16 +24,21 @@ export default async function CatalogPage({
   ]);
 
   return (
-    <div className="space-y-8">
-      <h1 className="font-heading text-4xl text-mm-primary">{messages.catalogTitle}</h1>
+    <div className="mm-wrap space-y-8">
+      <div>
+        <h1 className="font-heading text-4xl text-mm-primary md:text-5xl">
+          {messages.catalogTitle}
+        </h1>
+        <p className="mt-2 text-mm-secondary">{messages.catalogSubtitle}</p>
+      </div>
 
       <div className="flex flex-wrap gap-2">
         <Link
           href={`/${locale}/catalog`}
-          className={`cursor-pointer border px-3 py-1.5 text-sm transition-colors ${
+          className={`cursor-pointer rounded-full border px-4 py-1.5 text-sm transition-colors ${
             !category
-              ? "border-mm-cta text-mm-cta"
-              : "border-stone-300 text-mm-secondary hover:border-mm-cta"
+              ? "border-mm-dark bg-mm-dark text-white"
+              : "border-mm-line bg-mm-surface text-mm-secondary hover:border-mm-cta hover:text-mm-primary"
           }`}
         >
           {messages.filterAll}
@@ -42,10 +47,10 @@ export default async function CatalogPage({
           <Link
             key={c.id}
             href={`/${locale}/catalog?category=${c.slug}`}
-            className={`cursor-pointer border px-3 py-1.5 text-sm transition-colors ${
+            className={`cursor-pointer rounded-full border px-4 py-1.5 text-sm transition-colors ${
               category === c.slug
-                ? "border-mm-cta text-mm-cta"
-                : "border-stone-300 text-mm-secondary hover:border-mm-cta"
+                ? "border-mm-dark bg-mm-dark text-white"
+                : "border-mm-line bg-mm-surface text-mm-secondary hover:border-mm-cta hover:text-mm-primary"
             }`}
           >
             {c.name}
@@ -65,7 +70,7 @@ export default async function CatalogPage({
                 href={`/${locale}/products/${p.id}`}
                 className="group cursor-pointer space-y-3"
               >
-                <div className="aspect-[4/3] overflow-hidden bg-stone-200">
+                <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-mm-soft">
                   {img ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -74,7 +79,7 @@ export default async function CatalogPage({
                       className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   ) : (
-                    <div className="flex h-full items-center justify-center text-sm text-stone-500">
+                    <div className="flex h-full items-center justify-center text-sm text-mm-secondary">
                       {messages.brand}
                     </div>
                   )}
@@ -84,7 +89,7 @@ export default async function CatalogPage({
                     {p.categoryName}
                   </p>
                   <h2 className="font-heading text-2xl text-mm-primary">{p.name}</h2>
-                  <p className="text-mm-accent">
+                  <p className="text-mm-cta">
                     {messages.priceFrom}
                     {formatIls(p.basePrice, messages.ils)}
                   </p>

@@ -10,13 +10,18 @@ export function LanguageSwitcher({ locale }: { locale: Locale }) {
   const rest = pathname.replace(/^\/(he|en)/, "") || "";
 
   return (
-    <div className="flex items-center gap-2 text-xs uppercase tracking-wider">
+    <div
+      className="inline-flex overflow-hidden rounded-full border border-mm-line bg-mm-surface"
+      aria-label="Language"
+    >
       {LOCALES.map((l) => (
         <Link
           key={l}
           href={`/${l}${rest}`}
-          className={`cursor-pointer transition-colors ${
-            l === locale ? "text-mm-cta font-semibold" : "text-mm-secondary hover:text-mm-cta"
+          className={`cursor-pointer px-2.5 py-1 text-[0.75rem] font-semibold uppercase tracking-wide transition-colors ${
+            l === locale
+              ? "bg-mm-dark text-white"
+              : "text-mm-secondary hover:text-mm-primary"
           }`}
         >
           {l}

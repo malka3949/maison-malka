@@ -13,18 +13,40 @@ export function localeDir(locale: Locale): "rtl" | "ltr" {
 
 export type Messages = {
   brand: string;
+  brandTagline: string;
   navHome: string;
   navCatalog: string;
   navCart: string;
   navLogin: string;
   navRegister: string;
   navLogout: string;
+  tickerItems: string[];
+  heroEyebrow: string;
   heroTitle: string;
   heroSubtitle: string;
   heroCta: string;
+  heroSecondaryCta: string;
   categoriesTitle: string;
+  categoriesSubtitle: string;
+  seeFullCatalog: string;
   featuredTitle: string;
+  featuredSubtitle: string;
+  seeAllProducts: string;
+  trustDelivery: string;
+  trustDeliverySub: string;
+  trustPickup: string;
+  trustPickupSub: string;
+  trustHandmade: string;
+  trustHandmadeSub: string;
+  trustApproval: string;
+  trustApprovalSub: string;
+  ctaFinalTitle: string;
+  ctaFinalBody: string;
+  ctaFinalButton: string;
   catalogTitle: string;
+  catalogSubtitle: string;
+  scrollPrev: string;
+  scrollNext: string;
   filterAll: string;
   emptyCatalog: string;
   priceFrom: string;
@@ -51,6 +73,7 @@ export type Messages = {
   onPickup: string;
   notes: string;
   submitOrder: string;
+  privacyNotice: string;
   orderSuccess: string;
   orderSuccessBody: string;
   orderId: string;

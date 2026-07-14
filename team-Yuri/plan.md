@@ -99,8 +99,9 @@ Team Yuri phases align with `DOCS/Maison-Malka-Development-Phases-Plan.md`:
 | 1 | System Foundation | Admin + DB + catalog model + dev deploy |
 | 2 | Customer Experience | Public site, catalog, cart, order submit |
 | 3 | Order Operations | Admin orders, approval, Resend emails |
-| 4 | Production Readiness | Security, backup, performance, prod deploy |
-| 5 | Business Growth | Payments, loyalty, expansion (TBD) |
+| 4 | Production Readiness | Security, backup, performance, prod deploy (PARKED — incomplete) |
+| 5 | Storefront Bakery Scroll UI | Apply approved light bakery design to public Next.js storefront |
+| 6 | Business Growth | Payments, loyalty, expansion (TBD; was former Phase 5) |
 
 ## Phase 1: System Foundation
 
@@ -187,10 +188,37 @@ Production deploy, security audits, backup, monitoring.
 ### Functional Testability
 Production URL serves MVP flow end-to-end.
 
-## Phase 5: Business Growth
+### Status (plan note)
+**PARKED / incomplete** by explicit user decision (2026-07): more storefront work before Production. Artifacts `arch-phase4.md` / `manager-phase4.md` / `dev-phase4.md` remain; resume after Phase 5 (or later) when user is ready for Vercel Production + live Resend. Do not treat Phase 4 as APPROVED-complete.
+
+## Phase 5: Storefront Bakery Scroll UI
 
 ### Goal
-Deferred — online payments, loyalty, delivery expansion per business needs.
+Replace the Phase 2 Direction A (Noir & Gold) public storefront look with the user-approved **Bakery Scroll** light bakery design, using `DOCS/ux-previews/direction-bakery-scroll.html` and sibling bakery pages as the visual/source-of-truth mock — without changing order/business domain logic.
+
+### Scope
+- Design tokens + typography aligned to `bakery-theme.css` (light cream surface, gold accents, Cormorant + Heebo)
+- Public pages: home, catalog, product detail, cart, checkout (+ order confirmation if present)
+- HE/EN + RTL/LTR preserved
+- Horizontal category/product carousels, ticker, subtle motion (respect `prefers-reduced-motion`)
+- Sync `DOCS/ux.md` to record Bakery Scroll as selected storefront direction
+
+### Out of Scope
+- Admin UI redesign
+- Production deploy / Resend live proof (Phase 4 residual)
+- Online payments, loyalty, coupons, WhatsApp, delivery zones (Phase 6+)
+- Prisma schema / ERD changes unless a blocking bug is found (then stop and escalate)
+
+### Functional Testability
+User opens `localhost` `/he` (and `/en`): storefront matches Bakery Scroll composition; browse → cart → guest checkout still creates `pending_approval` order.
+
+### Handoff Notes for Phase Design
+See `team-Yuri/arch-phase5.md`.
+
+## Phase 6: Business Growth
+
+### Goal
+Deferred — online payments, loyalty, delivery expansion per business needs (formerly labeled Phase 5).
 
 ## Open Questions
 
@@ -199,3 +227,4 @@ Deferred — online payments, loyalty, delivery expansion per business needs.
 | Supabase/Vercel project names | Env setup | Developer during Phase 1 |
 | Admin UI language in Phase 1 | Scope | Hebrew-first admin acceptable for Phase 1 |
 | Brand assets (logo, fonts) | Homepage Phase 2 | User to supply before Phase 2 |
+| Hero / promo imagery for Bakery Scroll | Visual fidelity vs Unsplash placeholders | Use product images from Supabase where available; placeholders OK until business assets supplied |
