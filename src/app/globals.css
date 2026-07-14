@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  --color-mm-primary: #1c1917;
+  --color-mm-secondary: #44403c;
+  --color-mm-cta: #ca8a04;
+  --color-mm-cta-hover: #a16207;
+  --color-mm-bg: #fafaf9;
+  --color-mm-text: #0c0a09;
+  --color-mm-accent: #d4af37;
+  --font-heading: var(--font-cormorant), Georgia, serif;
+  --font-body: var(--font-heebo), system-ui, sans-serif;
+}
+
+:root {
+  --font-cormorant: "Cormorant", Georgia, serif;
+  --font-heebo: "Heebo", system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-mm-bg);
+  color: var(--color-mm-text);
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+input,
+select,
+textarea,
+button {
+  font: inherit;
+}
