@@ -10,6 +10,7 @@ const navItems = [
   { href: "/admin", label: "לוח בקרה" },
   { href: "/admin/categories", label: "קטגוריות" },
   { href: "/admin/products", label: "מוצרים" },
+  { href: "/admin/orders", label: "הזמנות" },
 ];
 
 export default async function ProtectedAdminLayout({
