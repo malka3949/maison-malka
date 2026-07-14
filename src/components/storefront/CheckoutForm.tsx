@@ -174,8 +174,15 @@ export function CheckoutForm({
 
       <label className="block space-y-1 text-sm">
         <span>{messages.notes}</span>
-        <textarea name="notes" className="w-full border border-stone-300 px-3 py-2" rows={2} />
+        <textarea
+          name="notes"
+          maxLength={1000}
+          className="w-full border border-stone-300 px-3 py-2"
+          rows={2}
+        />
       </label>
+
+      <p className="text-xs leading-relaxed text-mm-secondary">{messages.privacyNotice}</p>
 
       {error ? <p className="text-sm text-red-700">{error}</p> : null}
 

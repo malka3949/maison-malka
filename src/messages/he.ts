@@ -40,6 +40,8 @@ export const he: Messages = {
   onPickup: "תשלום באיסוף",
   notes: "הערות",
   submitOrder: "שליחת הזמנה",
+  privacyNotice:
+    "הפרטים נאספים לצורך ביצוע ההזמנה ויצירת קשר. המידע מאוחסן אצל ספקי התשתית שלנו (Supabase, Vercel) ונשלחות התראות אימייל דרך Resend. אין תשלום מקוון באתר.",
   orderSuccess: "ההזמנה התקבלה",
   orderSuccessBody: "בקשת ההזמנה נשמרה וממתינה לאישור.",
   orderId: "מספר הזמנה",

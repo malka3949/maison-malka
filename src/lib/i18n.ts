@@ -51,6 +51,7 @@ export type Messages = {
   onPickup: string;
   notes: string;
   submitOrder: string;
+  privacyNotice: string;
   orderSuccess: string;
   orderSuccessBody: string;
   orderId: string;

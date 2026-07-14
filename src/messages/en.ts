@@ -40,6 +40,8 @@ export const en: Messages = {
   onPickup: "Pay on pickup",
   notes: "Notes",
   submitOrder: "Submit order",
+  privacyNotice:
+    "We collect your details to fulfil the order and contact you. Data is stored with our infrastructure providers (Supabase, Vercel) and transactional emails are sent via Resend. No online payment is processed on this site.",
   orderSuccess: "Order received",
   orderSuccessBody: "Your order request was saved and is pending approval.",
   orderId: "Order ID",
