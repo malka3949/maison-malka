@@ -119,17 +119,17 @@ Phase 4 readiness work started on `phase-4/production-readiness`: security/priva
 |---|---|
 | Branch | `phase-4/production-readiness` |
 | Base | `develop` |
-| Push | PENDING (commits then push) |
+| Push | PUSHED |
 | Remote | `https://github.com/malka3949/maison-malka.git` |
 
 ### Commits
 
 | SHA (short) | Message | Milestone |
 |---|---|---|
-| (pending) | `phase-4: start production readiness branch` | M0 |
-| (pending) | `phase-4: security reports and hardenings` | M4–M7 |
-| (pending) | `phase-4: ops runbook and privacy notice` | M6/M8/M9 |
-| (pending) | `phase-4: document blocked Production wait` | M11 / status |
+| a94e8c7 | `phase-4: start production readiness branch` | M0 |
+| 4431b20 | `phase-4: security reports and hardenings` | M4–M7 |
+| 051efc6 | `phase-4: ops runbook and privacy notice` | M6/M8/M9 |
+| 6e4ba32 | `phase-4: document blocked Production wait` | status |
 
 ## Known Issues / Limitations
 
