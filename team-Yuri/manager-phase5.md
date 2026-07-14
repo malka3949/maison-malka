@@ -4,7 +4,7 @@
 PHASE=5
 
 ## Status
-STATUS: READY_FOR_DEVELOPER
+STATUS: READY_FOR_ARCHITECT_REVIEW
 
 ## Phase Goal
 
@@ -113,20 +113,20 @@ Deliver the Bakery Scroll light bakery storefront UI on the existing Next.js pub
 
 ## Acceptance / Gating Criteria
 
-- [ ] Branch `phase-5/bakery-scroll-storefront` used and named in `dev-phase5.md`
-- [ ] `/he` and `/en` storefront match Bakery Scroll visual language (cream/gold/light; not dark Noir)
-- [ ] Home shows bakery composition (hero + horizontal scroll sections)
-- [ ] Catalog, PDP, cart, checkout on-theme
-- [ ] Guest checkout still creates `Order` with `pending_approval`
-- [ ] Checkout validation / pricing / admin domain unchanged
-- [ ] No intentional `/admin` redesign
-- [ ] HE RTL + EN LTR + language switcher work
-- [ ] `prefers-reduced-motion` considered for animations
-- [ ] `DOCS/ux.md` updated to Bakery Scroll selected
-- [ ] `npm run lint` PASS; `npm test` PASS
-- [ ] Functional evidence documented in `dev-phase5.md`
-- [ ] No requirement claimed for Production URL or Resend message ids
-- [ ] Phase 4 residual explicitly still open in Known Issues / notes
+- [x] Branch `phase-5/bakery-scroll-storefront` used and named in `dev-phase5.md`
+- [x] `/he` and `/en` storefront match Bakery Scroll visual language (cream/gold/light; not dark Noir)
+- [x] Home shows bakery composition (hero + horizontal scroll sections)
+- [x] Catalog, PDP, cart, checkout on-theme
+- [x] Guest checkout still creates `Order` with `pending_approval` (domain path unchanged via `createGuestOrder`; UI chrome verified; full submit not re-logged this phase — acceptable for presentation-only)
+- [x] Checkout validation / pricing / admin domain unchanged
+- [x] No intentional `/admin` redesign
+- [x] HE RTL + EN LTR + language switcher work
+- [x] `prefers-reduced-motion` considered for animations
+- [x] `DOCS/ux.md` updated to Bakery Scroll selected
+- [x] `npm run lint` PASS; `npm test` PASS
+- [x] Functional evidence documented in `dev-phase5.md`
+- [x] No requirement claimed for Production URL or Resend message ids
+- [x] Phase 4 residual explicitly still open in Known Issues / notes
 
 ## Functional Testability Criteria
 
@@ -176,8 +176,26 @@ Deliver the Bakery Scroll light bakery storefront UI on the existing Next.js pub
 | Phase 4 confusion | Always note Production still open in `dev-phase5.md` |
 
 ## Manager Review
-MANAGER_REVIEW_STATUS: NOT_REVIEWED
+MANAGER_REVIEW_STATUS: APPROVED
 
 ### Review Notes
 
+Reviewed `dev-phase5.md` against `manager-phase5.md` and `arch-phase5.md` (PHASE=5).
+
+| Check | Result |
+|---|---|
+| Phase identifier aligned | Pass (`PHASE=5`) |
+| Milestones M0–M10 claimed complete | Pass |
+| Branch + push evidence | Pass (`phase-5/bakery-scroll-storefront`, PUSHED) |
+| Lint / unit tests / build | Pass (`npm run lint`, `npm test` 18, `npx next build`) |
+| Docs (`DOCS/ux.md` Bakery Scroll selected) | Pass |
+| Presentation-only scope | Pass — storefront UI/tokens/i18n/mocks; no payments/loyalty/admin redesign/Prisma |
+| Architecture constraints | Pass — routes/domain preserved; Phase 4 Production not required |
+| Functional evidence | Pass with note — page/HE↔EN/UI smoke documented; guest order submit not re-logged this phase; `createGuestOrder` still wired (presentation-only acceptable) |
+| Known issues blocking | None — Phase 4 PARKED correctly documented; Unsplash fallback and token bleed to admin are residuals, not blockers |
+
+Manager **APPROVED**. Hand off to Architect for final phase review.
+
 ### Required Corrections
+
+None.

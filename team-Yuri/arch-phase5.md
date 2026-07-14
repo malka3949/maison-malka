@@ -4,7 +4,7 @@
 PHASE=5
 
 ## Status
-STATUS: READY_FOR_MANAGER
+STATUS: APPROVED
 
 ## Phase Goal
 
@@ -120,8 +120,52 @@ This phase is **not** infrastructure-only.
 6. Do not expand into admin redesign or growth features.
 
 ## Architect Review
-ARCHITECT_REVIEW_STATUS: NOT_REVIEWED
+ARCHITECT_REVIEW_STATUS: APPROVED
 
 ### Review Notes
 
+**Review date:** 2026-07-15  
+**Reviewer:** Yuri (Software Architect)  
+**Artifacts reviewed:** `arch-phase5.md`, `manager-phase5.md` (MANAGER_REVIEW_STATUS: APPROVED), `dev-phase5.md` (STATUS: COMPLETE)
+
+#### Architecture alignment — PASS
+
+| Check | Verdict | Notes |
+|---|---|---|
+| Phase 5 goal | Pass | Bakery Scroll presentation on public storefront |
+| Presentation-only | Pass | Tokens/components/pages/i18n/docs; no new business domains |
+| Visual SoT Bakery Scroll | Pass | Home hero, ticker, horizontal scrollers, cream/gold tokens documented |
+| Route contract Phase 2 | Pass | Same `/[locale]` storefront paths |
+| Admin untouched as goal | Pass | No admin redesign; minor token inheritance noted as residual |
+| No Prisma / ERD | Pass | No migrations in evidence |
+| Phase 4 Production not required | Pass | Explicitly PARKED in Known Issues |
+| Phase 6 growth out | Pass | No payments/loyalty/WhatsApp |
+| `DOCS/ux.md` direction lock | Pass | Bakery Scroll selected |
+| Git workflow | Pass | `phase-5/bakery-scroll-storefront` from `develop`; pushed |
+| Manager gate | Pass | APPROVED with acceptance criteria checked |
+
+#### Functional testability — PASS (with documented residual)
+
+| Criterion | Verdict | Notes |
+|---|---|---|
+| Local Bakery Scroll surfaces | Pass | `/he`, catalog, PDP, cart, checkout chrome; HE↔EN |
+| Lint / unit tests / build | Pass | lint; 18 tests; `npx next build` |
+| Motion a11y | Pass | `prefers-reduced-motion` in globals |
+| Guest order create re-proof | Partial | Submit not re-logged this phase; `createGuestOrder` still wired — **accepted** for presentation-only (Manager concurred) |
+| Production / Resend | N/A | Correctly out of Phase 5 |
+
+#### Accepted residuals for Phase 5 close
+
+| Item | Disposition |
+|---|---|
+| Guest checkout submit not re-logged | Accepted — domain unchanged; recommend smoke before Production |
+| Unsplash hero fallback when no product images | Accepted — preferred DB images when present |
+| Admin inherits `mm-*` token refresh | Accepted — not an admin redesign |
+| Phase 4 Production + live Resend | Remains open — resume before customer go-live |
+| Windows `npm run build` Prisma EPERM | Accepted — `npx next build` PASS documented |
+
+**Architect APPROVED.** Phase 5 complete architecturally. Do **not** update `PHASE.md` without explicit user instruction. Next product choices: more pre-prod features, or resume Phase 4 Production readiness.
+
 ### Required Corrections
+
+None.

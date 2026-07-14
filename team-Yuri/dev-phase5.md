@@ -108,7 +108,7 @@ Implemented Bakery Scroll light bakery presentation on the public storefront: de
 |---|---|---|
 | e80b744 | `phase5: add Phase 5 architecture and manager plans` | M0 / governance |
 | 1487071 | `phase5: implement bakery scroll storefront UI` | M1–M9 |
-| (next) | `phase5: document developer verification evidence` | M10 |
+| 45bb20e | `phase5: document developer verification evidence` | M10 |
 
 ## Known Issues / Limitations
 
