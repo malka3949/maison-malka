@@ -83,39 +83,42 @@ export function CheckoutForm({
   }
 
   return (
-    <form onSubmit={onSubmit} className="mx-auto max-w-lg space-y-4">
-      <label className="block space-y-1 text-sm">
+    <form
+      onSubmit={onSubmit}
+      className="mx-auto max-w-lg space-y-4 rounded-2xl border border-mm-line bg-mm-surface p-6 md:p-8"
+    >
+      <label className="block space-y-1 text-sm text-mm-secondary">
         <span>{messages.fullName}</span>
         <input
           name="fullName"
           required
           defaultValue={prefill?.fullName ?? ""}
-          className="w-full border border-stone-300 px-3 py-2"
+          className="mm-field"
         />
       </label>
-      <label className="block space-y-1 text-sm">
+      <label className="block space-y-1 text-sm text-mm-secondary">
         <span>{messages.phone}</span>
         <input
           name="phone"
           required
           defaultValue={prefill?.phone ?? ""}
-          className="w-full border border-stone-300 px-3 py-2"
+          className="mm-field"
         />
       </label>
-      <label className="block space-y-1 text-sm">
+      <label className="block space-y-1 text-sm text-mm-secondary">
         <span>{messages.email}</span>
         <input
           name="email"
           type="email"
           required
           defaultValue={prefill?.email ?? ""}
-          className="w-full border border-stone-300 px-3 py-2"
+          className="mm-field"
         />
       </label>
 
       <fieldset className="space-y-2">
-        <legend className="text-sm font-medium">{messages.fulfillment}</legend>
-        <label className="me-4 inline-flex cursor-pointer items-center gap-2">
+        <legend className="text-sm font-medium text-mm-primary">{messages.fulfillment}</legend>
+        <label className="me-4 inline-flex cursor-pointer items-center gap-2 text-sm">
           <input
             type="radio"
             name="fulfillmentType"
@@ -124,7 +127,7 @@ export function CheckoutForm({
           />
           {messages.pickup}
         </label>
-        <label className="inline-flex cursor-pointer items-center gap-2">
+        <label className="inline-flex cursor-pointer items-center gap-2 text-sm">
           <input
             type="radio"
             name="fulfillmentType"
@@ -136,19 +139,19 @@ export function CheckoutForm({
       </fieldset>
 
       {fulfillment === "delivery" ? (
-        <label className="block space-y-1 text-sm">
+        <label className="block space-y-1 text-sm text-mm-secondary">
           <span>{messages.deliveryAddress}</span>
           <textarea
             name="deliveryAddress"
             required
             defaultValue={prefill?.deliveryAddress ?? ""}
-            className="w-full border border-stone-300 px-3 py-2"
+            className="mm-field"
             rows={2}
           />
         </label>
       ) : null}
 
-      <label className="block space-y-1 text-sm">
+      <label className="block space-y-1 text-sm text-mm-secondary">
         <span>{messages.fulfillmentDate}</span>
         <input
           name="fulfillmentDate"
@@ -156,34 +159,30 @@ export function CheckoutForm({
           required
           min={minDate}
           defaultValue={minDate}
-          className="w-full border border-stone-300 px-3 py-2"
+          className="mm-field"
         />
       </label>
 
-      <label className="block space-y-1 text-sm">
+      <label className="block space-y-1 text-sm text-mm-secondary">
         <span>{messages.paymentMethod}</span>
-        <select
-          name="paymentMethod"
-          className="w-full border border-stone-300 px-3 py-2"
-          defaultValue="on_pickup"
-        >
+        <select name="paymentMethod" className="mm-field" defaultValue="on_pickup">
           <option value="on_pickup">{messages.onPickup}</option>
           <option value="bank_transfer">{messages.bankTransfer}</option>
         </select>
       </label>
 
-      <label className="block space-y-1 text-sm">
+      <label className="block space-y-1 text-sm text-mm-secondary">
         <span>{messages.notes}</span>
-        <textarea name="notes" className="w-full border border-stone-300 px-3 py-2" rows={2} />
+        <textarea name="notes" className="mm-field" rows={2} />
       </label>
+
+      <p className="rounded-xl border border-mm-line bg-mm-soft p-3 text-xs leading-relaxed text-mm-secondary">
+        {messages.privacyNotice}
+      </p>
 
       {error ? <p className="text-sm text-red-700">{error}</p> : null}
 
-      <button
-        type="submit"
-        disabled={pending}
-        className="cursor-pointer rounded-sm bg-mm-cta px-6 py-3 text-white transition-colors hover:bg-mm-cta-hover disabled:opacity-60"
-      >
+      <button type="submit" disabled={pending} className="mm-btn w-full disabled:opacity-60">
         {messages.submitOrder}
       </button>
     </form>

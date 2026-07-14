@@ -94,10 +94,10 @@ export function AddToCartButton({
             {opt.values.map((v) => (
               <label
                 key={v.id}
-                className={`cursor-pointer rounded-sm border px-3 py-2 text-sm transition-colors ${
+                className={`cursor-pointer rounded-full border px-3 py-2 text-sm transition-colors ${
                   selected[opt.id] === v.id
-                    ? "border-mm-cta bg-mm-cta/10 text-mm-primary"
-                    : "border-stone-300 hover:border-mm-accent"
+                    ? "border-mm-dark bg-mm-dark text-white"
+                    : "border-mm-line hover:border-mm-cta"
                 }`}
               >
                 <input
@@ -117,18 +117,14 @@ export function AddToCartButton({
         </fieldset>
       ))}
 
-      <p className="font-heading text-2xl text-mm-accent">
+      <p className="font-heading text-2xl text-mm-cta">
         {messages.ils}
         {unitPrice.toFixed(2)}
       </p>
 
       {error ? <p className="text-sm text-red-700">{error}</p> : null}
 
-      <button
-        type="button"
-        onClick={onAdd}
-        className="cursor-pointer rounded-sm bg-mm-cta px-6 py-3 text-white transition-colors hover:bg-mm-cta-hover"
-      >
+      <button type="button" onClick={onAdd} className="mm-btn">
         {messages.addToCart}
       </button>
     </div>

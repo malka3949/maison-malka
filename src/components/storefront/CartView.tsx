@@ -13,12 +13,9 @@ export function CartView({ locale, messages }: { locale: Locale; messages: Messa
 
   if (lines.length === 0) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-4 rounded-2xl border border-mm-line bg-mm-surface p-6">
         <p className="text-mm-secondary">{messages.cartEmpty}</p>
-        <Link
-          href={`/${locale}/catalog`}
-          className="inline-block cursor-pointer text-mm-cta hover:text-mm-cta-hover"
-        >
+        <Link href={`/${locale}/catalog`} className="mm-btn inline-flex">
           {messages.navCatalog}
         </Link>
       </div>
@@ -27,15 +24,15 @@ export function CartView({ locale, messages }: { locale: Locale; messages: Messa
 
   return (
     <div className="space-y-6">
-      <ul className="divide-y divide-stone-200 border border-stone-200 bg-white">
+      <ul className="divide-y divide-mm-line overflow-hidden rounded-2xl border border-mm-line bg-mm-surface">
         {lines.map((line) => (
           <li
             key={`${line.productId}-${line.optionValueIds.join(",")}`}
-            className="flex flex-wrap items-center justify-between gap-4 px-4 py-4"
+            className="flex flex-wrap items-center justify-between gap-4 px-5 py-4"
           >
             <div>
               <p className="font-medium text-mm-primary">{line.name}</p>
-              <p className="text-sm text-mm-accent">
+              <p className="text-sm text-mm-cta">
                 {messages.ils}
                 {line.unitPrice.toFixed(2)}
               </p>
@@ -54,7 +51,7 @@ export function CartView({ locale, messages }: { locale: Locale; messages: Messa
                       Number(e.target.value) || 1,
                     )
                   }
-                  className="ms-2 w-16 border border-stone-300 px-2 py-1"
+                  className="mm-field ms-2 w-16"
                 />
               </label>
               <button
@@ -69,15 +66,12 @@ export function CartView({ locale, messages }: { locale: Locale; messages: Messa
         ))}
       </ul>
 
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-mm-line bg-mm-surface p-5">
         <p className="font-heading text-xl text-mm-primary">
           {messages.subtotal}: {messages.ils}
           {subtotal.toFixed(2)}
         </p>
-        <Link
-          href={`/${locale}/checkout`}
-          className="cursor-pointer rounded-sm bg-mm-cta px-6 py-3 text-white transition-colors hover:bg-mm-cta-hover"
-        >
+        <Link href={`/${locale}/checkout`} className="mm-btn">
           {messages.checkout}
         </Link>
       </div>

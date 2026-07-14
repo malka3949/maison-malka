@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checkout — Maison Malka</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="bakery-theme.css" />
+</head>
+<body>
+  <div class="pill-note">Checkout · where the order goes</div>
+
+  <header>
+    <div class="nav">
+      <nav class="nav-links">
+        <a href="bakery-home-en.html">Home</a>
+        <a href="bakery-catalog.html">Catalog</a>
+        <a href="bakery-cart.html">Cart</a>
+      </nav>
+      <a class="brand" href="bakery-home-en.html">Maison Malka<small>Jerusalem bakery</small></a>
+      <div class="nav-icons">
+        <div class="lang-switch">
+          <a href="bakery-checkout.html">HE</a>
+          <a class="active" href="bakery-checkout-en.html">EN</a>
+        </div>
+        <a href="bakery-cart.html">Cart (2)</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="page-title">
+      <h1>Complete your order</h1>
+      <p>Submit details — the order reaches shop admin for approval</p>
+    </div>
+
+    <div class="checkout-layout">
+      <form class="form-card" action="#" onsubmit="return false;">
+        <h2>Your details</h2>
+        <div class="field">
+          <label for="name">Full name</label>
+          <input id="name" type="text" placeholder="Full name" />
+        </div>
+        <div class="field">
+          <label for="phone">Phone</label>
+          <input id="phone" type="tel" placeholder="050-0000000" />
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="you@email.com" />
+        </div>
+        <div class="field">
+          <label for="fulfillment">Pickup / delivery</label>
+          <select id="fulfillment">
+            <option>Self pickup</option>
+            <option>Delivery in Jerusalem</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="notes">Notes</label>
+          <textarea id="notes" placeholder="Preferred time, allergies, cake message..."></textarea>
+        </div>
+
+        <div class="hint">
+          <strong>Where does the order go?</strong><br />
+          1) Saved in the system — visible immediately in the <strong>Admin Orders</strong> screen.<br />
+          2) Email confirmation to the customer + notice to the shop (when Resend is configured).<br />
+          3) No online payment — the shop approves/rejects manually, then contacts the customer.
+        </div>
+
+        <div style="margin-top:1.15rem;display:flex;gap:0.65rem;flex-wrap:wrap">
+          <button class="btn" type="submit">Place order</button>
+          <a class="btn btn-ghost" href="bakery-cart.html">Back to cart</a>
+        </div>
+      </form>
+
+      <aside class="side-card">
+        <h2>Summary</h2>
+        <div class="side-line"><span>Chocolate cake</span><span>₪120</span></div>
+        <div class="side-line"><span>Butter croissant ×3</span><span>₪54</span></div>
+        <div class="side-total"><span>Total</span><span>₪174</span></div>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    <div class="brand">Maison Malka</div>
+    <p>Boutique pastry · Jerusalem</p>
+  </footer>
+</body>
+</html>

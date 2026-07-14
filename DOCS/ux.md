@@ -1,8 +1,12 @@
 # Maison Malka — UX Design System (3 Directions)
 
-Version: Draft v1.0  
-Status: **Selected — Direction A (Boutique Noir & Gold)**  
-Decision date: 2026-07-13
+Version: Draft v1.1  
+Status: **Selected — Bakery Scroll (light bakery e-commerce)**  
+Decision date: 2026-07-15  
+Previous selection: Direction A (Boutique Noir & Gold) — archival reference below  
+
+**Visual source of truth (mocks):** [`ux-previews/direction-bakery-scroll.html`](./ux-previews/direction-bakery-scroll.html) and sibling `bakery-*.html` / `bakery-theme.css`.  
+**Shipped in app:** Team Yuri Phase 5 storefront tokens + pages under `src/app/[locale]`.
 
 ---
 

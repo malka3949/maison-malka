@@ -19,43 +19,38 @@ export default async function LoginPage({
   const messages = getMessages(locale);
 
   return (
-    <div className="mx-auto max-w-md space-y-6">
-      <h1 className="font-heading text-4xl text-mm-primary">{messages.loginTitle}</h1>
-      <form action={loginCustomer} className="space-y-4">
-        <input type="hidden" name="locale" value={locale} />
-        <label className="block space-y-1 text-sm">
-          <span>{messages.email}</span>
-          <input
-            name="email"
-            type="email"
-            required
-            className="w-full border border-stone-300 px-3 py-2"
-          />
-        </label>
-        <label className="block space-y-1 text-sm">
-          <span>{messages.password}</span>
-          <input
-            name="password"
-            type="password"
-            required
-            className="w-full border border-stone-300 px-3 py-2"
-          />
-        </label>
-        {error ? <p className="text-sm text-red-700">{messages.errorGeneric}</p> : null}
-        <button
-          type="submit"
-          className="cursor-pointer rounded-sm bg-mm-cta px-6 py-3 text-white hover:bg-mm-cta-hover"
-        >
-          {messages.loginSubmit}
-        </button>
-      </form>
-      <div className="flex flex-col gap-2 text-sm">
-        <Link href={`/${locale}/register`} className="text-mm-cta cursor-pointer">
-          {messages.navRegister}
-        </Link>
-        <Link href={`/${locale}/checkout`} className="text-mm-cta cursor-pointer">
-          {messages.continueAsGuest}
-        </Link>
+    <div className="mm-wrap">
+      <div className="mx-auto max-w-md space-y-6 rounded-2xl border border-mm-line bg-mm-surface p-6 md:p-8">
+        <h1 className="font-heading text-4xl text-mm-primary">{messages.loginTitle}</h1>
+        <form action={loginCustomer} className="space-y-4">
+          <input type="hidden" name="locale" value={locale} />
+          <label className="block space-y-1 text-sm text-mm-secondary">
+            <span>{messages.email}</span>
+            <input name="email" type="email" required className="mm-field" />
+          </label>
+          <label className="block space-y-1 text-sm text-mm-secondary">
+            <span>{messages.password}</span>
+            <input name="password" type="password" required className="mm-field" />
+          </label>
+          {error ? <p className="text-sm text-red-700">{messages.errorGeneric}</p> : null}
+          <button type="submit" className="mm-btn">
+            {messages.loginSubmit}
+          </button>
+        </form>
+        <div className="flex flex-col gap-2 text-sm">
+          <Link
+            href={`/${locale}/register`}
+            className="cursor-pointer text-mm-primary hover:underline"
+          >
+            {messages.navRegister}
+          </Link>
+          <Link
+            href={`/${locale}/checkout`}
+            className="cursor-pointer text-mm-primary hover:underline"
+          >
+            {messages.continueAsGuest}
+          </Link>
+        </div>
       </div>
     </div>
   );

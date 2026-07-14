@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>הזמנה — Maison Malka</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="bakery-theme.css" />
+</head>
+<body>
+  <div class="pill-note">דף הזמנה · לאן ההזמנה מגיעה</div>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span>משלוחים בירושלים</span>
+      <span>איסוף עצמי</span>
+      <span>אישור הזמנה ידני</span>
+      <span>Maison Malka</span>
+      <span>משלוחים בירושלים</span>
+      <span>איסוף עצמי</span>
+      <span>אישור הזמנה ידני</span>
+      <span>Maison Malka</span>
+    </div>
+  </div>
+
+  <header>
+    <div class="nav">
+      <div class="nav-icons">
+        <div class="lang-switch" aria-label="Language">
+          <a class="active" href="bakery-checkout.html">HE</a>
+          <a href="bakery-checkout-en.html">EN</a>
+        </div>
+        <a href="bakery-catalog.html">חיפוש</a>
+        <a href="bakery-cart.html">עגלה (2)</a>
+      </div>
+      <a class="brand" href="direction-bakery-scroll.html">Maison Malka<small>Jerusalem bakery</small></a>
+      <nav class="nav-links">
+        <a href="direction-bakery-scroll.html">דף הבית</a>
+        <a href="bakery-catalog.html">קטלוג</a>
+        <a href="bakery-product.html">מוצר</a>
+        <a href="bakery-cart.html">עגלה</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="page-title">
+      <h1>השלמת הזמנה</h1>
+      <p>מלאו פרטים — ההזמנה תגיע לניהול האתר לאישור</p>
+    </div>
+
+    <div class="checkout-layout">
+      <form class="form-card" action="#" onsubmit="return false;">
+        <h2>פרטי לקוח</h2>
+        <div class="field">
+          <label for="name">שם מלא</label>
+          <input id="name" name="name" type="text" placeholder="ישראל ישראלי" />
+        </div>
+        <div class="field">
+          <label for="phone">טלפון</label>
+          <input id="phone" name="phone" type="tel" placeholder="050-0000000" />
+        </div>
+        <div class="field">
+          <label for="email">אימייל</label>
+          <input id="email" name="email" type="email" placeholder="you@email.com" />
+        </div>
+        <div class="field">
+          <label for="fulfillment">איסוף / משלוח</label>
+          <select id="fulfillment" name="fulfillment">
+            <option>איסוף עצמי</option>
+            <option>משלוח בירושלים</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="notes">הערות</label>
+          <textarea id="notes" name="notes" placeholder="שעה מועדפת, אלרגיות, ברכה על העוגה..."></textarea>
+        </div>
+
+        <div class="hint">
+          <strong>לאן ההזמנה נשלחת?</strong><br />
+          1) נשמרת במערכת — נראית מיד ב־<strong>מסך ניהול הזמנות</strong> (אדמין).<br />
+          2) נשלח אימייל אישור ללקוח + התראה לעסק (כש־Resend מוגדר).<br />
+          3) אין תשלום אונליין — העסק מאשר/דוחה ידנית, ואז יוצרים קשר עם הלקוח.
+        </div>
+
+        <div style="margin-top:1.15rem;display:flex;gap:0.65rem;flex-wrap:wrap">
+          <button class="btn" type="submit">שליחת הזמנה</button>
+          <a class="btn btn-ghost" href="bakery-cart.html">חזרה לעגלה</a>
+        </div>
+      </form>
+
+      <aside class="side-card">
+        <h2>סיכום</h2>
+        <div class="side-line"><span>עוגת שוקולד</span><span>₪120</span></div>
+        <div class="side-line"><span>קרואסון חמאה ×3</span><span>₪54</span></div>
+        <div class="side-line"><span>משלוח / איסוף</span><span>יחושב באישור</span></div>
+        <div class="side-total"><span>סה״כ</span><span>₪174</span></div>
+        <p style="margin:0;color:var(--muted);font-size:0.85rem;font-weight:300">
+          אחרי השליחה תראו מסך «ההזמנה התקבלה» עם מספר הזמנה.
+        </p>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    <div class="brand">Maison Malka</div>
+    <p>קונדיטוריה בוטיק · ירושלים</p>
+  </footer>
+
+  <div class="chooser">
+    דפים:
+    <a class="alt" href="direction-bakery-scroll.html">בית</a>
+    <a class="alt" href="bakery-catalog.html">קטלוג</a>
+    <a class="alt" href="bakery-product.html">מוצר</a>
+    <a class="alt" href="bakery-cart.html">עגלה</a>
+    <a href="bakery-checkout.html">הזמנה</a>
+  </div>
+</body>
+</html>

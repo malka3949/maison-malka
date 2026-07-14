@@ -9,11 +9,11 @@ export function CartBadge({ locale, label }: { locale: Locale; label: string }) 
   return (
     <Link
       href={`/${locale}/cart`}
-      className="hover:text-mm-cta cursor-pointer transition-colors"
+      className="cursor-pointer transition-colors hover:text-mm-primary"
     >
       {label}
       {itemCount > 0 ? (
-        <span className="ms-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-mm-accent px-1 text-xs text-white">
+        <span className="ms-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-mm-dark px-1.5 text-xs text-white">
           {itemCount}
         </span>
       ) : null}

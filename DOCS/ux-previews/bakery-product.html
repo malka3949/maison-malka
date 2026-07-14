@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>עוגת שוקולד — Maison Malka</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="bakery-theme.css" />
+</head>
+<body>
+  <div class="pill-note">דף מוצר · אותו עיצוב בהיר</div>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span>משלוחים בירושלים</span>
+      <span>איסוף עצמי</span>
+      <span>מתוקים בעבודת יד</span>
+      <span>Maison Malka</span>
+      <span>משלוחים בירושלים</span>
+      <span>איסוף עצמי</span>
+      <span>מתוקים בעבודת יד</span>
+      <span>Maison Malka</span>
+    </div>
+  </div>
+
+  <header>
+    <div class="nav">
+      <div class="nav-icons">
+        <div class="lang-switch" aria-label="שפה">
+          <a class="active" href="bakery-product.html">HE</a>
+          <a href="bakery-home-en.html">EN</a>
+        </div>
+        <a href="bakery-catalog.html">חיפוש</a>
+        <a href="bakery-cart.html">עגלה (2)</a>
+      </div>
+      <a class="brand" href="direction-bakery-scroll.html">Maison Malka<small>Jerusalem bakery</small></a>
+      <nav class="nav-links">
+        <a href="direction-bakery-scroll.html">דף הבית</a>
+        <a href="bakery-catalog.html">קטלוג</a>
+        <a class="active" href="bakery-product.html">מוצר</a>
+        <a href="bakery-cart.html">עגלה</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="page-title" style="padding-bottom:0.5rem">
+      <p><a href="bakery-catalog.html" style="color:var(--muted)">← חזרה לקטלוג</a></p>
+    </div>
+
+    <div class="detail">
+      <div class="detail-media">
+        <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=1100&q=85" alt="עוגת שוקולד" />
+      </div>
+      <div class="detail-copy">
+        <h1>עוגת שוקולד</h1>
+        <div class="price-lg">₪120</div>
+        <p>עשירה ורכה — מושלמת לאירוח או למתנה. מוכנה בהזמנה, עם תשומת לב לכל פרט.</p>
+        <div class="qty-row">
+          <span style="color:var(--muted);font-size:0.9rem">כמות</span>
+          <div class="qty">
+            <button type="button">−</button>
+            <span>1</span>
+            <button type="button">+</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.65rem;flex-wrap:wrap">
+          <a class="btn" href="bakery-cart.html">הוספה לסל</a>
+          <a class="btn btn-ghost" href="bakery-catalog.html">המשך בקטלוג</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <div>
+        <h2>אולי תאהבו גם</h2>
+        <p>עוד כמה טעמים מהקולקציה</p>
+      </div>
+    </div>
+    <div class="scroller" id="related">
+      <article class="product-card">
+        <a href="bakery-product.html">
+          <div class="product-media"><img src="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&w=600&q=80" alt="" /></div>
+          <div class="product-body"><h3>עוגת חגיגה</h3><div class="price">₪150</div></div>
+        </a>
+      </article>
+      <article class="product-card">
+        <a href="bakery-product.html">
+          <div class="product-media"><img src="https://images.unsplash.com/photo-1464305795204-6f5bbfc7fb81?auto=format&fit=crop&w=600&q=80" alt="" /></div>
+          <div class="product-body"><h3>טארט פירות</h3><div class="price">₪95</div></div>
+        </a>
+      </article>
+      <article class="product-card">
+        <a href="bakery-product.html">
+          <div class="product-media"><img src="https://images.unsplash.com/photo-1621303837174-89787a7d4729?auto=format&fit=crop&w=600&q=80" alt="" /></div>
+          <div class="product-body"><h3>מארז סוף שבוע</h3><div class="price">₪130</div></div>
+        </a>
+      </article>
+      <article class="product-card">
+        <a href="bakery-product.html">
+          <div class="product-media"><img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80" alt="" /></div>
+          <div class="product-body"><h3>קרואסון חמאה</h3><div class="price">₪18</div></div>
+        </a>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="brand">Maison Malka</div>
+    <p>קונדיטוריה בוטיק · ירושלים</p>
+  </footer>
+
+  <div class="chooser">
+    דפים:
+    <a class="alt" href="direction-bakery-scroll.html">בית</a>
+    <a class="alt" href="bakery-catalog.html">קטלוג</a>
+    <a href="bakery-product.html">מוצר</a>
+    <a class="alt" href="bakery-cart.html">עגלה</a>
+  </div>
+</body>
+</html>

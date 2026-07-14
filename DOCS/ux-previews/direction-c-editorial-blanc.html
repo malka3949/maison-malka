@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>כיוון C — Editorial Blanc | Maison Malka</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #18181b;
+      --secondary: #3f3f46;
+      --cta: #be8a5c;
+      --cta-hover: #a67b52;
+      --bg: #fafafa;
+      --text: #09090b;
+      --accent: #a8a29e;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Heebo", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+    a { color: inherit; text-decoration: none; cursor: pointer; }
+    .wrap { max-width: 56rem; margin: 0 auto; padding: 0 1.5rem; }
+    .wide { max-width: 72rem; margin: 0 auto; }
+    .badge {
+      display: inline-block; margin: 1rem 1.5rem 0;
+      padding: 0.3rem 0.7rem; font-size: 0.7rem; letter-spacing: 0.08em;
+      text-transform: uppercase; border: 1px solid var(--accent); color: var(--secondary);
+    }
+    header {
+      border-bottom: 1px solid #e4e4e7;
+      background: var(--bg);
+      position: sticky; top: 0; z-index: 10;
+    }
+    .nav {
+      max-width: 72rem; margin: 0 auto; padding: 0 1.5rem;
+      min-height: 3.75rem; display: flex; align-items: center; justify-content: space-between;
+    }
+    .brand {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 1.35rem; font-weight: 600; letter-spacing: 0.04em;
+    }
+    .nav a { font-size: 0.85rem; color: var(--secondary); }
+    .nav a:hover { color: var(--primary); }
+    .hero {
+      text-align: center; padding: 6rem 1.5rem 3rem;
+    }
+    .hero h1 {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(2.8rem, 7vw, 4.8rem);
+      font-weight: 600; margin: 0 0 1rem; line-height: 1.05;
+    }
+    .hero p {
+      max-width: 28rem; margin: 0 auto 2rem;
+      color: var(--secondary); font-size: 1.05rem;
+    }
+    .btn {
+      display: inline-block; background: var(--cta); color: #fff;
+      padding: 1rem 2rem; font-size: 0.95rem; font-weight: 500;
+      border-radius: 0; transition: background 200ms;
+    }
+    .btn:hover { background: var(--cta-hover); }
+    .feature {
+      width: 100%; max-height: 70vh; object-fit: cover; display: block;
+    }
+    .brand-copy {
+      text-align: center; padding: 4rem 1.5rem;
+      max-width: 36rem; margin: 0 auto;
+      color: var(--secondary); font-size: 1.05rem;
+    }
+    .products {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
+      padding: 2rem 1.5rem 4rem; max-width: 72rem; margin: 0 auto;
+    }
+    .product img {
+      width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block;
+    }
+    .product h3 {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 1.15rem; font-weight: 500; margin: 0.9rem 0 0.25rem;
+    }
+    .product .price { color: var(--secondary); font-size: 0.9rem; }
+    .rule {
+      height: 1px; background: #e4e4e7; border: 0; margin: 0;
+    }
+    .cta {
+      text-align: center; padding: 5rem 1.5rem;
+    }
+    .cta h2 {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 2rem; font-weight: 500; margin: 0 0 1.5rem;
+    }
+    footer {
+      border-top: 1px solid #e4e4e7;
+      text-align: center; padding: 2rem; color: var(--accent); font-size: 0.8rem;
+    }
+    .chooser {
+      position: fixed; left: 1rem; bottom: 1rem; z-index: 50;
+      background: #fff; border: 1px solid #e4e4e7;
+      padding: 0.75rem 1rem; font-size: 0.8rem;
+      display: flex; gap: 0.5rem; align-items: center;
+    }
+    .chooser a {
+      padding: 0.35rem 0.6rem; background: var(--primary); color: #fff;
+    }
+    .chooser a.alt { background: #fff; color: var(--primary); border: 1px solid #e4e4e7; }
+    @media (max-width: 800px) {
+      .products { grid-template-columns: 1fr; gap: 2.5rem; }
+      .hero { padding-top: 4rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="badge">Direction C · Editorial Blanc</div>
+  <header>
+    <div class="nav">
+      <a class="brand" href="#">Maison Malka</a>
+      <a href="#">קטלוג</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1>Maison Malka</h1>
+    <p>קונדיטוריה בוטיק בירושלים — מתוקים בעבודת יד</p>
+    <a class="btn" href="#">להזמנה</a>
+  </section>
+
+  <img class="feature" src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1800&q=80" alt="עוגת דגל" />
+
+  <p class="brand-copy">
+    מינימליזם עריכתי: פחות רעש, יותר צילום וטיפוגרפיה. האתר מרגיש כמו מגזין קולינרי — שקט, מדויק, פרימיום.
+  </p>
+
+  <hr class="rule" />
+
+  <div class="products">
+    <article class="product">
+      <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80" alt="עוגת שוקולד" />
+      <h3>עוגת שוקולד</h3>
+      <div class="price">₪120</div>
+    </article>
+    <article class="product">
+      <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80" alt="קרואסון" />
+      <h3>קרואסון חמאה</h3>
+      <div class="price">₪18</div>
+    </article>
+    <article class="product">
+      <img src="https://images.unsplash.com/photo-1481391319762-47dff72954d9?auto=format&fit=crop&w=800&q=80" alt="מארז" />
+      <h3>מארז סוף שבוע</h3>
+      <div class="price">₪130</div>
+    </article>
+  </div>
+
+  <div class="cta">
+    <h2>לקטלוג המלא</h2>
+    <a class="btn" href="#">עברו לקטלוג</a>
+  </div>
+
+  <footer>Maison Malka · ירושלים</footer>
+
+  <div class="chooser">
+    השוואה:
+    <a class="alt" href="direction-a-noir-gold.html">A</a>
+    <a class="alt" href="direction-b-artisan-chaud.html">B</a>
+    <a href="direction-c-editorial-blanc.html">C</a>
+  </div>
+</body>
+</html>

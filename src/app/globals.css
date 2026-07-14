@@ -1,13 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  --color-mm-primary: #1c1917;
-  --color-mm-secondary: #44403c;
-  --color-mm-cta: #ca8a04;
-  --color-mm-cta-hover: #a16207;
-  --color-mm-bg: #fafaf9;
-  --color-mm-text: #0c0a09;
-  --color-mm-accent: #d4af37;
+  --color-mm-primary: #2a2520;
+  --color-mm-secondary: #8a8278;
+  --color-mm-cta: #c9aa78;
+  --color-mm-cta-hover: #b09158;
+  --color-mm-bg: #fbfaf7;
+  --color-mm-text: #2a2520;
+  --color-mm-accent: #c9aa78;
+  --color-mm-surface: #ffffff;
+  --color-mm-line: #ece7de;
+  --color-mm-soft: #f3efe8;
+  --color-mm-dark: #242019;
   --font-heading: var(--font-cormorant), Georgia, serif;
   --font-body: var(--font-heebo), system-ui, sans-serif;
 }
@@ -17,10 +21,15 @@
   --font-heebo: "Heebo", system-ui, sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: var(--font-body);
   background-color: var(--color-mm-bg);
   color: var(--color-mm-text);
+  line-height: 1.55;
 }
 
 .font-heading {
@@ -32,4 +41,135 @@ select,
 textarea,
 button {
   font: inherit;
+}
+
+/* Bakery Scroll helpers */
+.mm-wrap {
+  width: min(1180px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.mm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 0.75rem 1.35rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: background-color 200ms, color 200ms, border-color 200ms, opacity 200ms;
+  background: var(--color-mm-dark);
+  color: #fff;
+  border: 1px solid var(--color-mm-dark);
+}
+
+.mm-btn:hover {
+  background: #3a342c;
+}
+
+.mm-btn-outline {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.65);
+}
+
+.mm-btn-outline:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.mm-btn-gold {
+  background: var(--color-mm-cta);
+  border-color: var(--color-mm-cta);
+  color: var(--color-mm-dark);
+}
+
+.mm-btn-gold:hover {
+  background: var(--color-mm-cta-hover);
+}
+
+.mm-field {
+  width: 100%;
+  border: 1px solid var(--color-mm-line);
+  border-radius: 0.45rem;
+  padding: 0.7rem 0.8rem;
+  background: #fff;
+  color: var(--color-mm-text);
+}
+
+.mm-ticker {
+  overflow: hidden;
+  white-space: nowrap;
+  background: #f0ebe3;
+  border-bottom: 1px solid var(--color-mm-line);
+  padding-block: 0.55rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--color-mm-text);
+}
+
+.mm-ticker-track {
+  display: inline-flex;
+  gap: 3rem;
+  padding-inline: 1rem;
+  animation: mm-marquee 28s linear infinite;
+}
+
+.mm-ticker-track span::before {
+  content: "·";
+  margin-inline-end: 3rem;
+  opacity: 0.35;
+}
+
+@keyframes mm-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(50%);
+  }
+}
+
+.mm-scroller {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding-block: 0.25rem 0.75rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mm-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.mm-scroller > * {
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+}
+
+.mm-hero-zoom {
+  animation: mm-slow-zoom 16s ease-out forwards;
+}
+
+@keyframes mm-slow-zoom {
+  from {
+    transform: scale(1.04);
+  }
+  to {
+    transform: scale(1.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .mm-ticker-track,
+  .mm-hero-zoom {
+    animation: none !important;
+  }
 }
