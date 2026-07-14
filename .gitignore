@@ -31,6 +31,9 @@ yarn-error.log*
 # env files
 .env
 .env*.local
+.env.development
+.env.production
+.env.test
 
 # cursor local secrets (never commit real PAT)
 .cursor/mcp.json

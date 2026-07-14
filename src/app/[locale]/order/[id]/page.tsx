@@ -15,7 +15,11 @@ export default async function OrderConfirmationPage({
   const locale = localeParam as Locale;
   const messages = getMessages(locale);
 
-  const order = await prisma.order.findUnique({ where: { id } });
+  // Confirmation page needs only id — do not load PII for unauthenticated viewers
+  const order = await prisma.order.findUnique({
+    where: { id },
+    select: { id: true },
+  });
   if (!order) {
     notFound();
   }

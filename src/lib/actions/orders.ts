@@ -62,7 +62,11 @@ export async function createGuestOrder(
   const name = input.customerName.trim();
   const phone = input.customerPhone.trim();
   const email = input.customerEmail.trim().toLowerCase();
+  const notes = input.customerNotes?.trim() || "";
   if (!name || !phone || !email) {
+    return { ok: false, error: "generic" };
+  }
+  if (name.length > 200 || phone.length > 40 || email.length > 254 || notes.length > 1000) {
     return { ok: false, error: "generic" };
   }
 
@@ -97,7 +101,7 @@ export async function createGuestOrder(
   }[] = [];
 
   for (const line of input.lines) {
-    if (line.quantity < 1) {
+    if (line.quantity < 1 || line.quantity > 50) {
       return { ok: false, error: "generic" };
     }
     const product = productMap.get(line.productId);
@@ -178,7 +182,7 @@ export async function createGuestOrder(
         input.paymentMethod === "bank_transfer"
           ? PaymentMethod.bank_transfer
           : PaymentMethod.on_pickup,
-      customer_notes: input.customerNotes?.trim() || null,
+      customer_notes: notes || null,
       subtotal,
       total,
       items: {
