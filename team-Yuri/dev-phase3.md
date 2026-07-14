@@ -105,7 +105,7 @@ Phase 3 admin order operations: Resend notification module (graceful skip when u
 |---|---|
 | Branch | `phase-3/order-operations` |
 | Base | `develop` |
-| Push | PUSHED (after push) |
+| Push | PUSHED |
 | Remote | `https://github.com/malka3949/maison-malka.git` |
 
 ### Commits
@@ -116,7 +116,7 @@ Phase 3 admin order operations: Resend notification module (graceful skip when u
 | db00460 | `phase-3: notification module and order status guard` | M1–M2 |
 | a85f7b6 | `phase-3: admin order list detail and calendar` | M3–M6, M9 |
 | 1eae425 | `phase-3: wire Resend notifications for order lifecycle` | M7–M8 |
-| cd927f4 | `phase-3: tests docs and verification evidence` | M10 |
+| db2bc52 | `phase-3: tests docs and verification evidence` | M10 |
 
 ## Known Issues / Limitations
 
