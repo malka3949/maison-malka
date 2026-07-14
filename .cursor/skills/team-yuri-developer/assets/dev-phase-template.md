@@ -59,6 +59,21 @@ STATUS: IN_PROGRESS | COMPLETE | BLOCKED | FAILED
 | Files Updated | |
 | Reason if Not Required | |
 
+## Git
+
+| Field | Value |
+|---|---|
+| Branch | `phase-<N>/<slug>` |
+| Base | `main` |
+| Push | PUSHED / NOT PUSHED / NO REMOTE |
+| Remote | `origin` URL or N/A |
+
+### Commits
+
+| SHA (short) | Message | Milestone |
+|---|---|---|
+| | `phase<N>: ...` | |
+
 ## Known Issues / Limitations
 
 ## Scope Compliance

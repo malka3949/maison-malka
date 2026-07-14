@@ -96,7 +96,7 @@ For `step` mode: execute steps 1–5 once.
 | S02 PLANNING | Architect | `team-Yuri/plan.md` |
 | S03 PHASE-DESIGN | Architect | `team-Yuri/arch-phase<N>.md` |
 | S04 MANAGER-PLANNING | Manager | `team-Yuri/manager-phase<N>.md` |
-| S05 DEVELOPER-IMPLEMENT | Developer | code + `team-Yuri/dev-phase<N>.md` |
+| S05 DEVELOPER-IMPLEMENT | Developer | phase branch + commits + code + `team-Yuri/dev-phase<N>.md` (see `.cursor/rules/50-git-workflow.md`) |
 | S06 MANAGER-REVIEW | Manager | approve/reject dev evidence |
 | S07 ARCHITECT-REVIEW | Architect | approve/reject phase |
 | S08 PHASE-COMPLETE | Orchestrator | print phase-advance instruction for user |

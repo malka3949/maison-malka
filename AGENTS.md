@@ -145,6 +145,7 @@ Claude Code:
 .claude/rules/20-testing.md
 .claude/rules/30-docs.md
 .claude/rules/40-project-structure.md
+.claude/rules/50-git-workflow.md
 ```
 
 Cursor:
@@ -152,4 +153,5 @@ Cursor:
 .cursor/rules/20-testing.md
 .cursor/rules/30-docs.md
 .cursor/rules/40-project-structure.md
+.cursor/rules/50-git-workflow.md
 ```

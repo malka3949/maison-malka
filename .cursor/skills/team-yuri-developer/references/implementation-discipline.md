@@ -10,6 +10,8 @@
 - Install dependencies required to run, test, or lint.
 - Prefer minimal, focused changes.
 - Keep changes traceable to milestones.
+- Follow `.cursor/rules/50-git-workflow.md` and `references/git-discipline.md`.
+- One phase branch; commit per significant milestone.
 
 Before PASS:
 - run relevant unit tests if supported
