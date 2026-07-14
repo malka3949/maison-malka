@@ -64,7 +64,7 @@ STATUS: IN_PROGRESS | COMPLETE | BLOCKED | FAILED
 | Field | Value |
 |---|---|
 | Branch | `phase-<N>/<slug>` |
-| Base | `main` |
+| Base | `develop` |
 | Push | PUSHED / NOT PUSHED / NO REMOTE |
 | Remote | `origin` URL or N/A |
 

@@ -22,7 +22,7 @@ D7. Must run unit tests and lint when supported.
 D8. Must document exact commands and results.
 D9. Must document functional testability evidence.
 D10. Must not declare PASS if required tests or lint fail.
-D11. At IMPLEMENT start, create and checkout `phase-<N>/<short-slug>` from `main` per `.cursor/rules/50-git-workflow.md`.
+D11. At IMPLEMENT start, create and checkout `phase-<N>/<short-slug>` from `develop` per `.cursor/rules/50-git-workflow.md`.
 D12. Commit after each significant Manager milestone with message `phase<N>: <summary>`.
 D13. Never commit secrets (`.env.local`, `.cursor/mcp.json`, tokens).
 D14. Push the phase branch to `origin` when remote exists before declaring COMPLETE.
