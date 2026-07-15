@@ -19,7 +19,7 @@ export default async function LoginPage({
   const messages = getMessages(locale);
 
   return (
-    <div className="mm-wrap">
+    <div className="mm-wrap pt-8">
       <div className="mx-auto max-w-md space-y-6 rounded-2xl border border-mm-line bg-mm-surface p-6 md:p-8">
         <h1 className="font-heading text-4xl text-mm-primary">{messages.loginTitle}</h1>
         <form action={loginCustomer} className="space-y-4">

@@ -21,53 +21,71 @@ export default async function ProductPage({
     notFound();
   }
 
+  const mainImage = product.images[0];
+  const mainUrl = mainImage ? getProductImagePublicUrl(mainImage.path) : null;
+
   return (
-    <div className="mm-wrap space-y-6">
+    <div className="mm-wrap space-y-8 pt-8 pb-10">
       <p>
         <Link
           href={`/${locale}/catalog`}
-          className="cursor-pointer text-sm text-mm-secondary transition-colors hover:text-mm-primary"
+          className="cursor-pointer text-sm text-mm-secondary underline-offset-4 transition-colors hover:text-mm-primary hover:underline"
         >
           ← {messages.navCatalog}
         </Link>
       </p>
 
-      <div className="grid gap-10 md:grid-cols-2">
+      <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-14">
         <div className="space-y-3">
-          {product.images.length === 0 ? (
-            <div className="flex aspect-square items-center justify-center rounded-2xl bg-mm-soft text-mm-secondary">
-              {messages.brand}
+          <div className="mm-pdp-img">
+            {mainUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={mainUrl} alt={mainImage?.alt || product.name} />
+            ) : (
+              <div className="flex aspect-[4/5] items-center justify-center bg-mm-soft text-mm-secondary">
+                {messages.brand}
+              </div>
+            )}
+          </div>
+          {product.images.length > 1 ? (
+            <div className="grid grid-cols-4 gap-2">
+              {product.images.slice(1).map((img) => {
+                const url = getProductImagePublicUrl(img.path);
+                return url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    key={img.path}
+                    src={url}
+                    alt={img.alt || product.name}
+                    className="aspect-square border border-mm-line object-cover"
+                  />
+                ) : null;
+              })}
             </div>
-          ) : (
-            product.images.map((img) => {
-              const url = getProductImagePublicUrl(img.path);
-              return url ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  key={img.path}
-                  src={url}
-                  alt={img.alt || product.name}
-                  className="w-full rounded-2xl object-cover"
-                />
-              ) : null;
-            })
-          )}
+          ) : null}
         </div>
 
-        <div className="space-y-6 rounded-2xl border border-mm-line bg-mm-surface p-6 md:p-8">
+        <div className="space-y-7 lg:pt-2">
           <div>
-            <h1 className="font-heading text-4xl text-mm-primary">{product.name}</h1>
+            <p className="text-[0.7rem] font-medium uppercase tracking-[0.16em] text-mm-word">
+              {messages.brand}
+            </p>
+            <h1 className="mt-2 font-heading text-4xl font-medium leading-tight text-mm-primary md:text-5xl">
+              {product.name}
+            </h1>
             {product.description ? (
-              <p className="mt-3 text-mm-secondary">{product.description}</p>
+              <p className="mt-4 text-[0.95rem] leading-relaxed text-mm-secondary">
+                {product.description}
+              </p>
             ) : null}
           </div>
 
           {product.productType === "bundle" && product.bundleItems.length > 0 ? (
-            <div>
-              <h2 className="mb-2 text-sm font-medium uppercase tracking-wide text-mm-secondary">
+            <div className="border-y border-mm-line py-4">
+              <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-mm-word">
                 {messages.bundleContains}
               </h2>
-              <ul className="list-inside list-disc text-mm-primary">
+              <ul className="space-y-1 text-sm text-mm-primary">
                 {product.bundleItems.map((bi) => (
                   <li key={bi.name}>
                     {bi.quantity}× {bi.name}

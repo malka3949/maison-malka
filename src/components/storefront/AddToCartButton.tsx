@@ -83,10 +83,10 @@ export function AddToCartButton({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {options.map((opt) => (
         <fieldset key={opt.id} className="space-y-2">
-          <legend className="text-sm font-medium text-mm-primary">
+          <legend className="text-xs font-semibold uppercase tracking-wide text-mm-word">
             {opt.nameKey}
             {opt.isRequired ? " *" : ""}
           </legend>
@@ -94,10 +94,8 @@ export function AddToCartButton({
             {opt.values.map((v) => (
               <label
                 key={v.id}
-                className={`cursor-pointer rounded-full border px-3 py-2 text-sm transition-colors ${
-                  selected[opt.id] === v.id
-                    ? "border-mm-dark bg-mm-dark text-white"
-                    : "border-mm-line hover:border-mm-cta"
+                className={`mm-option-chip ${
+                  selected[opt.id] === v.id ? "is-active" : ""
                 }`}
               >
                 <input
@@ -117,14 +115,14 @@ export function AddToCartButton({
         </fieldset>
       ))}
 
-      <p className="font-heading text-2xl text-mm-cta">
+      <p className="text-2xl font-semibold tracking-wide text-mm-primary">
         {messages.ils}
         {unitPrice.toFixed(2)}
       </p>
 
       {error ? <p className="text-sm text-red-700">{error}</p> : null}
 
-      <button type="button" onClick={onAdd} className="mm-btn">
+      <button type="button" onClick={onAdd} className="mm-btn w-full sm:w-auto">
         {messages.addToCart}
       </button>
     </div>

@@ -32,7 +32,7 @@ export function HorizontalScroller({
         aria-controls={id}
         aria-label={ariaLabelPrev}
         onClick={() => scrollByDir(-1)}
-        className="absolute start-0 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-mm-line bg-mm-surface/95 text-lg text-mm-primary shadow-sm transition-colors hover:bg-mm-soft md:flex"
+        className="absolute start-0 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center border border-mm-line bg-mm-surface text-lg text-mm-primary transition-colors hover:bg-mm-line md:flex"
       >
         ‹
       </button>
@@ -41,7 +41,7 @@ export function HorizontalScroller({
         aria-controls={id}
         aria-label={ariaLabelNext}
         onClick={() => scrollByDir(1)}
-        className="absolute end-0 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-mm-line bg-mm-surface/95 text-lg text-mm-primary shadow-sm transition-colors hover:bg-mm-soft md:flex"
+        className="absolute end-0 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center border border-mm-line bg-mm-surface text-lg text-mm-primary transition-colors hover:bg-mm-line md:flex"
       >
         ›
       </button>

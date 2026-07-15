@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
+import { AnnouncementBar } from "@/components/storefront/AnnouncementBar";
 import { CartProvider } from "@/components/storefront/CartProvider";
 import { HtmlLangDir } from "@/components/storefront/HtmlLangDir";
 import { StorefrontFooter } from "@/components/storefront/StorefrontFooter";
 import { StorefrontHeader } from "@/components/storefront/StorefrontHeader";
-import { Ticker } from "@/components/storefront/Ticker";
 import { getSessionUser } from "@/lib/auth";
 import { getMessages, isLocale, localeDir, type Locale } from "@/lib/i18n";
 
@@ -30,13 +30,13 @@ export default async function LocaleLayout({
         lang={locale}
         className="flex min-h-screen flex-col bg-mm-bg text-mm-text"
       >
-        <Ticker items={messages.tickerItems} />
+        <AnnouncementBar text={messages.announcement} />
         <StorefrontHeader
           locale={locale}
           messages={messages}
           isLoggedIn={Boolean(user)}
         />
-        <main className="w-full flex-1 pb-12 pt-4">{children}</main>
+        <main className="w-full flex-1 pb-16">{children}</main>
         <StorefrontFooter messages={messages} />
       </div>
     </CartProvider>
