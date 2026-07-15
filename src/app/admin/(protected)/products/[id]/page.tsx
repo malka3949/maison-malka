@@ -5,26 +5,20 @@ import { ProductForm } from "@/components/admin/ProductForm";
 import { ImageUploadSection } from "@/components/admin/ImageUploadSection";
 import { ProductOptionsSection } from "@/components/admin/ProductOptionsSection";
 import { BundleItemsSection } from "@/components/admin/BundleItemsSection";
-import { createServiceClient } from "@/lib/supabase/admin";
+import { getProductImagePublicUrl } from "@/lib/storefront";
 import { adminUi } from "@/lib/admin-ui";
 
 export const dynamic = "force-dynamic";
 
-function getPublicUrl(storagePath: string) {
-  try {
-    const supabase = createServiceClient();
-    return supabase.storage.from("product-images").getPublicUrl(storagePath).data.publicUrl;
-  } catch {
-    return storagePath;
-  }
-}
-
 export default async function EditProductPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ created?: string }>;
 }) {
   const { id } = await params;
+  const { created } = await searchParams;
 
   const [product, categories, standardProducts] = await Promise.all([
     prisma.product.findUnique({
@@ -71,7 +65,8 @@ export default async function EditProductPage({
   const images = product.images.map((image) => ({
     id: image.id,
     storage_path: image.storage_path,
-    public_url: getPublicUrl(image.storage_path),
+    public_url:
+      getProductImagePublicUrl(image.storage_path) ?? image.storage_path,
     alt_text: image.alt_text,
   }));
 
@@ -83,6 +78,11 @@ export default async function EditProductPage({
           חזרה לרשימה
         </Link>
       </div>
+      {created === "1" ? (
+        <p className="rounded-md border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+          המוצר נוצר בהצלחה. עכשיו אפשר להעלות תמונה בקטע «תמונות מוצר» למטה.
+        </p>
+      ) : null}
       <ProductForm
         categories={categoryOptions}
         product={{

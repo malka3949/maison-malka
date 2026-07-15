@@ -14,6 +14,8 @@ export function localeDir(locale: Locale): "rtl" | "ltr" {
 export type Messages = {
   brand: string;
   brandTagline: string;
+  brandSince: string;
+  announcement: string;
   navHome: string;
   navCatalog: string;
   navCart: string;
@@ -26,6 +28,14 @@ export type Messages = {
   heroSubtitle: string;
   heroCta: string;
   heroSecondaryCta: string;
+  promoCatalogLabel: string;
+  promoCatalogTitle: string;
+  promoCatalogBody: string;
+  promoCatalogCta: string;
+  promoGiftLabel: string;
+  promoGiftTitle: string;
+  promoGiftBody: string;
+  promoGiftCta: string;
   categoriesTitle: string;
   categoriesSubtitle: string;
   seeFullCatalog: string;
@@ -54,6 +64,8 @@ export type Messages = {
   viewProduct: string;
   cartTitle: string;
   cartEmpty: string;
+  continueShopping: string;
+  inCart: string;
   quantity: string;
   remove: string;
   checkout: string;

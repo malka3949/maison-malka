@@ -22,6 +22,9 @@
 .DS_Store
 *.pem
 
+# local NetFree-friendly product image cache (copied on upload)
+/public/uploads/
+
 # debug
 npm-debug.log*
 yarn-debug.log*

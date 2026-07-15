@@ -11,7 +11,7 @@ export function LanguageSwitcher({ locale }: { locale: Locale }) {
 
   return (
     <div
-      className="inline-flex overflow-hidden rounded-full border border-mm-line bg-mm-surface"
+      className="inline-flex overflow-hidden border border-mm-line bg-mm-surface"
       aria-label="Language"
     >
       {LOCALES.map((l) => (

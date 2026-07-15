@@ -16,10 +16,12 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@imgly/background-removal": "^1.7.0",
     "@prisma/client": "^6.9.0",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.49.8",
     "next": "^15.3.3",
+    "onnxruntime-web": "^1.21.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },

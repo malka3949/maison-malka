@@ -24,7 +24,7 @@ export default async function OrderConfirmationPage({
   }
 
   return (
-    <div className="mm-wrap">
+    <div className="mm-wrap pt-8">
       <div className="mx-auto max-w-lg space-y-4 rounded-2xl border border-mm-line bg-mm-surface p-8 text-center">
         <h1 className="font-heading text-4xl text-mm-primary">{messages.orderSuccess}</h1>
         <p className="text-mm-secondary">{messages.orderSuccessBody}</p>

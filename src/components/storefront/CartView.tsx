@@ -16,7 +16,7 @@ export function CartView({ locale, messages }: { locale: Locale; messages: Messa
       <div className="space-y-4 rounded-2xl border border-mm-line bg-mm-surface p-6">
         <p className="text-mm-secondary">{messages.cartEmpty}</p>
         <Link href={`/${locale}/catalog`} className="mm-btn inline-flex">
-          {messages.navCatalog}
+          {messages.continueShopping}
         </Link>
       </div>
     );
@@ -24,6 +24,15 @@ export function CartView({ locale, messages }: { locale: Locale; messages: Messa
 
   return (
     <div className="space-y-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <Link
+          href={`/${locale}/catalog`}
+          className="cursor-pointer text-sm font-medium text-mm-secondary underline-offset-4 transition-colors hover:text-mm-primary hover:underline"
+        >
+          ← {messages.continueShopping}
+        </Link>
+      </div>
+
       <ul className="divide-y divide-mm-line overflow-hidden rounded-2xl border border-mm-line bg-mm-surface">
         {lines.map((line) => (
           <li
@@ -71,9 +80,14 @@ export function CartView({ locale, messages }: { locale: Locale; messages: Messa
           {messages.subtotal}: {messages.ils}
           {subtotal.toFixed(2)}
         </p>
-        <Link href={`/${locale}/checkout`} className="mm-btn">
-          {messages.checkout}
-        </Link>
+        <div className="flex flex-wrap gap-3">
+          <Link href={`/${locale}/catalog`} className="mm-btn mm-btn-outline-dark">
+            {messages.continueShopping}
+          </Link>
+          <Link href={`/${locale}/checkout`} className="mm-btn">
+            {messages.checkout}
+          </Link>
+        </div>
       </div>
     </div>
   );
