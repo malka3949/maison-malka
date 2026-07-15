@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
 import { parsePrice } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { Locale, ProductType } from "@prisma/client";
 import { Prisma } from "@prisma/client";
 
@@ -93,6 +94,11 @@ export async function upsertProductAction(
   revalidatePath("/admin/products");
   if (productId) {
     revalidatePath(`/admin/products/${productId}`);
+  }
+
+  // New products must land on the edit page where image upload lives.
+  if (!id && productId) {
+    redirect(`/admin/products/${productId}?created=1`);
   }
 
   return { success: true, productId };

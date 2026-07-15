@@ -29,7 +29,9 @@ export function parsePrice(value: string): number | null {
 }
 
 export const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
-export const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
+/** Phone photos are often 6–12MB; keep a practical admin limit. */
+export const MAX_IMAGE_SIZE_MB = 15;
+export const MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024;
 
 export function isAllowedImageType(type: string): boolean {
   return (ALLOWED_IMAGE_TYPES as readonly string[]).includes(type);

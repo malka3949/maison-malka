@@ -135,8 +135,13 @@ export function ProductForm({ categories, product }: ProductFormProps) {
       </div>
       {state.error ? <p className="text-sm text-red-600">{state.error}</p> : null}
       {state.success ? <p className="text-sm text-green-700">נשמר בהצלחה</p> : null}
+      {!product ? (
+        <p className={`rounded-md border border-dashed border-mm-line bg-mm-soft/60 px-3 py-2 text-sm ${adminUi.muted}`}>
+          אחרי יצירת המוצר תעברו אוטומטית למסך שבו אפשר להעלות תמונות.
+        </p>
+      ) : null}
       <button type="submit" disabled={pending} className={adminUi.btnPrimary}>
-        {pending ? "שומר..." : product ? "עדכון" : "יצירה"}
+        {pending ? "שומר..." : product ? "עדכון" : "יצירה והמשך להעלאת תמונה"}
       </button>
     </form>
   );
