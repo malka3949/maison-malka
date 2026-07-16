@@ -112,14 +112,17 @@ Implemented Site Content CMS: Prisma models `SiteMedia`, `SiteContentBlock`, `Si
 |---|---|
 | Branch | `phase-6/site-content-cms` |
 | Base | `develop` |
-| Push | (pending this completion) |
+| Push | PUSHED |
 | Remote | `origin` https://github.com/malka3949/maison-malka |
 
 ### Commits
 
 | SHA (short) | Message | Milestone |
 |---|---|---|
-| (filled after commit) | `phase6: ...` | M1–M9 |
+| `4664c55` | `phase6: add Site CMS schema migration and ERD` | M1 |
+| `4ec8674` | `phase6: add site content allowlist libs and unit tests` | M2 |
+| `4f1cc32` | `phase6: add site-media upload and admin CMS pages` | M3–M7 |
+| `ba46717` | `phase6: wire storefront CMS fallback and document evidence` | M8–M9 |
 
 ## Known Issues / Limitations
 
