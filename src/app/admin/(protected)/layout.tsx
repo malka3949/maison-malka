@@ -11,6 +11,9 @@ const navItems = [
   { href: "/admin/categories", label: "קטגוריות" },
   { href: "/admin/products", label: "מוצרים" },
   { href: "/admin/orders", label: "הזמנות" },
+  { href: "/admin/site", label: "תוכן אתר" },
+  { href: "/admin/media", label: "מדיה" },
+  { href: "/admin/settings", label: "הגדרות" },
 ];
 
 export default async function ProtectedAdminLayout({
