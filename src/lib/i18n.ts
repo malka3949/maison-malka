@@ -101,6 +101,8 @@ export type Messages = {
   continueAsGuest: string;
   ils: string;
   footerNote: string;
+  contactLabel: string;
+  hoursLabel: string;
   errorGeneric: string;
   errorRequiredOptions: string;
   errorEmptyCart: string;

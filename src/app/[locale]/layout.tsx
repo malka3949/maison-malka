@@ -5,7 +5,11 @@ import { HtmlLangDir } from "@/components/storefront/HtmlLangDir";
 import { StorefrontFooter } from "@/components/storefront/StorefrontFooter";
 import { StorefrontHeader } from "@/components/storefront/StorefrontHeader";
 import { getSessionUser } from "@/lib/auth";
-import { getMessages, isLocale, localeDir, type Locale } from "@/lib/i18n";
+import { isLocale, localeDir, type Locale } from "@/lib/i18n";
+import {
+  loadMergedStorefrontMessages,
+  loadSiteSettingsMap,
+} from "@/lib/site-cms";
 
 export default async function LocaleLayout({
   children,
@@ -19,7 +23,10 @@ export default async function LocaleLayout({
     notFound();
   }
   const locale = localeParam as Locale;
-  const messages = getMessages(locale);
+  const [messages, settings] = await Promise.all([
+    loadMergedStorefrontMessages(locale),
+    loadSiteSettingsMap(),
+  ]);
   const user = await getSessionUser();
 
   return (
@@ -37,7 +44,11 @@ export default async function LocaleLayout({
           isLoggedIn={Boolean(user)}
         />
         <main className="w-full flex-1 pb-16">{children}</main>
-        <StorefrontFooter messages={messages} />
+        <StorefrontFooter
+          locale={locale}
+          messages={messages}
+          settings={settings}
+        />
       </div>
     </CartProvider>
   );

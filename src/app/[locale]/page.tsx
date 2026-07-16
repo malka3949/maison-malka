@@ -3,9 +3,12 @@ import { notFound } from "next/navigation";
 import { HorizontalScroller } from "@/components/storefront/HorizontalScroller";
 import { Ticker } from "@/components/storefront/Ticker";
 import { getActiveCategories, getAvailableProducts } from "@/lib/catalog";
-import { getMessages, isLocale, type Locale } from "@/lib/i18n";
+import { isLocale, type Locale } from "@/lib/i18n";
 import { formatIls, getProductImagePublicUrl } from "@/lib/storefront";
-import { HOME_MEDIA } from "@/lib/home-media";
+import {
+  loadHomeMediaFromCms,
+  loadMergedStorefrontMessages,
+} from "@/lib/site-cms";
 
 export default async function HomePage({
   params,
@@ -17,17 +20,17 @@ export default async function HomePage({
     notFound();
   }
   const locale = localeParam as Locale;
-  const messages = getMessages(locale);
-  const [categories, products] = await Promise.all([
+  const [messages, categories, products, homeMedia] = await Promise.all([
+    loadMergedStorefrontMessages(locale),
     getActiveCategories(locale),
     getAvailableProducts(locale),
+    loadHomeMediaFromCms(),
   ]);
   const featured = products.slice(0, 8);
 
-  // Fixed site media — do not bind promo frames to “first product with image”
-  const heroImg = HOME_MEDIA.hero;
-  const promoCatalogImg = HOME_MEDIA.promoCatalog;
-  const promoGiftImg = HOME_MEDIA.promoGift;
+  const heroImg = homeMedia.hero;
+  const promoCatalogImg = homeMedia.promoCatalog;
+  const promoGiftImg = homeMedia.promoGift;
 
   // Category chips also use fixed category art when possible (stable, not newest product)
   const CATEGORY_MEDIA: Record<string, string> = {

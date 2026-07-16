@@ -97,6 +97,8 @@ export const en: Messages = {
   continueAsGuest: "Continue as guest",
   ils: "₪",
   footerNote: "Boutique bakery · Jerusalem",
+  contactLabel: "Contact",
+  hoursLabel: "Hours by arrangement",
   errorGeneric: "Something went wrong. Please try again.",
   errorRequiredOptions: "Please select all required options.",
   errorEmptyCart: "Your cart is empty.",

@@ -96,6 +96,8 @@ export const he: Messages = {
   continueAsGuest: "המשך כאורח",
   ils: "₪",
   footerNote: "קונדיטוריה בוטיק · ירושלים",
+  contactLabel: "יצירת קשר",
+  hoursLabel: "שעות פעילות בתיאום",
   errorGeneric: "אירעה שגיאה. נסו שוב.",
   errorRequiredOptions: "יש לבחור את כל האפשרויות הנדרשות.",
   errorEmptyCart: "העגלה ריקה.",

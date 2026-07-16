@@ -14,7 +14,7 @@ Premium pastry e-commerce — **Phase 3** adds admin order operations (list, cal
 1. Create a new Supabase project.
 2. **Database:** copy the connection string (URI) into `DATABASE_URL`.
 3. **Auth:** enable Email provider; create an admin user with the same email as `ADMIN_EMAIL`.
-4. **Storage:** create a public bucket named `product-images` (app can also create it on first admin upload). Product images are shown via same-origin `/api/media/product-images/...` so the browser does not need direct `*.supabase.co` access. Full admin image flow (cutout, live background, save): [DOCS/features/admin-product-images.md](DOCS/features/admin-product-images.md).
+4. **Storage:** create public buckets `product-images` and `site-media` (app can also create them on first admin upload). Product images: `/api/media/product-images/...`. Site CMS images: `/uploads/site-media/...` (fallback proxy `/api/media/site-media/...`). Product image admin flow: [DOCS/features/admin-product-images.md](DOCS/features/admin-product-images.md).
 
 ## Local setup
 
@@ -31,6 +31,7 @@ npm run dev
 - English: [http://localhost:3000/en](http://localhost:3000/en)
 - Admin: [http://localhost:3000/admin/login](http://localhost:3000/admin/login)
 - Admin orders: [http://localhost:3000/admin/orders](http://localhost:3000/admin/orders)
+- Site CMS: [http://localhost:3000/admin/site](http://localhost:3000/admin/site) · [media](http://localhost:3000/admin/media) · [settings](http://localhost:3000/admin/settings)
 
 ## Environment variables
 
