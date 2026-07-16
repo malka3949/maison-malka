@@ -207,3 +207,34 @@ model OrderItemOption {
   order_item           OrderItem           @relation(fields: [order_item_id], references: [id], onDelete: Cascade)
   product_option_value ProductOptionValue? @relation(fields: [product_option_value_id], references: [id], onDelete: SetNull)
 }
+
+/// Marketing / site CMS media (bucket: site-media). Not product catalog images.
+model SiteMedia {
+  id           String   @id @default(cuid())
+  storage_path String
+  alt_he       String   @default("")
+  alt_en       String   @default("")
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+}
+
+/// Keyed plain-text CMS blocks (HE/EN) and shared image-slot refs (locale=he).
+model SiteContentBlock {
+  id         String   @id @default(cuid())
+  key        String
+  locale     Locale
+  value      String   @default("")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@unique([key, locale])
+}
+
+/// Locale-agnostic business settings (key/value).
+model SiteSettings {
+  id         String   @id @default(cuid())
+  key        String   @unique
+  value      String   @default("")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}

@@ -32,6 +32,32 @@ erDiagram
     ORDER_ITEM ||--o{ ORDER_ITEM_OPTION : "selected"
     PRODUCT_OPTION_VALUE ||--o{ ORDER_ITEM_OPTION : "snapshot of"
 
+    SITE_MEDIA {
+        string id PK
+        string storage_path
+        string alt_he
+        string alt_en
+        datetime created_at
+        datetime updated_at
+    }
+
+    SITE_CONTENT_BLOCK {
+        string id PK
+        string key
+        enum locale "he, en"
+        string value
+        datetime created_at
+        datetime updated_at
+    }
+
+    SITE_SETTINGS {
+        string id PK
+        string key UK
+        string value
+        datetime created_at
+        datetime updated_at
+    }
+
     CATEGORY {
         string id PK
         string slug
@@ -415,6 +441,51 @@ erDiagram
 
 ---
 
+## 4b. Site Content CMS (Phase 6)
+
+### SiteMedia
+
+**Purpose:** Marketing / site images in Storage bucket `site-media` (not product catalog).  
+**Source:** `team-Yuri/arch-phase6.md`
+
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| id | string | yes | Primary key |
+| storage_path | string | yes | Path in `site-media` bucket |
+| alt_he | string | yes | Hebrew alt text |
+| alt_en | string | yes | English alt text |
+| created_at | datetime | yes | |
+| updated_at | datetime | yes | |
+
+### SiteContentBlock
+
+**Purpose:** Allowlisted plain-text CMS keys per locale; image slots use locale `he` and store `SiteMedia.id` in `value`.  
+**Source:** `team-Yuri/arch-phase6.md`, `manager-phase6.md`
+
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| id | string | yes | Primary key |
+| key | string | yes | Allowlisted key |
+| locale | enum: [he, en] | yes | Unique with key |
+| value | string | yes | Plain text or media id |
+| created_at | datetime | yes | |
+| updated_at | datetime | yes | |
+
+### SiteSettings
+
+**Purpose:** Locale-agnostic business settings (phone, address, hours, lead-time note).  
+**Source:** `team-Yuri/arch-phase6.md`
+
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| id | string | yes | Primary key |
+| key | string | yes | Unique allowlisted key |
+| value | string | yes | Plain text |
+| created_at | datetime | yes | |
+| updated_at | datetime | yes | |
+
+---
+
 ## 5. Coverage Map
 
 | PRD Reference | Capability | Entities Involved |
@@ -438,6 +509,7 @@ erDiagram
 | PRD §8 out | Inventory automation | — (not modeled) |
 | PRD §8 out | Loyalty / coupons | — (not modeled) |
 | PRD §8 out | Seasonal products | — (not modeled) |
+| Phase 6 CMS | Site marketing content / media / settings | SiteMedia, SiteContentBlock, SiteSettings |
 
 ---
 
