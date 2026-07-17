@@ -2,6 +2,7 @@
 
 import {
   FulfillmentType,
+  Locale as PrismaLocale,
   OrderStatus,
   PaymentMethod,
   UserRole,
@@ -13,7 +14,7 @@ import { validateFulfillmentDate } from "@/lib/fulfillment";
 import { computeLineTotal, computeUnitPrice, sumMoney } from "@/lib/pricing";
 import { createClient } from "@/lib/supabase/server";
 import type { Locale } from "@/lib/i18n";
-import { sendOrderReceived } from "@/lib/notifications/resend";
+import { sendOrderAdminNew, sendOrderReceived } from "@/lib/notifications/resend";
 
 export type CheckoutCartLineInput = {
   productId: string;
@@ -158,6 +159,9 @@ export async function createGuestOrder(
     }
   }
 
+  const orderLocale =
+    input.locale === "en" ? PrismaLocale.en : PrismaLocale.he;
+
   const order = await prisma.order.create({
     data: {
       user_id: userId,
@@ -165,6 +169,7 @@ export async function createGuestOrder(
       customer_name: name,
       customer_phone: phone,
       customer_email: email,
+      locale: orderLocale,
       fulfillment_type:
         input.fulfillmentType === "delivery"
           ? FulfillmentType.delivery
@@ -203,6 +208,12 @@ export async function createGuestOrder(
   void sendOrderReceived(order).then((result) => {
     if (!result.ok && !result.skipped) {
       console.error("[checkout] order received email failed", result.error);
+    }
+  });
+
+  void sendOrderAdminNew(order, computedLines.length).then((result) => {
+    if (!result.ok && !result.skipped) {
+      console.error("[checkout] admin new-order email failed", result.error);
     }
   });
 

@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { OrderStatus } from "@prisma/client";
 import {
   formatDateKey,
@@ -8,9 +8,12 @@ import {
   assertTransition,
   canTransition,
 } from "@/lib/orders/status";
+import { resolveEmailDestination } from "@/lib/notifications/resend";
 import {
+  buildOrderAdminNewEmail,
   buildOrderApprovedEmail,
   buildOrderReceivedEmail,
+  toAdminNewOrderEmailPayload,
   toOrderEmailPayload,
 } from "@/lib/notifications/templates";
 
@@ -74,6 +77,33 @@ describe("calendar grouping", () => {
   });
 });
 
+describe("RESEND_DEV_TO redirect", () => {
+  const prev = process.env.RESEND_DEV_TO;
+
+  afterEach(() => {
+    if (prev === undefined) {
+      delete process.env.RESEND_DEV_TO;
+    } else {
+      process.env.RESEND_DEV_TO = prev;
+    }
+  });
+
+  it("sends to intended recipient when override unset", () => {
+    delete process.env.RESEND_DEV_TO;
+    const dest = resolveEmailDestination("customer@example.com");
+    expect(dest.to).toBe("customer@example.com");
+    expect(dest.subjectPrefix).toBe("");
+  });
+
+  it("redirects all mail to RESEND_DEV_TO when set", () => {
+    process.env.RESEND_DEV_TO = "owner@example.com";
+    const dest = resolveEmailDestination("customer@example.com");
+    expect(dest.to).toBe("owner@example.com");
+    expect(dest.subjectPrefix).toContain("customer@example.com");
+    expect(dest.htmlNote).toContain("customer@example.com");
+  });
+});
+
 describe("notification templates", () => {
   it("builds order received payload and email", () => {
     const payload = toOrderEmailPayload({
@@ -88,6 +118,49 @@ describe("notification templates", () => {
     expect(email.subject).toContain("התקבלה");
     expect(email.html).toContain("order_123");
     expect(email.html).toContain("Test User");
+  });
+
+  it("builds English order received email when locale is en", () => {
+    const payload = toOrderEmailPayload({
+      id: "order_en",
+      customer_name: "Alex",
+      customer_email: "alex@example.com",
+      requested_fulfillment_date: new Date("2026-08-01T00:00:00Z"),
+      total: "90",
+      locale: "en",
+    });
+    const email = buildOrderReceivedEmail(payload);
+    expect(email.subject).toContain("Order received");
+    expect(email.html).toContain("lang=\"en\"");
+    expect(email.html).toContain("Hello");
+    expect(email.html).not.toContain("ההזמנה התקבלה");
+  });
+
+  it("builds admin new-order alert email", () => {
+    const payload = toAdminNewOrderEmailPayload(
+      {
+        id: "order_456",
+        customer_name: "דנה",
+        customer_email: "dana@example.com",
+        customer_phone: "050-1234567",
+        fulfillment_type: "delivery",
+        delivery_address: "רחוב הרצל 1",
+        payment_method: "bank_transfer",
+        customer_notes: null,
+        requested_fulfillment_date: new Date("2026-08-01T00:00:00Z"),
+        total: "200",
+      },
+      3,
+    );
+    const email = buildOrderAdminNewEmail(payload);
+    expect(email.subject).toContain("הזמנה חדשה");
+    expect(email.html).toContain("order_456");
+    expect(email.html).toContain("050-1234567");
+    expect(email.html).toContain("רחוב הרצל 1");
+    expect(email.html).toContain("3");
+    expect(payload.adminOrderUrl).toContain("/admin/orders/order_456");
+    expect(email.html).toContain("לאישור ההזמנה באתר");
+    expect(email.html).toContain(payload.adminOrderUrl);
   });
 
   it("escapes html in approved template", () => {

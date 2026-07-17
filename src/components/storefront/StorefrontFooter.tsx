@@ -22,7 +22,7 @@ export function StorefrontFooter({
     <footer className="mt-auto border-t border-mm-line bg-mm-soft py-12">
       <div className="mm-wrap grid gap-8 text-center md:grid-cols-[1.2fr_1fr] md:text-start">
         <div>
-          <p className="font-heading text-3xl tracking-wide text-mm-primary">
+          <p className="font-brand text-3xl tracking-wide text-mm-primary">
             {messages.brand}
           </p>
           <p className="mt-1 text-[0.65rem] uppercase tracking-[0.2em] text-mm-secondary">

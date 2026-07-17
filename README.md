@@ -41,9 +41,11 @@ npm run dev
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Client/server Supabase anon key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server-only uploads (never expose to client) |
-| `ADMIN_EMAIL` | Email that receives `admin` role on login |
+| `ADMIN_EMAIL` | Admin login role + **new-order email alerts** (with Resend) |
+| `NEXT_PUBLIC_APP_URL` | Site origin for links in emails (e.g. `http://localhost:3000`) |
 | `RESEND_API_KEY` | Server-only Resend API key (transactional email) |
 | `RESEND_FROM_EMAIL` | Verified sender address for Resend (e.g. `Maison Malka <onboarding@resend.dev>`) |
+| `RESEND_DEV_TO` | Optional: redirect **all** emails to this inbox (for free tier / no domain). Shows original recipient in subject. Remove when domain is verified. |
 
 ## Scripts
 
@@ -59,9 +61,10 @@ npm run dev
 ## Phase 3 admin order flow
 
 1. Customer places guest order (Phase 2 checkout) → `pending_approval`.
-2. Admin opens `/admin/orders` → filters / opens detail.
-3. Approve or reject → status updated; Resend sends email when configured.
-4. Calendar at `/admin/orders/calendar` groups orders by requested fulfillment date.
+2. When Resend is configured: customer gets “order received” email; **`ADMIN_EMAIL` gets a new-order alert**.
+3. Admin opens `/admin/orders` → filters / opens detail.
+4. Approve or reject → status updated; Resend sends email when configured.
+5. Calendar at `/admin/orders/calendar` groups orders by requested fulfillment date.
 
 Configure Resend: add `RESEND_API_KEY` and `RESEND_FROM_EMAIL` to `.env.local` (see [Resend](https://resend.com)).
 
@@ -70,13 +73,13 @@ Configure Resend: add `RESEND_API_KEY` and `RESEND_FROM_EMAIL` to `.env.local` (
 1. Browse `/he` → catalog → product.
 2. Add to cart (options supported).
 3. Checkout as guest (pickup/delivery, date ≥ 2 days, no Saturday).
-4. Order saved as `pending_approval`; customer receives email when Resend is configured.
+4. Order saved as `pending_approval`; customer + admin (`ADMIN_EMAIL`) receive emails when Resend is configured.
 
 Locale switcher: HE (RTL) ↔ EN (LTR). Optional customer register/login prefills checkout.
 
 ## Scope
 
-**In scope:** Admin order list/calendar/detail, approve/reject workflow, Resend transactional emails (received/approved/rejected).
+**In scope:** Admin order list/calendar/detail, approve/reject workflow, Resend transactional emails (received/approved/rejected + admin new-order alert).
 
 **Out of scope:** Payment gateway, WhatsApp/SMS, production hardening (Phase 4).
 

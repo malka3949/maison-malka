@@ -4,7 +4,7 @@
 PHASE=6
 
 ## Status
-STATUS: READY_FOR_MANAGER
+STATUS: APPROVED
 
 ## Phase Goal
 
@@ -168,12 +168,67 @@ This phase is **not** infrastructure-only.
 6. Update docs (ERD at minimum) to match schema.
 
 ## Architect Review
-ARCHITECT_REVIEW_STATUS: NOT_REVIEWED
+ARCHITECT_REVIEW_STATUS: APPROVED
 
 ### Review Notes
 
-(Phase design complete. Awaiting Manager detailed design + Developer implementation + evidence before Architect REVIEW-PHASE.)
+**Review date:** 2026-07-17  
+**Reviewer:** Yuri (Software Architect)  
+**Artifacts reviewed:** `arch-phase6.md`, `manager-phase6.md` (MANAGER_REVIEW_STATUS: APPROVED), `dev-phase6.md` (STATUS: COMPLETE)
+
+#### Architecture alignment — PASS
+
+| Check | Verdict | Notes |
+|---|---|---|
+| Phase 6 goal — Site Content CMS | Pass | Admin edits marketing copy, images, settings; storefront reads without redeploy |
+| Keyed allowlist (not page builder) | Pass | `SITE_TEXT_KEYS`, image slots, settings keys; `assertAllowed*` on server actions |
+| Plain text only / no HTML XSS | Pass | No `dangerouslySetInnerHTML` for CMS values in `src/` |
+| Three Prisma entities | Pass | `SiteMedia`, `SiteContentBlock`, `SiteSettings`; migration `20260716120000_phase6_site_cms` |
+| Separate `site-media` bucket | Pass | Dedicated upload route + local/proxy mirror pattern |
+| Storefront DB read + messages fallback | Pass | `mergeMessagesWithCms`, `resolveHomeMediaSlots`, unit-tested |
+| Admin routes + `requireAdmin` | Pass | `/admin/site`, `/admin/media`, `/admin/settings`; writes/upload gated |
+| Storage delete on media row delete | Pass | Documented in dev evidence; actions route present |
+| V1 surfaces locked (home + chrome + settings) | Pass | No page builder, About, or full i18n CMS |
+| Bakery Scroll / order domain preserved | Pass | No checkout validation, pricing, or order flow changes claimed |
+| Phase 4 Production not required | Pass | Explicitly PARKED in Known Issues |
+| Phase 7 Growth out of scope | Pass | No payments/loyalty/WhatsApp |
+| Git workflow | Pass | `phase-6/site-content-cms` from `develop`; pushed; commits documented |
+| Docs | Pass | `DOCS/Maison-Malka-ERD.md` §4b, `README.md` CMS routes |
+| Manager gate | Pass | APPROVED; acceptance criteria checked |
+
+#### Developer evidence — PASS
+
+| Criterion | Verdict | Notes |
+|---|---|---|
+| Milestones M0–M9 | Pass | All marked Yes in `dev-phase6.md` |
+| Lint | Pass | `npm run lint` — no warnings/errors |
+| Unit tests | Pass | `npm test` — 25 total; 7 CMS tests (allowlist, fallback, ticker, image slots, settings) |
+| Build | Pass | `npx next build`; CMS admin/API routes listed |
+| Migration | Pass | `20260716120000_phase6_site_cms` applied |
+| Scope compliance checklist | Pass | All items checked in `dev-phase6.md` |
+
+#### Functional testability — PASS (with documented residual)
+
+| Criterion | Verdict | Notes |
+|---|---|---|
+| CMS logic (override + fallback) | Pass | Unit tests prove hero title override, empty fallback, ticker split/join, image slot resolution |
+| Admin + storefront surfaces compile | Pass | Build route proof for `/admin/site`, `/admin/media`, `/admin/settings`, upload + media APIs |
+| Interactive browser E2E | Partial | Admin login → edit HE `hero.title` → verify `/he` **not re-logged** in dev evidence. Outcome is locally testable; recommend user smoke before merge to `develop`. |
+| Catalog / guest checkout smoke | Partial | Not re-logged; no domain edits in diff — **accepted** (same disposition as Phase 5 guest-submit residual) |
+| Production / live Resend | N/A | Correctly out of Phase 6 |
+
+#### Accepted residuals for Phase 6 close
+
+| Item | Disposition |
+|---|---|
+| Interactive admin→storefront browser E2E not re-logged | Accepted — merge/fallback logic unit-tested; routes build; user should run manual smoke (`/admin/site` → save HE hero → refresh `/he`) before merge |
+| Catalog/checkout smoke not re-logged | Accepted — no order/catalog domain changes in evidence |
+| `site-media` bucket auto-create on first upload | Accepted — document manual Supabase bucket creation if service role unavailable |
+| Phase 4 Production + live Resend | Remains open — resume before customer go-live |
+| Image slots use shared locale `he` row | Accepted — per Manager shape choice within Architect intent |
+
+**Architect APPROVED.** Phase 6 complete architecturally. Do **not** update `PHASE.md` without explicit user instruction. Next choices: merge `phase-6/site-content-cms` → `develop`, resume Phase 4 Production readiness, or begin Phase 7 Business Growth design.
 
 ### Required Corrections
 
-None at design time.
+None.

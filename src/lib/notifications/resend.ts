@@ -1,12 +1,34 @@
 import {
+  buildOrderAdminNewEmail,
   buildOrderApprovedEmail,
   buildOrderReceivedEmail,
   buildOrderRejectedEmail,
+  toAdminNewOrderEmailPayload,
   toOrderEmailPayload,
 } from "./templates";
 import type { OrderEmailPayload, SendEmailResult } from "./types";
 
 type ResendApiResponse = { id?: string; message?: string };
+
+/**
+ * When RESEND_DEV_TO is set (no verified domain yet), all mail goes there.
+ * Subject/body keep a note of the original intended recipient.
+ */
+export function resolveEmailDestination(intendedTo: string): {
+  to: string;
+  subjectPrefix: string;
+  htmlNote: string;
+} {
+  const override = process.env.RESEND_DEV_TO?.trim();
+  if (!override || override.toLowerCase() === intendedTo.toLowerCase()) {
+    return { to: intendedTo, subjectPrefix: "", htmlNote: "" };
+  }
+  return {
+    to: override,
+    subjectPrefix: `[DEV → ${intendedTo}] `,
+    htmlNote: `<div style="margin:0 0 16px;padding:12px 16px;background:#f5efe4;border:1px solid #d6d0b3;font-family:Arial,sans-serif;font-size:13px;color:#726b4f;text-align:center"><strong>מצב פיתוח:</strong> מיועד ל־<code dir="ltr">${intendedTo}</code> · נשלח ל־<code dir="ltr">${override}</code></div>`,
+  };
+}
 
 export async function sendTransactionalEmail(input: {
   to: string;
@@ -21,6 +43,16 @@ export async function sendTransactionalEmail(input: {
     return { ok: false, error: "not_configured", skipped: true };
   }
 
+  const dest = resolveEmailDestination(input.to);
+  const subject = `${dest.subjectPrefix}${input.subject}`;
+  const html = dest.htmlNote ? `${dest.htmlNote}${input.html}` : input.html;
+
+  if (dest.subjectPrefix) {
+    console.info(
+      `[notifications] RESEND_DEV_TO redirect: ${input.to} → ${dest.to}`,
+    );
+  }
+
   try {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -30,9 +62,9 @@ export async function sendTransactionalEmail(input: {
       },
       body: JSON.stringify({
         from,
-        to: [input.to],
-        subject: input.subject,
-        html: input.html,
+        to: [dest.to],
+        subject,
+        html,
       }),
     });
 
@@ -75,6 +107,26 @@ export async function sendOrderReceived(
   order: Parameters<typeof toOrderEmailPayload>[0],
 ): Promise<SendEmailResult> {
   return sendOrderEmail(toOrderEmailPayload(order), "received");
+}
+
+export async function sendOrderAdminNew(
+  order: Parameters<typeof toAdminNewOrderEmailPayload>[0],
+  itemCount: number,
+): Promise<SendEmailResult> {
+  const adminEmail = process.env.ADMIN_EMAIL?.trim();
+  if (!adminEmail) {
+    console.warn("[notifications] ADMIN_EMAIL not configured — admin alert skipped");
+    return { ok: false, error: "admin_email_not_configured", skipped: true };
+  }
+
+  const built = buildOrderAdminNewEmail(
+    toAdminNewOrderEmailPayload(order, itemCount),
+  );
+  return sendTransactionalEmail({
+    to: adminEmail,
+    subject: built.subject,
+    html: built.html,
+  });
 }
 
 export async function sendOrderApproved(

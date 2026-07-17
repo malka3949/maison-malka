@@ -36,7 +36,7 @@ export function StorefrontHeader({ locale, messages, isLoggedIn }: Props) {
           className="flex flex-col items-center text-center cursor-pointer"
           onClick={() => setOpen(false)}
         >
-          <span className="font-heading text-[1.7rem] font-semibold leading-none tracking-[0.06em] text-mm-primary md:text-[2rem]">
+          <span className="font-brand text-[1.85rem] leading-none tracking-[0.04em] text-mm-primary md:text-[2.15rem]">
             {messages.brand}
           </span>
           <span className="mt-1 max-w-[11rem] text-[0.52rem] font-medium uppercase leading-tight tracking-[0.14em] text-mm-secondary">

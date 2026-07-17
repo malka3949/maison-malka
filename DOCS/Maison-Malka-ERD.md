@@ -150,6 +150,7 @@ erDiagram
         string customer_name
         string customer_phone
         string customer_email
+        enum locale "he, en"
         enum fulfillment_type "pickup, delivery"
         text delivery_address
         date requested_fulfillment_date
@@ -332,6 +333,7 @@ erDiagram
 | customer_name | string | yes | Snapshot at order time |
 | customer_phone | string | yes | Snapshot at order time |
 | customer_email | string | yes | Snapshot at order time |
+| locale | enum Locale | yes | Storefront language at checkout (`he` default); drives customer email language |
 | fulfillment_type | enum: [pickup, delivery] | yes | |
 | delivery_address | text | no | Required when delivery |
 | requested_fulfillment_date | date | yes | Separate from created_at |

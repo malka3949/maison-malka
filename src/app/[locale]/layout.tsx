@@ -35,6 +35,7 @@ export default async function LocaleLayout({
       <div
         dir={localeDir(locale)}
         lang={locale}
+        data-locale={locale}
         className="flex min-h-screen flex-col bg-mm-bg text-mm-text"
       >
         <AnnouncementBar text={messages.announcement} />

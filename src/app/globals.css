@@ -14,12 +14,15 @@
   --color-mm-dark: #1a1814;
   --color-mm-word: #726b4f;
   --color-mm-announce: #cfc7b0;
-  --font-heading: var(--font-cormorant), Georgia, serif;
+  --font-display: var(--font-great-vibes), cursive;
+  --font-heading-en: var(--font-great-vibes), cursive;
+  --font-heading-he: var(--font-heebo), system-ui, sans-serif;
+  --font-heading: var(--font-heebo), system-ui, sans-serif;
   --font-body: var(--font-heebo), system-ui, sans-serif;
 }
 
 :root {
-  --font-cormorant: "Cormorant", Georgia, serif;
+  --font-great-vibes: "Great Vibes", cursive;
   --font-heebo: "Heebo", system-ui, sans-serif;
 }
 
@@ -36,6 +39,30 @@ body {
 
 .font-heading {
   font-family: var(--font-heading);
+}
+
+/* Brand wordmark — always Latin script (Great Vibes). */
+.font-brand {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* English: romantic script headings. Hebrew: clean organized Heebo. */
+[data-locale="en"] .font-heading,
+:lang(en) .font-heading {
+  font-family: var(--font-heading-en);
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0.02em;
+}
+
+[data-locale="he"] .font-heading,
+:lang(he) .font-heading {
+  font-family: var(--font-heading-he);
+  font-weight: 600;
+  font-style: normal;
+  letter-spacing: 0.01em;
 }
 
 input,
@@ -242,14 +269,27 @@ button {
   z-index: 3;
   background: var(--color-mm-bg);
   padding-inline: 0.75rem;
-  font-family: var(--font-heading);
   font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 500;
-  font-style: italic;
   line-height: 1;
-  letter-spacing: 0.01em;
   color: var(--color-mm-word);
+}
+
+[data-locale="en"] .mm-frame-word,
+:lang(en) .mm-frame-word {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0.02em;
   text-transform: lowercase;
+}
+
+[data-locale="he"] .mm-frame-word,
+:lang(he) .mm-frame-word {
+  font-family: var(--font-heading-he);
+  font-weight: 600;
+  font-style: normal;
+  letter-spacing: 0.01em;
+  text-transform: none;
 }
 
 .mm-frame-inner {
@@ -527,11 +567,23 @@ button {
 }
 
 .mm-section-label {
-  font-family: var(--font-heading);
   font-size: clamp(2rem, 4vw, 2.8rem);
-  font-weight: 500;
   color: var(--color-mm-word);
-  line-height: 1;
+  line-height: 1.15;
+}
+
+[data-locale="en"] .mm-section-label,
+:lang(en) .mm-section-label {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+[data-locale="he"] .mm-section-label,
+:lang(he) .mm-section-label {
+  font-family: var(--font-heading-he);
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
 
 @media (prefers-reduced-motion: reduce) {

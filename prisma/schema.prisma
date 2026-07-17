@@ -169,6 +169,7 @@ model Order {
   customer_name              String
   customer_phone             String
   customer_email             String
+  locale                     Locale          @default(he)
   fulfillment_type           FulfillmentType
   delivery_address           String?
   requested_fulfillment_date DateTime        @db.Date
