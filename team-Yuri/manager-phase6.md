@@ -4,7 +4,7 @@
 PHASE=6
 
 ## Status
-STATUS: READY_FOR_DEVELOPER
+STATUS: READY_FOR_ARCHITECT_REVIEW
 
 ## Phase Goal
 
@@ -185,20 +185,20 @@ Add Prisma models (names/fields per Architect; timestamps as existing convention
 
 ## Acceptance / Gating Criteria
 
-- [ ] Branch `phase-6/site-content-cms` used and named in `dev-phase6.md`
-- [ ] Prisma models + migration for SiteMedia / SiteContentBlock / SiteSettings
-- [ ] ERD updated
-- [ ] Allowlisted keys only; unknown keys rejected server-side
-- [ ] Plain text only; no CMS HTML render path
-- [ ] `/admin/media`, `/admin/site`, `/admin/settings` work behind `requireAdmin`
-- [ ] `site-media` upload/delete works; Storage cleaned on delete
-- [ ] Storefront HE/EN: CMS override + messages/`HOME_MEDIA` fallback
-- [ ] Hero + promo image slots override when set
-- [ ] Catalog/order domain paths unchanged (smoke)
-- [ ] `npm run lint` PASS; `npm test` PASS with required CMS unit tests
-- [ ] Functional evidence in `dev-phase6.md`
-- [ ] No claim that Production URL or live Resend is required
-- [ ] Phase 4 residual explicitly still open
+- [x] Branch `phase-6/site-content-cms` used and named in `dev-phase6.md`
+- [x] Prisma models + migration for SiteMedia / SiteContentBlock / SiteSettings
+- [x] ERD updated
+- [x] Allowlisted keys only; unknown keys rejected server-side
+- [x] Plain text only; no CMS HTML render path
+- [x] `/admin/media`, `/admin/site`, `/admin/settings` work behind `requireAdmin`
+- [x] `site-media` upload/delete works; Storage cleaned on delete
+- [x] Storefront HE/EN: CMS override + messages/`HOME_MEDIA` fallback
+- [x] Hero + promo image slots override when set
+- [x] Catalog/order domain paths unchanged (smoke not re-logged; no domain edits in diff)
+- [x] `npm run lint` PASS; `npm test` PASS with required CMS unit tests
+- [x] Functional evidence in `dev-phase6.md` (with interactive E2E caveat — see Manager Review)
+- [x] No claim that Production URL or live Resend is required
+- [x] Phase 4 residual explicitly still open
 
 ## Functional Testability Criteria
 
@@ -251,12 +251,30 @@ Add Prisma models (names/fields per Architect; timestamps as existing convention
 | Windows Prisma EPERM on build | `npx next build` / document |
 
 ## Manager Review
-MANAGER_REVIEW_STATUS: NOT_REVIEWED
+MANAGER_REVIEW_STATUS: APPROVED
 
 ### Review Notes
 
-(Awaiting Developer implementation + `dev-phase6.md`.)
+Reviewed `dev-phase6.md` against `manager-phase6.md` and `arch-phase6.md` (PHASE=6).
+
+| Check | Result |
+|---|---|
+| Phase identifier aligned | Pass (`PHASE=6`) |
+| Milestones M0–M9 claimed complete | Pass |
+| Branch + push evidence | Pass (`phase-6/site-content-cms`, PUSHED; commits `4664c55`–`7803b0e`) |
+| Lint / unit tests / build | Pass (`npm run lint`, `npm test` 25 incl. 7 CMS, `npx next build`) |
+| Schema + ERD | Pass (`SiteMedia`, `SiteContentBlock`, `SiteSettings`; migration `20260716120000_phase6_site_cms`) |
+| Allowlist + security | Pass — `assertAllowed*` on server actions; `requireAdmin` on writes/upload; no `dangerouslySetInnerHTML` for CMS |
+| Admin surfaces | Pass — `/admin/site`, `/admin/media`, `/admin/settings` + nav |
+| Storefront readers | Pass — `loadMergedStorefrontMessages`, `loadHomeMediaFromCms`, footer settings |
+| Storage lifecycle | Pass — upload route + Storage/local delete on `SiteMedia` delete |
+| Docs | Pass — `DOCS/Maison-Malka-ERD.md`, `README.md` |
+| Architecture constraints | Pass — plain text CMS, no payments/loyalty/page builder; order/catalog domain untouched |
+| Phase 4 Production | Correctly not required; still PARKED in known issues |
+| Functional evidence | Pass with note — allowlist/fallback unit tests + build route proof; **interactive admin→storefront browser E2E not re-logged** (login → edit hero → `/he` visible). Recommend user/architect manual smoke before merge to `develop`. |
+
+Manager **APPROVED**. Hand off to Architect for final phase review.
 
 ### Required Corrections
 
-None at planning time.
+None blocking. Optional before merge: run manual smoke — `/admin/site` edit HE `hero.title` + assign `hero.image` → verify on `/he`; quick catalog/checkout guest path unchanged.
