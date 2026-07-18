@@ -175,6 +175,15 @@ Prepare the system for real customer usage.
 - Backup strategy.
 - Performance improvements.
 - Error monitoring.
+- **Pre-launch Trust & Legal (required before public launch):**
+  - Privacy, terms, and cancellation pages (Hebrew + English) with storefront links.
+  - Always-visible business contact (phone, pickup address, hours).
+  - Checkout consent to terms (client + server).
+  - Jerusalem delivery disclosure + arranged cost + customer affirmation.
+  - Keep bank transfer; admin-stored payment instructions shown after order approval.
+  - No ע.מ./ח.פ. display required in this wave.
+
+> **Team Yuri mapping:** Trust & Legal is executed as Team Yuri `PHASE=7`. Product roadmap phase docs fold this into MVP launch readiness (`DOCS/phases/09-…`), not a new Phase 12.
 
 ### Completion Criteria
 
@@ -184,6 +193,7 @@ Phase 4 is complete when:
 - Customer data is protected.
 - Backup process exists.
 - Operational risks are documented.
+- Trust & Legal wave above is live (or explicitly deferred with documented owner approval).
 
 ---
 

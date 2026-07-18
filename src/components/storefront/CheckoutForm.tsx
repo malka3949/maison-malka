@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/components/storefront/CartProvider";
@@ -40,6 +41,9 @@ export function CheckoutForm({
     }
 
     const form = new FormData(e.currentTarget);
+    const acceptedTerms = form.get("acceptedTerms") === "on";
+    const deliveryAreaConfirmed = form.get("deliveryAreaConfirmed") === "on";
+
     setPending(true);
     const result = await createGuestOrder({
       customerName: String(form.get("fullName") || ""),
@@ -52,6 +56,8 @@ export function CheckoutForm({
         | "bank_transfer"
         | "on_pickup",
       customerNotes: String(form.get("notes") || ""),
+      acceptedTerms,
+      deliveryAreaConfirmed,
       lines: lines.map((l) => ({
         productId: l.productId,
         quantity: l.quantity,
@@ -68,6 +74,8 @@ export function CheckoutForm({
         saturday: messages.errorSaturday,
         delivery_address: messages.errorDeliveryAddress,
         required_options: messages.errorRequiredOptions,
+        accepted_terms: messages.errorAcceptedTerms,
+        delivery_area: messages.errorDeliveryArea,
         generic: messages.errorGeneric,
       };
       setError(map[result.error] ?? messages.errorGeneric);
@@ -139,16 +147,30 @@ export function CheckoutForm({
       </fieldset>
 
       {fulfillment === "delivery" ? (
-        <label className="block space-y-1 text-sm text-mm-secondary">
-          <span>{messages.deliveryAddress}</span>
-          <textarea
-            name="deliveryAddress"
-            required
-            defaultValue={prefill?.deliveryAddress ?? ""}
-            className="mm-field"
-            rows={2}
-          />
-        </label>
+        <div className="space-y-3">
+          <p className="rounded-xl border border-mm-line bg-mm-soft p-3 text-xs leading-relaxed text-mm-secondary">
+            {messages.deliveryJerusalemNote} {messages.deliveryCostArranged}
+          </p>
+          <label className="block space-y-1 text-sm text-mm-secondary">
+            <span>{messages.deliveryAddress}</span>
+            <textarea
+              name="deliveryAddress"
+              required
+              defaultValue={prefill?.deliveryAddress ?? ""}
+              className="mm-field"
+              rows={2}
+            />
+          </label>
+          <label className="flex cursor-pointer items-start gap-2 text-sm text-mm-secondary">
+            <input
+              type="checkbox"
+              name="deliveryAreaConfirmed"
+              className="mt-1"
+              required
+            />
+            <span>{messages.deliveryAreaConfirm}</span>
+          </label>
+        </div>
       ) : null}
 
       <label className="block space-y-1 text-sm text-mm-secondary">
@@ -179,6 +201,33 @@ export function CheckoutForm({
       <p className="rounded-xl border border-mm-line bg-mm-soft p-3 text-xs leading-relaxed text-mm-secondary">
         {messages.privacyNotice}
       </p>
+
+      <div className="space-y-2 text-sm text-mm-secondary">
+        <nav className="flex flex-wrap gap-x-3 gap-y-1 text-xs">
+          <Link
+            href={`/${locale}/privacy`}
+            className="text-mm-primary underline-offset-2 hover:underline"
+          >
+            {messages.legalPrivacy}
+          </Link>
+          <Link
+            href={`/${locale}/terms`}
+            className="text-mm-primary underline-offset-2 hover:underline"
+          >
+            {messages.legalTerms}
+          </Link>
+          <Link
+            href={`/${locale}/cancellation`}
+            className="text-mm-primary underline-offset-2 hover:underline"
+          >
+            {messages.legalCancellation}
+          </Link>
+        </nav>
+        <label className="flex cursor-pointer items-start gap-2">
+          <input type="checkbox" name="acceptedTerms" className="mt-1" required />
+          <span>{messages.acceptTerms}</span>
+        </label>
+      </div>
 
       {error ? <p className="text-sm text-red-700">{error}</p> : null}
 

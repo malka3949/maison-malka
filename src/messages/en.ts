@@ -82,6 +82,20 @@ export const en: Messages = {
   submitOrder: "Submit order",
   privacyNotice:
     "We collect your details to fulfil the order and contact you. Data is stored with our infrastructure providers (Supabase, Vercel) and transactional emails are sent via Resend. No online payment is processed on this site.",
+  legalPrivacy: "Privacy Policy",
+  legalTerms: "Terms of Use",
+  legalCancellation: "Cancellation Policy",
+  acceptTerms:
+    "I have read and agree to the Terms of Use, Privacy Policy, and Cancellation Policy",
+  deliveryJerusalemNote: "Delivery is available in the Jerusalem area only.",
+  deliveryCostArranged: "Delivery cost is arranged with the shop.",
+  deliveryAreaConfirm:
+    "I confirm the address is in the Jerusalem area and understand delivery cost is arranged",
+  bankTransferNextSteps:
+    "You chose bank transfer. After we approve the order, payment instructions will be emailed to you.",
+  fallbackPhone: "050-000-0000 (draft — update)",
+  fallbackPickupAddress: "Jerusalem (sample pickup address — update)",
+  fallbackBusinessHours: "Hours by prior arrangement",
   orderSuccess: "Order received",
   orderSuccessBody: "Your order request was saved and is pending approval.",
   orderId: "Order ID",
@@ -105,4 +119,6 @@ export const en: Messages = {
   errorLeadTime: "Fulfillment date must be at least 2 days from today.",
   errorSaturday: "No fulfillment on Saturday. Choose another day.",
   errorDeliveryAddress: "Delivery address is required.",
+  errorAcceptedTerms: "Please accept the terms and policies before submitting.",
+  errorDeliveryArea: "Please confirm the delivery area and arranged cost.",
 };

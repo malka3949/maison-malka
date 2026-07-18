@@ -475,14 +475,14 @@ erDiagram
 
 ### SiteSettings
 
-**Purpose:** Locale-agnostic business settings (phone, address, hours, lead-time note).  
-**Source:** `team-Yuri/arch-phase6.md`
+**Purpose:** Locale-agnostic business settings (phone, address, hours, lead-time note, bank transfer details).  
+**Source:** `team-Yuri/arch-phase6.md`, extended in Phase 7 (`bank_transfer_details`)
 
 | Field | Type | Required | Notes |
 |-------|------|----------|-------|
 | id | string | yes | Primary key |
-| key | string | yes | Unique allowlisted key |
-| value | string | yes | Plain text |
+| key | string | yes | Unique allowlisted key (`pickup_address`, `phone`, `business_hours`, `lead_time_note`, `bank_transfer_details`) |
+| value | string | yes | Plain text (multiline OK for bank details) |
 | created_at | datetime | yes | |
 | updated_at | datetime | yes | |
 
@@ -512,6 +512,7 @@ erDiagram
 | PRD §8 out | Loyalty / coupons | — (not modeled) |
 | PRD §8 out | Seasonal products | — (not modeled) |
 | Phase 6 CMS | Site marketing content / media / settings | SiteMedia, SiteContentBlock, SiteSettings |
+| Phase 7 Trust & Legal | Bank transfer instructions in settings | SiteSettings (`bank_transfer_details`) |
 
 ---
 

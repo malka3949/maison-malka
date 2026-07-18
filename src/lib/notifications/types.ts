@@ -10,6 +10,11 @@ export type OrderEmailPayload = {
   total: string;
   /** Storefront locale at checkout — drives customer email language. */
   locale: "he" | "en";
+  paymentMethod?: "on_pickup" | "bank_transfer";
+  /** Plain-text bank instructions from SiteSettings (approved emails). */
+  bankTransferDetails?: string | null;
+  /** Fallback phone when bank details missing. */
+  contactPhone?: string | null;
 };
 
 export type AdminNewOrderEmailPayload = OrderEmailPayload & {

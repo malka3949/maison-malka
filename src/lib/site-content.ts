@@ -48,6 +48,7 @@ export const SITE_SETTINGS_KEYS = [
   "phone",
   "business_hours",
   "lead_time_note",
+  "bank_transfer_details",
 ] as const;
 
 export type SiteSettingsKey = (typeof SITE_SETTINGS_KEYS)[number];
@@ -199,6 +200,30 @@ export function mergeSettings(
     if (v) out[row.key] = v;
   }
   return out;
+}
+
+export type BusinessContact = {
+  phone: string;
+  address: string;
+  hours: string;
+};
+
+/**
+ * Always-visible contact: CMS settings when set, else message fallbacks.
+ */
+export function resolveBusinessContact(
+  settings: SiteSettingsMap,
+  messages: Pick<
+    Messages,
+    "fallbackPhone" | "fallbackPickupAddress" | "fallbackBusinessHours"
+  >,
+): BusinessContact {
+  return {
+    phone: settings.phone?.trim() || messages.fallbackPhone,
+    address: settings.pickup_address?.trim() || messages.fallbackPickupAddress,
+    hours:
+      settings.business_hours?.trim() || messages.fallbackBusinessHours,
+  };
 }
 
 export type CmsLocale = AppLocale;

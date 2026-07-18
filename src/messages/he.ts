@@ -81,6 +81,18 @@ export const he: Messages = {
   submitOrder: "שליחת הזמנה",
   privacyNotice:
     "הפרטים נאספים לצורך ביצוע ההזמנה ויצירת קשר. המידע מאוחסן אצל ספקי התשתית שלנו (Supabase, Vercel) ונשלחות התראות אימייל דרך Resend. אין תשלום מקוון באתר.",
+  legalPrivacy: "מדיניות פרטיות",
+  legalTerms: "תנאי שימוש",
+  legalCancellation: "מדיניות ביטולים",
+  acceptTerms: "קראתי ואני מסכים/ה לתנאי השימוש, מדיניות הפרטיות ומדיניות הביטולים",
+  deliveryJerusalemNote: "משלוח זמין באזור ירושלים בלבד.",
+  deliveryCostArranged: "עלות המשלוח בתיאום עם בית העסק.",
+  deliveryAreaConfirm: "אני מאשר/ת שהכתובת באזור ירושלים ומבין/ה שעלות המשלוח בתיאום",
+  bankTransferNextSteps:
+    "בחרתם העברה בנקאית. לאחר אישור ההזמנה נשלח אליכם (באימייל) הוראות תשלום.",
+  fallbackPhone: "050-000-0000 (טיוטה — לעדכון)",
+  fallbackPickupAddress: "ירושלים (כתובת איסוף לדוגמה — לעדכון)",
+  fallbackBusinessHours: "שעות פעילות בתיאום מראש",
   orderSuccess: "ההזמנה התקבלה",
   orderSuccessBody: "בקשת ההזמנה נשמרה וממתינה לאישור.",
   orderId: "מספר הזמנה",
@@ -104,4 +116,6 @@ export const he: Messages = {
   errorLeadTime: "תאריך האיסוף/משלוח חייב להיות לפחות בעוד יומיים.",
   errorSaturday: "אין אספקה בשבת. בחרו יום אחר.",
   errorDeliveryAddress: "כתובת למשלוח חובה.",
+  errorAcceptedTerms: "יש לאשר את תנאי השימוש והמדיניות לפני שליחה.",
+  errorDeliveryArea: "יש לאשר את אזור המשלוח ועלות בתיאום.",
 };

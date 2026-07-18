@@ -7,6 +7,9 @@ import {
   toOrderEmailPayload,
 } from "./templates";
 import type { OrderEmailPayload, SendEmailResult } from "./types";
+import { getMessages } from "@/lib/i18n";
+import { loadSiteSettingsMap } from "@/lib/site-cms";
+import { resolveBusinessContact } from "@/lib/site-content";
 
 type ResendApiResponse = { id?: string; message?: string };
 
@@ -130,9 +133,23 @@ export async function sendOrderAdminNew(
 }
 
 export async function sendOrderApproved(
-  order: Parameters<typeof toOrderEmailPayload>[0],
+  order: Parameters<typeof toOrderEmailPayload>[0] & {
+    payment_method?: "on_pickup" | "bank_transfer";
+  },
 ): Promise<SendEmailResult> {
-  return sendOrderEmail(toOrderEmailPayload(order), "approved");
+  const base = toOrderEmailPayload(order);
+  const settings = await loadSiteSettingsMap();
+  const messages = getMessages(base.locale);
+  const contact = resolveBusinessContact(settings, messages);
+
+  const payload: OrderEmailPayload = {
+    ...base,
+    paymentMethod: order.payment_method,
+    bankTransferDetails: settings.bank_transfer_details ?? null,
+    contactPhone: contact.phone,
+  };
+
+  return sendOrderEmail(payload, "approved");
 }
 
 export async function sendOrderRejected(

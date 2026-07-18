@@ -1,6 +1,9 @@
 import Link from "next/link";
 import type { Locale, Messages } from "@/lib/i18n";
-import type { SiteSettingsMap } from "@/lib/site-content";
+import {
+  resolveBusinessContact,
+  type SiteSettingsMap,
+} from "@/lib/site-content";
 
 export function StorefrontFooter({
   locale,
@@ -11,11 +14,7 @@ export function StorefrontFooter({
   messages: Messages;
   settings?: SiteSettingsMap;
 }) {
-  const hours =
-    settings.business_hours?.trim() ||
-    messages.hoursLabel;
-  const phone = settings.phone?.trim();
-  const address = settings.pickup_address?.trim();
+  const contact = resolveBusinessContact(settings, messages);
   const lead = settings.lead_time_note?.trim();
 
   return (
@@ -42,15 +41,11 @@ export function StorefrontFooter({
           <p className="text-xs font-semibold uppercase tracking-wide text-mm-word">
             {messages.contactLabel}
           </p>
-          <p className="mt-3 text-sm text-mm-secondary">{hours}</p>
-          {phone ? (
-            <p className="mt-2 text-sm text-mm-primary" dir="ltr">
-              {phone}
-            </p>
-          ) : null}
-          {address ? (
-            <p className="mt-2 text-sm text-mm-secondary">{address}</p>
-          ) : null}
+          <p className="mt-3 text-sm text-mm-secondary">{contact.hours}</p>
+          <p className="mt-2 text-sm text-mm-primary" dir="ltr">
+            {contact.phone}
+          </p>
+          <p className="mt-2 text-sm text-mm-secondary">{contact.address}</p>
           <nav className="mt-4 flex flex-col gap-2 text-sm">
             <Link
               href={`/${locale}/catalog`}
@@ -63,6 +58,24 @@ export function StorefrontFooter({
               className="cursor-pointer text-mm-primary hover:opacity-70"
             >
               {messages.navCart}
+            </Link>
+            <Link
+              href={`/${locale}/privacy`}
+              className="cursor-pointer text-mm-primary hover:opacity-70"
+            >
+              {messages.legalPrivacy}
+            </Link>
+            <Link
+              href={`/${locale}/terms`}
+              className="cursor-pointer text-mm-primary hover:opacity-70"
+            >
+              {messages.legalTerms}
+            </Link>
+            <Link
+              href={`/${locale}/cancellation`}
+              className="cursor-pointer text-mm-primary hover:opacity-70"
+            >
+              {messages.legalCancellation}
             </Link>
           </nav>
         </div>
