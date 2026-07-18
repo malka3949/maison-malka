@@ -29,10 +29,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="he" dir="rtl" suppressHydrationWarning>
-      <body
-        className={`${greatVibes.variable} ${heebo.variable} font-sans antialiased bg-mm-bg text-mm-text`}
-      >
+    <html
+      lang="he"
+      dir="rtl"
+      suppressHydrationWarning
+      className={`${greatVibes.variable} ${heebo.variable}`}
+    >
+      <body className="font-sans antialiased bg-mm-bg text-mm-text">
         {children}
       </body>
     </html>

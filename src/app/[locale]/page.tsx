@@ -57,7 +57,7 @@ export default async function HomePage({
         />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,16,12,0.25)_0%,rgba(20,16,12,0.15)_45%,rgba(20,16,12,0.62)_100%)]" />
         <div className="relative z-[2] flex min-h-[min(72vh,620px)] flex-col items-center justify-end px-5 pb-10 text-center md:pb-14">
-          <h1 className="font-heading text-[clamp(3rem,10vw,6.5rem)] font-medium leading-[0.9] tracking-[0.04em] text-[#f3eee4]">
+          <h1 className="font-heading text-[clamp(3rem,10vw,6.5rem)] leading-[0.9] tracking-[0.04em] text-[#f3eee4]">
             {messages.heroTitle}
           </h1>
           <div className="mt-6 flex flex-wrap justify-center gap-3">

@@ -70,7 +70,7 @@ export default async function ProductPage({
             <p className="text-[0.7rem] font-medium uppercase tracking-[0.16em] text-mm-word">
               {messages.brand}
             </p>
-            <h1 className="mt-2 font-heading text-4xl font-medium leading-tight text-mm-primary md:text-5xl">
+            <h1 className="mt-2 font-heading text-4xl leading-tight text-mm-primary md:text-5xl">
               {product.name}
             </h1>
             {product.description ? (
