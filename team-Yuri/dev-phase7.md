@@ -106,7 +106,7 @@ No ע.מ./ח.פ. UI. Phase 4 Production remains PARKED. Legal copy marked as dra
 |---|---|
 | Branch | `phase-7/pre-launch-trust-legal` |
 | Base | `develop` |
-| Push | PUSHED (after this commit) |
+| Push | PUSHED |
 | Remote | `origin` |
 
 ### Commits
@@ -114,7 +114,7 @@ No ע.מ./ח.פ. UI. Phase 4 Production remains PARKED. Legal copy marked as dra
 | SHA (short) | Message | Milestone |
 |---|---|---|
 | f4044eb | `phase7: add Trust and Legal architecture and manager plan` | Arch/Manager (prior) |
-| (this) | `phase7: implement Trust and Legal pre-launch pack` | M1–M8 |
+| 5c82e15 | `phase7: implement Trust and Legal pre-launch pack` | M1–M8 |
 
 ## Known Issues / Limitations
 
