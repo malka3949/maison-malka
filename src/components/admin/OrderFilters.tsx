@@ -8,6 +8,8 @@ const statuses: Array<{ value: string; label: string }> = [
   { value: OrderStatus.pending_approval, label: orderStatusLabelHe.pending_approval },
   { value: OrderStatus.approved, label: orderStatusLabelHe.approved },
   { value: OrderStatus.rejected, label: orderStatusLabelHe.rejected },
+  { value: OrderStatus.payment_pending, label: orderStatusLabelHe.payment_pending },
+  { value: OrderStatus.completed, label: orderStatusLabelHe.completed },
 ];
 
 export function OrderFilters({
@@ -62,7 +64,9 @@ export function OrderStatusBadge({ status }: { status: OrderStatus }) {
         ? adminUi.badgeOn
         : status === OrderStatus.rejected
           ? "rounded-full bg-red-100 px-2 py-0.5 text-xs text-red-800"
-          : adminUi.badgeOff;
+          : status === OrderStatus.completed
+            ? "rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-900"
+            : adminUi.badgeOff;
 
   return <span className={className}>{label}</span>;
 }

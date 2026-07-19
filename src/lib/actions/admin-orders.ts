@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
 import {
   sendOrderApproved,
+  sendOrderCompleted,
   sendOrderRejected,
 } from "@/lib/notifications/resend";
 import { prisma } from "@/lib/prisma";
@@ -59,6 +60,15 @@ export async function updateOrderStatus(
     } else {
       console.error("[admin-orders] rejection email failed", email.error);
     }
+  } else if (newStatus === OrderStatus.completed) {
+    const email = await sendOrderCompleted(updated);
+    if (email.ok) {
+      emailMessageId = email.messageId;
+    } else if (email.skipped) {
+      emailSkipped = true;
+    } else {
+      console.error("[admin-orders] completed email failed", email.error);
+    }
   }
 
   revalidatePath("/admin/orders");
@@ -76,4 +86,9 @@ export async function approveOrderFormAction(formData: FormData) {
 export async function rejectOrderFormAction(formData: FormData) {
   const id = String(formData.get("id") || "");
   await updateOrderStatus(id, OrderStatus.rejected);
+}
+
+export async function completeOrderFormAction(formData: FormData) {
+  const id = String(formData.get("id") || "");
+  await updateOrderStatus(id, OrderStatus.completed);
 }

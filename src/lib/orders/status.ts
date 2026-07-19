@@ -5,6 +5,8 @@ const ADMIN_TRANSITIONS: Partial<Record<OrderStatus, OrderStatus[]>> = {
     OrderStatus.approved,
     OrderStatus.rejected,
   ],
+  [OrderStatus.approved]: [OrderStatus.completed],
+  [OrderStatus.payment_pending]: [OrderStatus.completed],
 };
 
 export function canTransition(
@@ -35,3 +37,20 @@ export const orderStatusLabelHe: Record<OrderStatus, string> = {
   payment_pending: "ממתין לתשלום",
   completed: "הושלם",
 };
+
+export const orderStatusLabelEn: Record<OrderStatus, string> = {
+  pending_approval: "Pending approval",
+  approved: "Approved",
+  rejected: "Rejected",
+  payment_pending: "Payment pending",
+  completed: "Completed",
+};
+
+export function orderStatusLabel(
+  status: OrderStatus,
+  locale: "he" | "en",
+): string {
+  return locale === "en"
+    ? orderStatusLabelEn[status]
+    : orderStatusLabelHe[status];
+}

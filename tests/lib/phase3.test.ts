@@ -27,6 +27,15 @@ describe("order status transitions", () => {
     ).toBe(true);
   });
 
+  it("allows completed from approved and payment_pending", () => {
+    expect(canTransition(OrderStatus.approved, OrderStatus.completed)).toBe(
+      true,
+    );
+    expect(
+      canTransition(OrderStatus.payment_pending, OrderStatus.completed),
+    ).toBe(true);
+  });
+
   it("rejects illegal transitions", () => {
     expect(canTransition(OrderStatus.approved, OrderStatus.rejected)).toBe(false);
     expect(canTransition(OrderStatus.rejected, OrderStatus.approved)).toBe(false);
