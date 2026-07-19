@@ -10,10 +10,14 @@ import {
 import { adminUi } from "@/lib/admin-ui";
 import {
   BG_PRESETS,
+  CANVAS_SIZE_OPTIONS,
+  DEFAULT_PRODUCT_IMAGE_EDIT,
   composeCutoutOnBackground,
+  paintProductComposite,
   prepareUploadImage,
   previewCss,
   type BgSpec,
+  type ProductImageEdit,
 } from "@/lib/admin-product-bg";
 
 type ProductImage = {
@@ -42,6 +46,45 @@ function swatchStyle(spec: BgSpec) {
   } as const;
 }
 
+function SliderRow({
+  label,
+  value,
+  min,
+  max,
+  step,
+  disabled,
+  onChange,
+  display,
+}: {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  step: number;
+  disabled?: boolean;
+  onChange: (v: number) => void;
+  display: string;
+}) {
+  return (
+    <label className="block space-y-1 text-sm text-mm-secondary">
+      <span className="flex justify-between gap-2">
+        <span>{label}</span>
+        <span className="font-mono text-xs text-mm-primary">{display}</span>
+      </span>
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        disabled={disabled}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="w-full cursor-pointer accent-mm-primary disabled:opacity-50"
+      />
+    </label>
+  );
+}
+
 export function ImageUploadSection({
   productId,
   images,
@@ -58,16 +101,16 @@ export function ImageUploadSection({
   const [originalName, setOriginalName] = useState<string | null>(null);
   const [originalPreview, setOriginalPreview] = useState<string | null>(null);
   const [cutoutBlob, setCutoutBlob] = useState<Blob | null>(null);
-  const [cutoutPreview, setCutoutPreview] = useState<string | null>(null);
   const objectUrlsRef = useRef<string[]>([]);
+  const previewCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const [activePreset, setActivePreset] = useState("white");
   const [customColor, setCustomColor] = useState("#ffffff");
   const [bgSpec, setBgSpec] = useState<BgSpec>({ kind: "solid", color: "#ffffff" });
+  const [edit, setEdit] = useState<ProductImageEdit>(DEFAULT_PRODUCT_IMAGE_EDIT);
 
   const canSave = Boolean(cutoutBlob) && !busy && !saving;
-
-  const previewPanelStyle = useMemo(() => previewCss(bgSpec), [bgSpec]);
+  const controlsDisabled = busy || saving || !cutoutBlob;
 
   const solidPresets = useMemo(
     () => BG_PRESETS.filter((p) => p.group === "solid"),
@@ -89,6 +132,31 @@ export function ImageUploadSection({
     };
   }, []);
 
+  useEffect(() => {
+    if (!cutoutBlob) return;
+    const canvas = previewCanvasRef.current;
+    if (!canvas) return;
+
+    let cancelled = false;
+    const previewSize = 360;
+    canvas.width = previewSize;
+    canvas.height = previewSize;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const previewEdit: ProductImageEdit = { ...edit, canvasSize: 1200 };
+    void paintProductComposite(ctx, cutoutBlob, bgSpec, {
+      ...previewEdit,
+      // Keep relative geometry; canvas is square either way
+    }).then(() => {
+      if (cancelled) return;
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [cutoutBlob, bgSpec, edit]);
+
   function trackObjectUrl(url: string) {
     objectUrlsRef.current.push(url);
     return url;
@@ -97,6 +165,10 @@ export function ImageUploadSection({
   function revokeTrackedUrls() {
     for (const url of objectUrlsRef.current) URL.revokeObjectURL(url);
     objectUrlsRef.current = [];
+  }
+
+  function patchEdit(partial: Partial<ProductImageEdit>) {
+    setEdit((prev) => ({ ...prev, ...partial }));
   }
 
   function applyPreset(presetId: string, spec: BgSpec) {
@@ -128,10 +200,10 @@ export function ImageUploadSection({
     setOriginalName(null);
     setOriginalPreview(null);
     setCutoutBlob(null);
-    setCutoutPreview(null);
     setActivePreset("white");
     setBgSpec({ kind: "solid", color: "#ffffff" });
     setCustomColor("#ffffff");
+    setEdit(DEFAULT_PRODUCT_IMAGE_EDIT);
     setStatus(null);
     setError(null);
   }
@@ -156,8 +228,7 @@ export function ImageUploadSection({
     try {
       const cutout = await cutOutProduct(file);
       setCutoutBlob(cutout);
-      setCutoutPreview(trackObjectUrl(URL.createObjectURL(cutout)));
-      setStatus("מוכן — בחרו רקע בזמן אמת ואז שמרו");
+      setStatus("מוכן — ערכו גודל/מיקום/רקע/צל ואז שמרו");
     } catch (err) {
       setError(err instanceof Error ? err.message : "הסרת הרקע נכשלה");
       setStatus(null);
@@ -175,7 +246,7 @@ export function ImageUploadSection({
     setStatus("שומר תמונה...");
 
     try {
-      const composed = await composeCutoutOnBackground(cutoutBlob, bgSpec);
+      const composed = await composeCutoutOnBackground(cutoutBlob, bgSpec, edit);
       setStatus("דוחס תמונה לפני שמירה...");
       const prepared = await prepareUploadImage(composed, {
         keepAlpha: bgSpec.kind === "transparent",
@@ -241,7 +312,7 @@ export function ImageUploadSection({
             <button
               key={preset.id}
               type="button"
-              disabled={busy || saving || !cutoutBlob}
+              disabled={controlsDisabled}
               onClick={() => applyPreset(preset.id, preset.spec)}
               className={`inline-flex cursor-pointer items-center gap-2 rounded-md border px-2.5 py-1.5 text-xs transition-colors ${
                 activePreset === preset.id
@@ -263,8 +334,8 @@ export function ImageUploadSection({
       <div>
         <h2 className={adminUi.h2}>תמונות מוצר</h2>
         <p className={`mt-1 text-sm ${adminUi.muted}`}>
-          1) בחרו תמונה → 2) בחרו רקע (צבע / גרדיאנט / דוגמה / תמונה שלכם) ורואים מיד → 3)
-          שמירה. עד {MAX_IMAGE_SIZE_MB}MB. הכול חינמי בדפדפן.
+          1) בחרו תמונה → 2) ערכו גודל/מיקום/רקע/צל (חינמי בדפדפן) → 3) שמירה. עד{" "}
+          {MAX_IMAGE_SIZE_MB}MB.
         </p>
       </div>
 
@@ -273,7 +344,7 @@ export function ImageUploadSection({
           {busy ? "מעבד תמונה..." : "לחצו לבחירת תמונה לעיבוד"}
         </span>
         <span className={`text-xs ${adminUi.muted}`}>
-          לא שומרים עדיין — קודם עורכים רקע בזמן אמת
+          לא שומרים עדיין — קודם עורכים בתצוגה חיה
         </span>
         <input
           type="file"
@@ -312,17 +383,12 @@ export function ImageUploadSection({
               </div>
             </div>
             <div className="space-y-1">
-              <p className="text-xs font-medium text-mm-word">תצוגה חיה עם רקע</p>
-              <div
-                className="flex min-h-40 items-center justify-center rounded-md border border-stone-200 p-2"
-                style={previewPanelStyle}
-              >
-                {cutoutPreview ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={cutoutPreview}
-                    alt="live preview"
-                    className="max-h-44 w-auto object-contain"
+              <p className="text-xs font-medium text-mm-word">תצוגה חיה (כמו השמירה)</p>
+              <div className="flex min-h-40 items-center justify-center rounded-md border border-stone-200 bg-mm-soft/30 p-2">
+                {cutoutBlob ? (
+                  <canvas
+                    ref={previewCanvasRef}
+                    className="max-h-52 w-full max-w-[22rem] rounded-sm border border-stone-200 bg-white"
                   />
                 ) : (
                   <p className={`text-sm ${adminUi.muted}`}>
@@ -331,6 +397,203 @@ export function ImageUploadSection({
                 )}
               </div>
             </div>
+          </div>
+
+          <div className="space-y-3 rounded-md border border-stone-100 bg-mm-soft/30 p-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="text-sm font-medium text-mm-primary">גודל ומיקום</p>
+              <button
+                type="button"
+                disabled={controlsDisabled}
+                onClick={() => setEdit(DEFAULT_PRODUCT_IMAGE_EDIT)}
+                className={adminUi.btnSecondary}
+              >
+                איפוס עריכה
+              </button>
+            </div>
+            <SliderRow
+              label="הגדלה / הקטנה"
+              value={Math.round(edit.scale * 100)}
+              min={40}
+              max={160}
+              step={1}
+              disabled={controlsDisabled}
+              onChange={(v) => patchEdit({ scale: v / 100 })}
+              display={`${Math.round(edit.scale * 100)}%`}
+            />
+            <SliderRow
+              label="הזזה אופקית"
+              value={Math.round(edit.offsetX * 100)}
+              min={-45}
+              max={45}
+              step={1}
+              disabled={controlsDisabled}
+              onChange={(v) => patchEdit({ offsetX: v / 100 })}
+              display={`${edit.offsetX >= 0 ? "+" : ""}${Math.round(edit.offsetX * 100)}%`}
+            />
+            <SliderRow
+              label="הזזה אנכית"
+              value={Math.round(edit.offsetY * 100)}
+              min={-45}
+              max={45}
+              step={1}
+              disabled={controlsDisabled}
+              onChange={(v) => patchEdit({ offsetY: v / 100 })}
+              display={`${edit.offsetY >= 0 ? "+" : ""}${Math.round(edit.offsetY * 100)}%`}
+            />
+            <SliderRow
+              label="ריפוד (אוויר מסביב)"
+              value={Math.round(edit.padding * 100)}
+              min={0}
+              max={25}
+              step={1}
+              disabled={controlsDisabled}
+              onChange={(v) => patchEdit({ padding: v / 100 })}
+              display={`${Math.round(edit.padding * 100)}%`}
+            />
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-sm text-mm-secondary">גודל ייצוא:</span>
+              {CANVAS_SIZE_OPTIONS.map((size) => (
+                <button
+                  key={size}
+                  type="button"
+                  disabled={controlsDisabled}
+                  onClick={() => patchEdit({ canvasSize: size })}
+                  className={`rounded-md border px-2.5 py-1 text-xs ${
+                    edit.canvasSize === size
+                      ? "border-mm-primary bg-white text-mm-primary"
+                      : "border-stone-200 bg-white text-mm-secondary"
+                  }`}
+                >
+                  {size}×{size}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-3 rounded-md border border-stone-100 bg-mm-soft/30 p-3">
+            <p className="text-sm font-medium text-mm-primary">סיבוב והיפוך</p>
+            <SliderRow
+              label="סיבוב"
+              value={edit.rotationDeg}
+              min={-180}
+              max={180}
+              step={1}
+              disabled={controlsDisabled}
+              onChange={(v) => patchEdit({ rotationDeg: v })}
+              display={`${edit.rotationDeg}°`}
+            />
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                disabled={controlsDisabled}
+                onClick={() =>
+                  patchEdit({
+                    rotationDeg: ((edit.rotationDeg - 90 + 540) % 360) - 180,
+                  })
+                }
+                className={adminUi.btnSecondary}
+              >
+                90° שמאלה
+              </button>
+              <button
+                type="button"
+                disabled={controlsDisabled}
+                onClick={() =>
+                  patchEdit({
+                    rotationDeg: ((edit.rotationDeg + 90 + 540) % 360) - 180,
+                  })
+                }
+                className={adminUi.btnSecondary}
+              >
+                90° ימינה
+              </button>
+              <button
+                type="button"
+                disabled={controlsDisabled}
+                onClick={() => patchEdit({ flipX: !edit.flipX })}
+                className={`${adminUi.btnSecondary} ${edit.flipX ? "ring-1 ring-mm-primary" : ""}`}
+              >
+                היפוך אופקי {edit.flipX ? "(פעיל)" : ""}
+              </button>
+            </div>
+          </div>
+
+          <div className="space-y-3 rounded-md border border-stone-100 bg-mm-soft/30 p-3">
+            <p className="text-sm font-medium text-mm-primary">צל סטודיו</p>
+            <label className="flex cursor-pointer items-center gap-2 text-sm text-mm-secondary">
+              <input
+                type="checkbox"
+                checked={edit.shadowEnabled}
+                disabled={controlsDisabled}
+                onChange={(e) => patchEdit({ shadowEnabled: e.target.checked })}
+              />
+              הפעל צל רך מתחת למוצר
+            </label>
+            <SliderRow
+              label="עוצמת צל"
+              value={Math.round(edit.shadowOpacity * 100)}
+              min={5}
+              max={60}
+              step={1}
+              disabled={controlsDisabled || !edit.shadowEnabled}
+              onChange={(v) => patchEdit({ shadowOpacity: v / 100 })}
+              display={`${Math.round(edit.shadowOpacity * 100)}%`}
+            />
+            <SliderRow
+              label="טשטוש צל"
+              value={edit.shadowBlur}
+              min={4}
+              max={60}
+              step={1}
+              disabled={controlsDisabled || !edit.shadowEnabled}
+              onChange={(v) => patchEdit({ shadowBlur: v })}
+              display={`${edit.shadowBlur}px`}
+            />
+            <SliderRow
+              label="הזזת צל למטה"
+              value={edit.shadowOffsetY}
+              min={0}
+              max={40}
+              step={1}
+              disabled={controlsDisabled || !edit.shadowEnabled}
+              onChange={(v) => patchEdit({ shadowOffsetY: v })}
+              display={`${edit.shadowOffsetY}px`}
+            />
+          </div>
+
+          <div className="space-y-3 rounded-md border border-stone-100 bg-mm-soft/30 p-3">
+            <p className="text-sm font-medium text-mm-primary">ליטוש צבע</p>
+            <SliderRow
+              label="בהירות"
+              value={edit.brightness}
+              min={-30}
+              max={30}
+              step={1}
+              disabled={controlsDisabled}
+              onChange={(v) => patchEdit({ brightness: v })}
+              display={`${edit.brightness >= 0 ? "+" : ""}${edit.brightness}`}
+            />
+            <SliderRow
+              label="ניגודיות"
+              value={edit.contrast}
+              min={-20}
+              max={20}
+              step={1}
+              disabled={controlsDisabled}
+              onChange={(v) => patchEdit({ contrast: v })}
+              display={`${edit.contrast >= 0 ? "+" : ""}${edit.contrast}`}
+            />
+            <SliderRow
+              label="רוויה"
+              value={edit.saturation}
+              min={-30}
+              max={30}
+              step={1}
+              disabled={controlsDisabled}
+              onChange={(v) => patchEdit({ saturation: v })}
+              display={`${edit.saturation >= 0 ? "+" : ""}${edit.saturation}`}
+            />
           </div>
 
           <div className="space-y-4">
@@ -346,13 +609,13 @@ export function ImageUploadSection({
                   activePreset === "custom-image"
                     ? "border-mm-primary bg-mm-soft text-mm-primary"
                     : "border-stone-200 bg-white text-mm-secondary hover:border-mm-cta"
-                } ${!cutoutBlob || busy || saving ? "pointer-events-none opacity-50" : ""}`}
+                } ${controlsDisabled ? "pointer-events-none opacity-50" : ""}`}
               >
                 {activePreset === "custom-image" ? "רקע מתמונה פעיל" : "העלו תמונת רקע"}
                 <input
                   type="file"
                   accept={ALLOWED_IMAGE_TYPES.join(",")}
-                  disabled={busy || saving || !cutoutBlob}
+                  disabled={controlsDisabled}
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (file) handlePickBgImage(file);
@@ -369,7 +632,7 @@ export function ImageUploadSection({
                 <input
                   type="color"
                   value={customColor}
-                  disabled={busy || saving || !cutoutBlob}
+                  disabled={controlsDisabled}
                   onChange={(e) => {
                     setActivePreset("custom");
                     setCustomColor(e.target.value);
@@ -381,7 +644,7 @@ export function ImageUploadSection({
               <input
                 type="text"
                 value={customColor}
-                disabled={busy || saving || !cutoutBlob}
+                disabled={controlsDisabled}
                 onChange={(e) => {
                   const raw = e.target.value.trim();
                   const next = raw.startsWith("#") ? raw : `#${raw}`;
@@ -405,7 +668,7 @@ export function ImageUploadSection({
               onClick={() => void handleSave()}
               className={adminUi.btnPrimary}
             >
-              {saving ? "שומר..." : "שמור תמונה עם הרקע שנבחר"}
+              {saving ? "שומר..." : "שמור תמונה מעובדת"}
             </button>
             <button
               type="button"
