@@ -459,27 +459,129 @@ export function previewCss(spec: BgSpec): CSSProperties {
   };
 }
 
+/** Free local transform / polish controls (Canvas only — no paid APIs). */
+export type ProductImageEdit = {
+  /** Product size relative to fit-in-frame (0.4–1.6). */
+  scale: number;
+  /** Horizontal shift as fraction of canvas (−0.5…0.5). */
+  offsetX: number;
+  /** Vertical shift as fraction of canvas (−0.5…0.5). */
+  offsetY: number;
+  /** Inner margin as fraction of canvas edge (0–0.25). */
+  padding: number;
+  rotationDeg: number; // −180…180
+  flipX: boolean;
+  /** −30…+30 → mapped to CSS filter percent. */
+  brightness: number;
+  contrast: number;
+  saturation: number;
+  shadowEnabled: boolean;
+  shadowBlur: number;
+  shadowOpacity: number;
+  shadowOffsetY: number;
+  canvasSize: 800 | 1200 | 1600;
+};
+
+export const DEFAULT_PRODUCT_IMAGE_EDIT: ProductImageEdit = {
+  scale: 1,
+  offsetX: 0,
+  offsetY: 0,
+  padding: 0.08,
+  rotationDeg: 0,
+  flipX: false,
+  brightness: 0,
+  contrast: 0,
+  saturation: 0,
+  shadowEnabled: true,
+  shadowBlur: 28,
+  shadowOpacity: 0.28,
+  shadowOffsetY: 18,
+  canvasSize: 1200,
+};
+
+export const CANVAS_SIZE_OPTIONS: Array<ProductImageEdit["canvasSize"]> = [
+  800, 1200, 1600,
+];
+
+function clamp(n: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, n));
+}
+
+function editFilterCss(edit: ProductImageEdit): string {
+  const b = clamp(100 + edit.brightness, 40, 160);
+  const c = clamp(100 + edit.contrast, 50, 160);
+  const s = clamp(100 + edit.saturation, 0, 200);
+  return `brightness(${b}%) contrast(${c}%) saturate(${s}%)`;
+}
+
+/**
+ * Paint background + transformed cutout onto an existing canvas context.
+ * Used for live preview and final export (same path).
+ */
+export async function paintProductComposite(
+  ctx: CanvasRenderingContext2D,
+  cutout: Blob | ImageBitmap,
+  spec: BgSpec,
+  edit: ProductImageEdit = DEFAULT_PRODUCT_IMAGE_EDIT,
+): Promise<void> {
+  const width = ctx.canvas.width;
+  const height = ctx.canvas.height;
+  ctx.clearRect(0, 0, width, height);
+  await paintBackground(ctx, width, height, spec);
+
+  const bitmap =
+    cutout instanceof ImageBitmap
+      ? cutout
+      : await createImageBitmap(cutout);
+  const ownsBitmap = !(cutout instanceof ImageBitmap);
+
+  const pad = clamp(edit.padding, 0, 0.25);
+  const inner = Math.min(width, height) * (1 - pad * 2);
+  const fit = Math.min(inner / bitmap.width, inner / bitmap.height);
+  const drawScale = fit * clamp(edit.scale, 0.4, 1.6);
+  const dw = bitmap.width * drawScale;
+  const dh = bitmap.height * drawScale;
+  const cx = width / 2 + clamp(edit.offsetX, -0.5, 0.5) * width;
+  const cy = height / 2 + clamp(edit.offsetY, -0.5, 0.5) * height;
+  const rad = (edit.rotationDeg * Math.PI) / 180;
+
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(rad);
+  if (edit.flipX) ctx.scale(-1, 1);
+
+  if (edit.shadowEnabled && spec.kind !== "transparent") {
+    ctx.shadowColor = `rgba(28, 22, 16, ${clamp(edit.shadowOpacity, 0, 0.8)})`;
+    ctx.shadowBlur = clamp(edit.shadowBlur, 0, 80);
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = clamp(edit.shadowOffsetY, 0, 60);
+  }
+
+  ctx.filter = editFilterCss(edit);
+  ctx.drawImage(bitmap, -dw / 2, -dh / 2, dw, dh);
+  ctx.filter = "none";
+  ctx.shadowColor = "transparent";
+  ctx.shadowBlur = 0;
+  ctx.restore();
+
+  if (ownsBitmap) bitmap.close();
+}
+
 export async function composeCutoutOnBackground(
   cutout: Blob,
   spec: BgSpec,
+  edit: ProductImageEdit = DEFAULT_PRODUCT_IMAGE_EDIT,
 ): Promise<Blob> {
-  if (spec.kind === "transparent") {
-    return cutout;
-  }
-
-  const bitmap = await createImageBitmap(cutout);
+  const size = edit.canvasSize;
   const canvas = document.createElement("canvas");
-  canvas.width = bitmap.width;
-  canvas.height = bitmap.height;
+  canvas.width = size;
+  canvas.height = size;
   const ctx = canvas.getContext("2d");
   if (!ctx) {
-    bitmap.close();
     throw new Error("לא ניתן לעבד את התמונה בדפדפן");
   }
 
-  await paintBackground(ctx, canvas.width, canvas.height, spec);
-  ctx.drawImage(bitmap, 0, 0);
-  bitmap.close();
+  await paintProductComposite(ctx, cutout, spec, edit);
 
   return new Promise<Blob>((resolve, reject) => {
     canvas.toBlob(
