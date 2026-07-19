@@ -156,6 +156,8 @@ erDiagram
         date requested_fulfillment_date
         enum payment_method "bank_transfer, on_pickup"
         text customer_notes
+        text rejection_reason_code
+        text rejection_reason_custom
         decimal subtotal
         decimal total
         datetime created_at
@@ -339,6 +341,8 @@ erDiagram
 | requested_fulfillment_date | date | yes | Separate from created_at |
 | payment_method | enum: [bank_transfer, on_pickup] | yes | No card storage |
 | customer_notes | text | no | Basic order notes only |
+| rejection_reason_code | text | no | Allowlisted rejection reason code; set when rejected |
+| rejection_reason_custom | text | no | Custom customer-facing reason when code is `other` |
 | subtotal | decimal | yes | |
 | total | decimal | yes | |
 | created_at | datetime | yes | Order submission time |

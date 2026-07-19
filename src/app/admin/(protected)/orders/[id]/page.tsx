@@ -4,6 +4,7 @@ import { OrderApproveRejectActions } from "@/components/admin/OrderApproveReject
 import { OrderStatusBadge } from "@/components/admin/OrderFilters";
 import { prisma } from "@/lib/prisma";
 import { adminUi } from "@/lib/admin-ui";
+import { getRejectionReasonText } from "@/lib/orders/rejection-reasons";
 
 export const dynamic = "force-dynamic";
 
@@ -39,6 +40,11 @@ export default async function AdminOrderDetailPage({
   if (!order) {
     notFound();
   }
+  const rejectionReason = getRejectionReasonText(
+    order.rejection_reason_code,
+    order.rejection_reason_custom,
+    "he",
+  );
 
   return (
     <div className="space-y-6">
@@ -104,6 +110,13 @@ export default async function AdminOrderDetailPage({
         <section className={adminUi.section}>
           <h2 className={adminUi.h2}>הערות לקוח</h2>
           <p className="mt-2 text-sm">{order.customer_notes}</p>
+        </section>
+      ) : null}
+
+      {rejectionReason ? (
+        <section className={adminUi.section}>
+          <h2 className={adminUi.h2}>סיבת דחייה שנשלחה ללקוח</h2>
+          <p className="mt-2 text-sm">{rejectionReason}</p>
         </section>
       ) : null}
 

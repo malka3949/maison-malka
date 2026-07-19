@@ -175,6 +175,8 @@ model Order {
   requested_fulfillment_date DateTime        @db.Date
   payment_method             PaymentMethod
   customer_notes             String?
+  rejection_reason_code      String?
+  rejection_reason_custom    String?
   subtotal                   Decimal         @db.Decimal(10, 2)
   total                      Decimal         @db.Decimal(10, 2)
   created_at                 DateTime        @default(now())

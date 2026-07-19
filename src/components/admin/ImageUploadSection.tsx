@@ -11,8 +11,10 @@ import { adminUi } from "@/lib/admin-ui";
 import {
   BG_PRESETS,
   CANVAS_SIZE_OPTIONS,
+  CROP_ASPECT_OPTIONS,
   DEFAULT_PRODUCT_IMAGE_EDIT,
   composeCutoutOnBackground,
+  getCropCanvasDimensions,
   paintProductComposite,
   prepareUploadImage,
   previewCss,
@@ -139,16 +141,17 @@ export function ImageUploadSection({
 
     let cancelled = false;
     const previewSize = 360;
-    canvas.width = previewSize;
-    canvas.height = previewSize;
+    const previewDimensions = getCropCanvasDimensions(
+      previewSize,
+      edit.cropAspect,
+    );
+    canvas.width = previewDimensions.width;
+    canvas.height = previewDimensions.height;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     const previewEdit: ProductImageEdit = { ...edit, canvasSize: 1200 };
-    void paintProductComposite(ctx, cutoutBlob, bgSpec, {
-      ...previewEdit,
-      // Keep relative geometry; canvas is square either way
-    }).then(() => {
+    void paintProductComposite(ctx, cutoutBlob, bgSpec, previewEdit).then(() => {
       if (cancelled) return;
     });
 
@@ -401,7 +404,9 @@ export function ImageUploadSection({
 
           <div className="space-y-3 rounded-md border border-stone-100 bg-mm-soft/30 p-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="text-sm font-medium text-mm-primary">גודל ומיקום</p>
+              <p className="text-sm font-medium text-mm-primary">
+                חיתוך, גודל ומיקום
+              </p>
               <button
                 type="button"
                 disabled={controlsDisabled}
@@ -410,6 +415,31 @@ export function ImageUploadSection({
               >
                 איפוס עריכה
               </button>
+            </div>
+            <div className="space-y-2">
+              <p className="text-xs font-medium text-mm-secondary">
+                יחס מסגרת החיתוך
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {CROP_ASPECT_OPTIONS.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    disabled={controlsDisabled}
+                    onClick={() => patchEdit({ cropAspect: option.value })}
+                    className={`rounded-md border px-2.5 py-1.5 text-xs ${
+                      edit.cropAspect === option.value
+                        ? "border-mm-primary bg-white text-mm-primary"
+                        : "border-stone-200 bg-white text-mm-secondary"
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs text-mm-secondary">
+                הגדילו והזיזו את המוצר כדי לבחור בדיוק מה יישאר בתוך המסגרת.
+              </p>
             </div>
             <SliderRow
               label="הגדלה / הקטנה"
@@ -452,7 +482,9 @@ export function ImageUploadSection({
               display={`${Math.round(edit.padding * 100)}%`}
             />
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-sm text-mm-secondary">גודל ייצוא:</span>
+              <span className="text-sm text-mm-secondary">
+                גודל הצלע הארוכה:
+              </span>
               {CANVAS_SIZE_OPTIONS.map((size) => (
                 <button
                   key={size}
@@ -465,7 +497,7 @@ export function ImageUploadSection({
                       : "border-stone-200 bg-white text-mm-secondary"
                   }`}
                 >
-                  {size}×{size}
+                  {size}px
                 </button>
               ))}
             </div>

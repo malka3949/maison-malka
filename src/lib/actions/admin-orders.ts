@@ -10,6 +10,10 @@ import {
 } from "@/lib/notifications/resend";
 import { prisma } from "@/lib/prisma";
 import { assertTransition } from "@/lib/orders/status";
+import {
+  validateRejectionReason,
+  type RejectionReasonCode,
+} from "@/lib/orders/rejection-reasons";
 
 export type UpdateOrderStatusResult =
   | { ok: true; emailMessageId?: string; emailSkipped?: boolean }
@@ -18,6 +22,10 @@ export type UpdateOrderStatusResult =
 export async function updateOrderStatus(
   orderId: string,
   newStatus: OrderStatus,
+  rejectionReason?: {
+    code: RejectionReasonCode;
+    custom: string | null;
+  },
 ): Promise<UpdateOrderStatusResult> {
   const admin = await requireAdmin();
   if (!admin) {
@@ -33,10 +41,19 @@ export async function updateOrderStatus(
   if (!check.ok) {
     return { ok: false, error: check.error };
   }
+  if (newStatus === OrderStatus.rejected && !rejectionReason) {
+    return { ok: false, error: "rejection_reason_required" };
+  }
 
   const updated = await prisma.order.update({
     where: { id: orderId },
-    data: { status: newStatus },
+    data: {
+      status: newStatus,
+      rejection_reason_code:
+        newStatus === OrderStatus.rejected ? rejectionReason!.code : null,
+      rejection_reason_custom:
+        newStatus === OrderStatus.rejected ? rejectionReason!.custom : null,
+    },
   });
 
   let emailMessageId: string | undefined;
@@ -83,9 +100,33 @@ export async function approveOrderFormAction(formData: FormData) {
   await updateOrderStatus(id, OrderStatus.approved);
 }
 
-export async function rejectOrderFormAction(formData: FormData) {
+export type RejectionFormState = {
+  error?: string;
+};
+
+export async function rejectOrderFormAction(
+  _previous: RejectionFormState,
+  formData: FormData,
+): Promise<RejectionFormState> {
   const id = String(formData.get("id") || "");
-  await updateOrderStatus(id, OrderStatus.rejected);
+  const validated = validateRejectionReason(
+    String(formData.get("reasonCode") || ""),
+    String(formData.get("customReason") || ""),
+  );
+  if (!validated.ok) {
+    const message =
+      validated.error === "custom_reason_required"
+        ? "יש לכתוב סיבה כאשר בוחרים „סיבה אחרת”."
+        : validated.error === "custom_reason_too_long"
+          ? "הסיבה ארוכה מדי (מקסימום 500 תווים)."
+          : "יש לבחור סיבת דחייה.";
+    return { error: message };
+  }
+  const result = await updateOrderStatus(id, OrderStatus.rejected, {
+    code: validated.code,
+    custom: validated.custom,
+  });
+  return result.ok ? {} : { error: "דחיית ההזמנה נכשלה. נסו שוב." };
 }
 
 export async function completeOrderFormAction(formData: FormData) {

@@ -324,6 +324,15 @@ export function buildOrderRejectedEmail(payload: OrderEmailPayload) {
   const shortId = payload.orderId.slice(-8);
   const en = payload.locale === "en";
   const name = escapeHtml(payload.customerName);
+  const rows: [string, string][] = en
+    ? [["Order number", escapeHtml(payload.orderId)]]
+    : [["מספר הזמנה", escapeHtml(payload.orderId)]];
+  if (payload.rejectionReason?.trim()) {
+    rows.push([
+      en ? "Reason" : "סיבה",
+      escapeHtml(payload.rejectionReason.trim()),
+    ]);
+  }
   return {
     subject: en
       ? `Maison Malka — Order not approved (${shortId})`
@@ -342,11 +351,7 @@ export function buildOrderRejectedEmail(payload: OrderEmailPayload) {
            <p style="margin:10px 0 0;">Unfortunately we cannot approve this order at this time. Please contact the shop if you have questions.</p>`
         : `<p style="margin:0;">שלום <strong style="color:${C.text};">${name}</strong>,</p>
            <p style="margin:10px 0 0;">לצערנו לא ניתן לאשר את ההזמנה בשלב זה. נשמח לעזור בבירור — אפשר ליצור איתנו קשר.</p>`,
-      bodyHtml: detailsTable(
-        en
-          ? [["Order number", escapeHtml(payload.orderId)]]
-          : [["מספר הזמנה", escapeHtml(payload.orderId)]],
-      ),
+      bodyHtml: detailsTable(rows),
     }),
   };
 }

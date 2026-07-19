@@ -480,6 +480,8 @@ export type ProductImageEdit = {
   shadowOpacity: number;
   shadowOffsetY: number;
   canvasSize: 800 | 1200 | 1600;
+  /** Output crop frame. Scale + offsets position the product inside it. */
+  cropAspect: "1:1" | "4:3" | "3:4" | "16:9";
 };
 
 export const DEFAULT_PRODUCT_IMAGE_EDIT: ProductImageEdit = {
@@ -497,11 +499,38 @@ export const DEFAULT_PRODUCT_IMAGE_EDIT: ProductImageEdit = {
   shadowOpacity: 0.28,
   shadowOffsetY: 18,
   canvasSize: 1200,
+  cropAspect: "1:1",
 };
 
 export const CANVAS_SIZE_OPTIONS: Array<ProductImageEdit["canvasSize"]> = [
   800, 1200, 1600,
 ];
+
+export const CROP_ASPECT_OPTIONS: Array<{
+  value: ProductImageEdit["cropAspect"];
+  label: string;
+}> = [
+  { value: "1:1", label: "ריבוע 1:1" },
+  { value: "4:3", label: "רוחב 4:3" },
+  { value: "3:4", label: "גובה 3:4" },
+  { value: "16:9", label: "רחב 16:9" },
+];
+
+export function getCropCanvasDimensions(
+  size: number,
+  aspect: ProductImageEdit["cropAspect"],
+): { width: number; height: number } {
+  if (aspect === "4:3") {
+    return { width: size, height: Math.round((size * 3) / 4) };
+  }
+  if (aspect === "3:4") {
+    return { width: Math.round((size * 3) / 4), height: size };
+  }
+  if (aspect === "16:9") {
+    return { width: size, height: Math.round((size * 9) / 16) };
+  }
+  return { width: size, height: size };
+}
 
 function clamp(n: number, min: number, max: number) {
   return Math.min(max, Math.max(min, n));
@@ -572,10 +601,13 @@ export async function composeCutoutOnBackground(
   spec: BgSpec,
   edit: ProductImageEdit = DEFAULT_PRODUCT_IMAGE_EDIT,
 ): Promise<Blob> {
-  const size = edit.canvasSize;
+  const dimensions = getCropCanvasDimensions(
+    edit.canvasSize,
+    edit.cropAspect,
+  );
   const canvas = document.createElement("canvas");
-  canvas.width = size;
-  canvas.height = size;
+  canvas.width = dimensions.width;
+  canvas.height = dimensions.height;
   const ctx = canvas.getContext("2d");
   if (!ctx) {
     throw new Error("לא ניתן לעבד את התמונה בדפדפן");

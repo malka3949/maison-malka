@@ -15,6 +15,8 @@ export type OrderEmailPayload = {
   bankTransferDetails?: string | null;
   /** Fallback phone when bank details missing. */
   contactPhone?: string | null;
+  /** Localized, plain-text reason included only in rejection emails. */
+  rejectionReason?: string | null;
 };
 
 export type AdminNewOrderEmailPayload = OrderEmailPayload & {

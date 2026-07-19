@@ -34,7 +34,7 @@ Admin can attach product photos for the storefront catalog and PDP, with optiona
 | Pick image | No upload yet; UI says editing happens first |
 | First AI cutout | May take ~30–60s (model download); later runs faster |
 | Background | **Solids:** white, cream, beige, sand, stone, light gray, charcoal, black, transparent, custom HEX. **Gradients:** cream, warm, butter, soft studio, soft dusk, soft green, soft spotlight, studio halo. **Patterns/effects:** linen, dots, paper, mesh, light wood, soft marble, soft stripes, studio vignette. **Custom:** upload your own background photo (cover-fit). All free Canvas 2D / local files — no paid API |
-| Free transform / polish | **Scale** 40–160%, **pan** X/Y, **padding**, **rotation** ±180° (+90° buttons), **flip X**, **studio shadow**, **brightness / contrast / saturation**, export canvas **800 / 1200 / 1600** square. Live preview uses the same Canvas path as save |
+| Free crop / transform / polish | Crop frames **1:1 / 4:3 / 3:4 / 16:9**, **scale** 40–160% and **pan** X/Y to position content inside the frame, **padding**, **rotation** ±180° (+90° buttons), **flip X**, **studio shadow**, **brightness / contrast / saturation**, long-edge export **800 / 1200 / 1600px**. Live preview uses the same Canvas path as save |
 | Live preview | Instant Canvas composite of selected background + edit controls under the cutout |
 | Save | Uploads composed PNG/JPEG with background + transforms baked in |
 | Cancel | Clears editor; does not delete already-saved product images |

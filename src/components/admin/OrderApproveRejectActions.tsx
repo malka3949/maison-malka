@@ -2,9 +2,9 @@ import { OrderStatus } from "@prisma/client";
 import {
   approveOrderFormAction,
   completeOrderFormAction,
-  rejectOrderFormAction,
 } from "@/lib/actions/admin-orders";
 import { adminUi } from "@/lib/admin-ui";
+import { OrderRejectionForm } from "@/components/admin/OrderRejectionForm";
 
 export function OrderApproveRejectActions({
   orderId,
@@ -23,13 +23,8 @@ export function OrderApproveRejectActions({
               אישור הזמנה
             </button>
           </form>
-          <form action={rejectOrderFormAction}>
-            <input type="hidden" name="id" value={orderId} />
-            <button type="submit" className={adminUi.btnSecondary}>
-              דחיית הזמנה
-            </button>
-          </form>
         </div>
+        <OrderRejectionForm orderId={orderId} />
         <p className={`text-sm ${adminUi.muted}`}>
           באישור / דחייה נשלח ללקוח מייל בשפה שבה הזמין (עברית או אנגלית).
         </p>

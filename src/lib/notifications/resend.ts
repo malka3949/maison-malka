@@ -11,6 +11,7 @@ import type { OrderEmailPayload, SendEmailResult } from "./types";
 import { getMessages } from "@/lib/i18n";
 import { loadSiteSettingsMap } from "@/lib/site-cms";
 import { resolveBusinessContact } from "@/lib/site-content";
+import { getRejectionReasonText } from "@/lib/orders/rejection-reasons";
 
 type ResendApiResponse = { id?: string; message?: string };
 
@@ -156,9 +157,18 @@ export async function sendOrderApproved(
 }
 
 export async function sendOrderRejected(
-  order: Parameters<typeof toOrderEmailPayload>[0],
+  order: Parameters<typeof toOrderEmailPayload>[0] & {
+    rejection_reason_code?: string | null;
+    rejection_reason_custom?: string | null;
+  },
 ): Promise<SendEmailResult> {
-  return sendOrderEmail(toOrderEmailPayload(order), "rejected");
+  const payload = toOrderEmailPayload(order);
+  payload.rejectionReason = getRejectionReasonText(
+    order.rejection_reason_code,
+    order.rejection_reason_custom,
+    payload.locale,
+  );
+  return sendOrderEmail(payload, "rejected");
 }
 
 export async function sendOrderCompleted(
