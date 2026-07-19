@@ -17,7 +17,7 @@ export default async function OrderConfirmationPage({
 
   const order = await prisma.order.findUnique({
     where: { id },
-    select: { id: true },
+    select: { id: true, payment_method: true },
   });
   if (!order) {
     notFound();
@@ -32,6 +32,11 @@ export default async function OrderConfirmationPage({
           {messages.orderId}:{" "}
           <span className="font-mono text-mm-primary">{order.id}</span>
         </p>
+        {order.payment_method === "bank_transfer" ? (
+          <p className="rounded-xl border border-mm-line bg-mm-soft p-3 text-sm leading-relaxed text-mm-secondary">
+            {messages.bankTransferNextSteps}
+          </p>
+        ) : null}
         <Link href={`/${locale}`} className="mm-btn inline-flex">
           {messages.backHome}
         </Link>

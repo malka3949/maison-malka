@@ -15,7 +15,10 @@ const LABELS: Record<SiteSettingsKey, string> = {
   phone: "טלפון",
   business_hours: "שעות פעילות",
   lead_time_note: "הערת זמן אספקה (שיווק)",
+  bank_transfer_details: "פרטי העברה בנקאית (ללקוח לאחר אישור)",
 };
+
+const TEXTAREA_KEYS = new Set<SiteSettingsKey>(["bank_transfer_details"]);
 
 export function SiteSettingsAdmin({
   values,
@@ -34,11 +37,20 @@ export function SiteSettingsAdmin({
           <span className="mb-1 block text-mm-secondary">
             {LABELS[key]} <span className="text-xs">({key})</span>
           </span>
-          <input
-            name={key}
-            defaultValue={values[key] ?? ""}
-            className={adminUi.input}
-          />
+          {TEXTAREA_KEYS.has(key) ? (
+            <textarea
+              name={key}
+              defaultValue={values[key] ?? ""}
+              className={adminUi.input}
+              rows={5}
+            />
+          ) : (
+            <input
+              name={key}
+              defaultValue={values[key] ?? ""}
+              className={adminUi.input}
+            />
+          )}
         </label>
       ))}
       <button type="submit" className={adminUi.btnPrimary} disabled={pending}>

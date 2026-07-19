@@ -260,6 +260,43 @@ export function buildOrderApprovedEmail(payload: OrderEmailPayload) {
   const shortId = payload.orderId.slice(-8);
   const en = payload.locale === "en";
   const name = escapeHtml(payload.customerName);
+
+  const rows: [string, string][] = en
+    ? [
+        ["Order number", escapeHtml(payload.orderId)],
+        ["Fulfillment date", escapeHtml(payload.fulfillmentDate)],
+        ["Total", `₪${escapeHtml(payload.total)}`],
+      ]
+    : [
+        ["מספר הזמנה", escapeHtml(payload.orderId)],
+        ["תאריך מילוי", escapeHtml(payload.fulfillmentDate)],
+        ["סכום", `₪${escapeHtml(payload.total)}`],
+      ];
+
+  let bankHtml = "";
+  if (payload.paymentMethod === "bank_transfer") {
+    const details = payload.bankTransferDetails?.trim();
+    const phone = payload.contactPhone?.trim();
+    if (details) {
+      bankHtml = en
+        ? `<div style="margin:16px 0 0;padding:14px 16px;background:#f7f3ea;border:1px solid #e2d9c4;border-radius:8px;font-size:14px;line-height:1.5;color:${C.text};white-space:pre-wrap;">
+            <strong>Bank transfer instructions</strong><br/>${escapeHtml(details)}
+           </div>`
+        : `<div style="margin:16px 0 0;padding:14px 16px;background:#f7f3ea;border:1px solid #e2d9c4;border-radius:8px;font-size:14px;line-height:1.5;color:${C.text};white-space:pre-wrap;">
+            <strong>הוראות להעברה בנקאית</strong><br/>${escapeHtml(details)}
+           </div>`;
+    } else {
+      const phoneNote = phone
+        ? en
+          ? `Please contact the shop at ${escapeHtml(phone)} for payment details.`
+          : `נא ליצור קשר עם בית העסק בטלפון ${escapeHtml(phone)} לקבלת פרטי תשלום.`
+        : en
+          ? "Please contact the shop for payment details."
+          : "נא ליצור קשר עם בית העסק לקבלת פרטי תשלום.";
+      bankHtml = `<p style="margin:16px 0 0;font-size:14px;line-height:1.5;color:${C.text};">${phoneNote}</p>`;
+    }
+  }
+
   return {
     subject: en
       ? `Maison Malka — Order approved (${shortId})`
@@ -278,19 +315,7 @@ export function buildOrderApprovedEmail(payload: OrderEmailPayload) {
            <p style="margin:10px 0 0;">Great news — your order has been approved. We look forward to preparing it for you on time.</p>`
         : `<p style="margin:0;">שלום <strong style="color:${C.text};">${name}</strong>,</p>
            <p style="margin:10px 0 0;">שמחים לבשר — ההזמנה שלך אושרה. נשמח להכין עבורך ולעמוד בלוח הזמנים.</p>`,
-      bodyHtml: detailsTable(
-        en
-          ? [
-              ["Order number", escapeHtml(payload.orderId)],
-              ["Fulfillment date", escapeHtml(payload.fulfillmentDate)],
-              ["Total", `₪${escapeHtml(payload.total)}`],
-            ]
-          : [
-              ["מספר הזמנה", escapeHtml(payload.orderId)],
-              ["תאריך מילוי", escapeHtml(payload.fulfillmentDate)],
-              ["סכום", `₪${escapeHtml(payload.total)}`],
-            ],
-      ),
+      bodyHtml: `${detailsTable(rows)}${bankHtml}`,
     }),
   };
 }

@@ -32,6 +32,7 @@ npm run dev
 - Admin: [http://localhost:3000/admin/login](http://localhost:3000/admin/login)
 - Admin orders: [http://localhost:3000/admin/orders](http://localhost:3000/admin/orders)
 - Site CMS: [http://localhost:3000/admin/site](http://localhost:3000/admin/site) · [media](http://localhost:3000/admin/media) · [settings](http://localhost:3000/admin/settings)
+- Legal (HE): [privacy](http://localhost:3000/he/privacy) · [terms](http://localhost:3000/he/terms) · [cancellation](http://localhost:3000/he/cancellation)
 
 ## Environment variables
 
@@ -74,8 +75,15 @@ Configure Resend: add `RESEND_API_KEY` and `RESEND_FROM_EMAIL` to `.env.local` (
 2. Add to cart (options supported).
 3. Checkout as guest (pickup/delivery, date ≥ 2 days, no Saturday).
 4. Order saved as `pending_approval`; customer + admin (`ADMIN_EMAIL`) receive emails when Resend is configured.
+5. Checkout requires terms consent; delivery requires Jerusalem-area affirmation. Bank transfer stays available — payment instructions come from admin **settings** (`bank_transfer_details`) in the approved-order email.
 
 Locale switcher: HE (RTL) ↔ EN (LTR). Optional customer register/login prefills checkout.
+
+## Trust & Legal (pre-launch)
+
+- Public legal pages under `/[locale]/privacy|terms|cancellation` (draft copy — replace before public launch).
+- Footer always shows phone / pickup address / hours (CMS settings or message fallbacks).
+- Admin settings: save multiline `bank_transfer_details` for approved bank-transfer orders.
 
 ## Scope
 

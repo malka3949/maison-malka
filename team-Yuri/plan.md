@@ -106,7 +106,8 @@ Team Yuri phases align with `DOCS/Maison-Malka-Development-Phases-Plan.md`:
 | 4 | Production Readiness | Security, backup, performance, prod deploy (PARKED — incomplete) |
 | 5 | Storefront Bakery Scroll UI | Apply approved light bakery design to public Next.js storefront |
 | 6 | Site Content CMS | Admin-editable homepage/chrome texts, site media library, business settings |
-| 7 | Business Growth | Payments, loyalty, expansion (TBD; was former Phase 6 / original Phase 5) |
+| 7 | Pre-launch Trust & Legal | Legal pages, contact disclosures, checkout consent, delivery disclosure, bank-transfer instructions |
+| 8 | Business Growth | Payments, loyalty, expansion (TBD; was former Phase 7 / earlier Growth slot) |
 
 ## Phase 1: System Foundation
 
@@ -266,10 +267,35 @@ Admin opens `/admin/site`, changes Hebrew hero title and replaces hero image →
 ### Handoff Notes for Phase Design
 See `team-Yuri/arch-phase6.md`.
 
-## Phase 7: Business Growth
+## Phase 7: Pre-launch Trust & Legal
 
 ### Goal
-Deferred — online payments, loyalty, delivery expansion per business needs (formerly labeled Phase 6; original Growth slot was Phase 5 before Bakery Scroll insertion).
+Make the public storefront safer for real customers before go-live: HE/EN legal pages, always-visible business contact info, mandatory checkout consent, Jerusalem delivery disclosure, and bank-transfer payment instructions after approval.
+
+### Scope (wave 1 — locked)
+- Public legal pages: privacy, terms/sale, cancellation/refund (food) — HE + EN
+- Footer + checkout links to legal pages
+- Always-visible phone, pickup address, hours (CMS with hard message fallbacks; **no** ע.מ./ח.פ.)
+- Checkout: required privacy+terms consent (client + server)
+- Delivery: Jerusalem service-area disclosure + cost “arranged / בתיאום” (no geo fee engine)
+- Keep `bank_transfer`; admin-editable bank details (SiteSettings); show instructions on approved email / confirmation when that method is used
+
+### Out of Scope
+- Phase 4 Production / live Resend proof / full security+privacy audit close-out
+- P1 pack (rich order confirmation, cart option labels, phone validation, completed workflow, accessibility page) — later phase unless trivial contact reuse in email templates
+- Online card payments, loyalty, WhatsApp, delivery-zone product (Growth)
+- CMS editing of full legal page HTML
+
+### Functional Testability
+User opens legal pages from footer; checkout blocks without consent; delivery shows Jerusalem + arranged cost; admin saves bank details; approve bank_transfer order → customer sees pay instructions.
+
+### Handoff Notes for Phase Design
+See `team-Yuri/arch-phase7.md`.
+
+## Phase 8: Business Growth
+
+### Goal
+Deferred — online payments, loyalty, delivery expansion per business needs (formerly labeled Phase 7; original Growth slot shifted after Trust & Legal insertion).
 
 ## Open Questions
 

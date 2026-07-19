@@ -11,6 +11,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getSessionUser, syncUserFromAuth } from "@/lib/auth";
 import { validateFulfillmentDate } from "@/lib/fulfillment";
+import { checkoutTrustGateError } from "@/lib/checkout-gates";
 import { computeLineTotal, computeUnitPrice, sumMoney } from "@/lib/pricing";
 import { createClient } from "@/lib/supabase/server";
 import type { Locale } from "@/lib/i18n";
@@ -31,6 +32,8 @@ export type CheckoutFormInput = {
   requestedFulfillmentDate: string;
   paymentMethod: "bank_transfer" | "on_pickup";
   customerNotes?: string;
+  acceptedTerms: boolean;
+  deliveryAreaConfirmed?: boolean;
   lines: CheckoutCartLineInput[];
   locale: Locale;
 };
@@ -44,6 +47,15 @@ export async function createGuestOrder(
 ): Promise<CheckoutResult> {
   if (!input.lines.length) {
     return { ok: false, error: "empty_cart" };
+  }
+
+  const trustError = checkoutTrustGateError({
+    acceptedTerms: input.acceptedTerms === true,
+    fulfillmentType: input.fulfillmentType,
+    deliveryAreaConfirmed: input.deliveryAreaConfirmed,
+  });
+  if (trustError) {
+    return { ok: false, error: trustError };
   }
 
   const requested = new Date(input.requestedFulfillmentDate + "T12:00:00");

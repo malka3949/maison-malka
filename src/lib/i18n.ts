@@ -86,6 +86,17 @@ export type Messages = {
   notes: string;
   submitOrder: string;
   privacyNotice: string;
+  legalPrivacy: string;
+  legalTerms: string;
+  legalCancellation: string;
+  acceptTerms: string;
+  deliveryJerusalemNote: string;
+  deliveryCostArranged: string;
+  deliveryAreaConfirm: string;
+  bankTransferNextSteps: string;
+  fallbackPhone: string;
+  fallbackPickupAddress: string;
+  fallbackBusinessHours: string;
   orderSuccess: string;
   orderSuccessBody: string;
   orderId: string;
@@ -109,6 +120,8 @@ export type Messages = {
   errorLeadTime: string;
   errorSaturday: string;
   errorDeliveryAddress: string;
+  errorAcceptedTerms: string;
+  errorDeliveryArea: string;
 };
 
 import { he } from "@/messages/he";

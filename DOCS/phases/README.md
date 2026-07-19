@@ -34,8 +34,10 @@
                           07 Admin Products  08 Admin Orders
                                   ╲           ╱
                                    ▼         ▼
-                              09 i18n & Launch
+                              09 i18n + Trust/Legal & Launch
 ```
+
+> **Team Yuri:** פאזת הפיתוח הנוכחית ל־Trust & Legal היא `PHASE=7` (לא פאזת מוצר 12). מפת המוצר כאן נשארת 01–11.
 
 ## רשימת פאזות
 
@@ -49,7 +51,7 @@
 | 06 | [06-checkout-and-orders.md](./06-checkout-and-orders.md) | תהליך הזמנה | הזמנה מלאה עם אישור |
 | 07 | [07-admin-products.md](./07-admin-products.md) | ניהול מוצרים (מנהל) | מנהל מוסיף ועורך מוצרים |
 | 08 | [08-admin-orders.md](./08-admin-orders.md) | ניהול הזמנות (מנהל) | מנהל רואה ומנהל הזמנות |
-| 09 | [09-i18n-and-mvp-launch.md](./09-i18n-and-mvp-launch.md) | רב-לשוניות והשקה | עברית/אנגלית, MVP מוכן לייצור |
+| 09 | [09-i18n-and-mvp-launch.md](./09-i18n-and-mvp-launch.md) | רב-לשוניות, אמון/משפט והשקה | עברית/אנגלית, Trust & Legal, MVP מוכן לייצור |
 | 10 | [10-growth-and-retention.md](./10-growth-and-retention.md) | צמיחה ושימור | מבצעים, המלצות, לקוחות חוזרים |
 | 11 | [11-scale-and-automation.md](./11-scale-and-automation.md) | התרחבות ואוטומציה | אזורים נוספים ויכולות מתקדמות |
 
