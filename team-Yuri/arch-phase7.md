@@ -4,7 +4,7 @@
 PHASE=7
 
 ## Status
-STATUS: READY_FOR_MANAGER
+STATUS: APPROVED
 
 ## Phase Goal
 
@@ -124,12 +124,63 @@ This phase is **not** infrastructure-only.
 6. Ask user approval of this architecture before Developer implementation if any scope conflict appears.
 
 ## Architect Review
-ARCHITECT_REVIEW_STATUS: NOT_REVIEWED
+ARCHITECT_REVIEW_STATUS: APPROVED
 
 ### Review Notes
 
-(Phase design complete. Awaiting Manager detailed design + Developer implementation + evidence before Architect REVIEW-PHASE.)
+**Review date:** 2026-07-19  
+**Reviewer:** Yuri (Software Architect)  
+**Artifacts reviewed:** `arch-phase7.md`, `manager-phase7.md` (MANAGER_REVIEW_STATUS: APPROVED), `dev-phase7.md` (STATUS: COMPLETE)
+
+#### Architecture alignment — PASS
+
+| Check | Verdict | Notes |
+|---|---|---|
+| Phase 7 goal — Pre-launch Trust & Legal (wave 1) | Pass | Legal pages, contact disclosures, consent, Jerusalem delivery disclosure, bank-transfer instructions after approval |
+| Legal pages as static localized content | Pass | `src/content/legal` + `/[locale]/privacy\|terms\|cancellation`; plain React text |
+| No ע.מ./ח.פ. | Pass | Explicitly out; not added |
+| Contact always visible | Pass | `resolveBusinessContact` + message fallbacks |
+| Consent client + server | Pass | Checkout UI + `checkoutTrustGateError` / `createGuestOrder` |
+| Delivery disclosure (not geo-engine) | Pass | Jerusalem + arranged cost + affirmation only |
+| Keep `bank_transfer` | Pass | Remains selectable; instructions via settings |
+| Bank via SiteSettings allowlist | Pass | `bank_transfer_details`; admin-only write; not on homepage |
+| Approved email + confirmation note | Pass | Template bank block / phone fallback; confirmation next-steps |
+| Phase 4 Production PARKED | Pass | Not claimed complete |
+| Growth out of scope | Pass | No gateway / loyalty / WhatsApp |
+| Git workflow | Pass | `phase-7/pre-launch-trust-legal` from `develop`; pushed (`f4044eb`, `5c82e15`) |
+| Docs | Pass | Product Phase 09 fold-in; Development Phases Plan; ERD; README |
+| Manager gate | Pass | APPROVED; acceptance criteria checked |
+
+#### Developer evidence — PASS
+
+| Criterion | Verdict | Notes |
+|---|---|---|
+| Milestones M0–M8 | Pass | All Yes in `dev-phase7.md` |
+| Lint | Pass | `npm run lint` |
+| Unit tests | Pass | `npm test` — 38 total; 9 Phase 7 (gates, contact resolve, settings allowlist, approved email bank branch) |
+| Scope compliance | Pass | Wave 1 only; draft legal acknowledged |
+| Declaration | Pass | `READY_FOR_MANAGER_REVIEW` then Manager APPROVED |
+
+#### Functional testability — PASS (with documented residual)
+
+| Criterion | Verdict | Notes |
+|---|---|---|
+| Legal pages + footer contact | Pass | Browser `/he/privacy` + legal footer links logged |
+| Trust gates | Pass | Unit tests prove consent/delivery reject paths |
+| Bank instructions path | Pass | Unit tests prove approved-email HTML with details or phone fallback; confirmation note implemented |
+| Full interactive checkout→approve→Resend inbox | Partial | Not re-logged end-to-end; **accepted** (same residual pattern as prior phases). Recommend user smoke before merge to `develop`. |
+| Production / live Resend proof | N/A | Correctly out of Phase 7 |
+
+#### Accepted residuals for Phase 7 close
+
+| Item | Disposition |
+|---|---|
+| Draft legal copy | Owner replaces before public launch — not a phase blocker |
+| Phase 4 Production | Remains PARKED |
+| Full Resend inbox E2E | Optional smoke before merge; template/unit coverage sufficient to close |
+
+**Architect APPROVED.** Phase 7 complete architecturally. Do **not** update `PHASE.md` without explicit user instruction. Next choices: merge `phase-7/pre-launch-trust-legal` → `develop` (PR preferred), resume Phase 4 Production readiness, or begin Phase 8 Business Growth design.
 
 ### Required Corrections
 
-None at design time.
+None.

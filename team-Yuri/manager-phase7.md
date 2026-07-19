@@ -4,7 +4,7 @@
 PHASE=7
 
 ## Status
-STATUS: READY_FOR_DEVELOPER
+STATUS: READY_FOR_ARCHITECT_REVIEW
 
 ## Phase Goal
 
@@ -104,19 +104,19 @@ Implement Pre-launch Trust & Legal (wave 1 / P0.1–P0.5): HE/EN legal pages wit
 
 ## Acceptance / Gating Criteria
 
-- [ ] Branch `phase-7/pre-launch-trust-legal` named in `dev-phase7.md`
-- [ ] `/he` and `/en` legal pages for privacy, terms, cancellation
-- [ ] Footer + checkout link to all three
-- [ ] Footer always shows phone, address, hours (CMS or fallback)
-- [ ] No ע.מ./ח.פ. UI added
-- [ ] Checkout requires terms consent (UI + server)
-- [ ] Delivery shows Jerusalem + arranged cost; affirmation required
-- [ ] `bank_transfer` remains selectable
-- [ ] Admin can save `bank_transfer_details`
-- [ ] Approved bank_transfer order surfaces pay instructions (email and/or confirmation)
-- [ ] `npm run lint` PASS; `npm test` PASS
-- [ ] Functional evidence in `dev-phase7.md`
-- [ ] Phase 4 Production not claimed complete
+- [x] Branch `phase-7/pre-launch-trust-legal` named in `dev-phase7.md`
+- [x] `/he` and `/en` legal pages for privacy, terms, cancellation
+- [x] Footer + checkout link to all three
+- [x] Footer always shows phone, address, hours (CMS or fallback)
+- [x] No ע.מ./ח.פ. UI added
+- [x] Checkout requires terms consent (UI + server)
+- [x] Delivery shows Jerusalem + arranged cost; affirmation required
+- [x] `bank_transfer` remains selectable
+- [x] Admin can save `bank_transfer_details`
+- [x] Approved bank_transfer order surfaces pay instructions (email and/or confirmation)
+- [x] `npm run lint` PASS; `npm test` PASS
+- [x] Functional evidence in `dev-phase7.md`
+- [x] Phase 4 Production not claimed complete
 
 ## Functional Testability Criteria
 
@@ -162,12 +162,31 @@ Implement Pre-launch Trust & Legal (wave 1 / P0.1–P0.5): HE/EN legal pages wit
 | Scope creep into Phase 4 / P1 | Stick to M0–M8 |
 
 ## Manager Review
-MANAGER_REVIEW_STATUS: NOT_REVIEWED
+MANAGER_REVIEW_STATUS: APPROVED
 
 ### Review Notes
 
-(Awaiting Developer implementation + `dev-phase7.md`.)
+Reviewed `dev-phase7.md` against `manager-phase7.md` and `arch-phase7.md` (PHASE=7).
+
+| Check | Result |
+|---|---|
+| Phase identifier aligned | Pass (`PHASE=7`) |
+| Milestones M0–M8 claimed complete | Pass |
+| Branch + push evidence | Pass (`phase-7/pre-launch-trust-legal`, PUSHED; commits `f4044eb`, `5c82e15`) |
+| Lint / unit tests | Pass (`npm run lint`; `npm test` 38 incl. 9 Phase 7 trust/legal) |
+| Legal pages HE/EN | Pass — `/privacy`, `/terms`, `/cancellation` + `src/content/legal` draft plain text |
+| Footer + checkout links | Pass — three legal links each |
+| Contact always visible | Pass — `resolveBusinessContact` + message fallbacks |
+| Consent + delivery gates | Pass — UI + `checkoutTrustGateError` / `createGuestOrder` server reject |
+| Bank settings | Pass — `bank_transfer_details` allowlisted; admin textarea; ERD/README updated |
+| Approved-path instructions | Pass — email template bank block + phone fallback; confirmation next-steps note |
+| Docs | Pass — product Phase 09 Trust & Legal fold-in; Development Phases Plan; ERD; README |
+| Architecture constraints | Pass — no gateway, no ע.מ./ח.פ., no legal CMS/HTML, no Growth; Phase 4 not claimed |
+| Known issues | Acceptable — draft legal copy; Phase 4 PARKED; empty bank → contact fallback |
+| Functional evidence | Pass with note — browser `/he/privacy` + unit coverage for gates/email HTML; **full interactive checkout→admin approve→Resend inbox E2E not re-logged**. Recommend user/architect quick smoke before merge to `develop`. |
+
+Manager **APPROVED**. Hand off to Architect for final phase review.
 
 ### Required Corrections
 
-None at planning time.
+None blocking. Optional before merge: smoke `/he/checkout` (consent + delivery affirm) → place bank_transfer order → set `bank_transfer_details` in `/admin/settings` → approve → confirm approved email/HTML includes instructions.
