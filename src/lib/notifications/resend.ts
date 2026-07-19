@@ -1,6 +1,7 @@
 import {
   buildOrderAdminNewEmail,
   buildOrderApprovedEmail,
+  buildOrderCompletedEmail,
   buildOrderReceivedEmail,
   buildOrderRejectedEmail,
   toAdminNewOrderEmailPayload,
@@ -90,14 +91,16 @@ export async function sendTransactionalEmail(input: {
 
 async function sendOrderEmail(
   payload: OrderEmailPayload,
-  kind: "received" | "approved" | "rejected",
+  kind: "received" | "approved" | "rejected" | "completed",
 ): Promise<SendEmailResult> {
   const built =
     kind === "received"
       ? buildOrderReceivedEmail(payload)
       : kind === "approved"
         ? buildOrderApprovedEmail(payload)
-        : buildOrderRejectedEmail(payload);
+        : kind === "rejected"
+          ? buildOrderRejectedEmail(payload)
+          : buildOrderCompletedEmail(payload);
 
   return sendTransactionalEmail({
     to: payload.customerEmail,
@@ -156,4 +159,10 @@ export async function sendOrderRejected(
   order: Parameters<typeof toOrderEmailPayload>[0],
 ): Promise<SendEmailResult> {
   return sendOrderEmail(toOrderEmailPayload(order), "rejected");
+}
+
+export async function sendOrderCompleted(
+  order: Parameters<typeof toOrderEmailPayload>[0],
+): Promise<SendEmailResult> {
+  return sendOrderEmail(toOrderEmailPayload(order), "completed");
 }

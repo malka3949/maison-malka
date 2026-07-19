@@ -118,4 +118,8 @@ export const he: Messages = {
   errorDeliveryAddress: "כתובת למשלוח חובה.",
   errorAcceptedTerms: "יש לאשר את תנאי השימוש והמדיניות לפני שליחה.",
   errorDeliveryArea: "יש לאשר את אזור המשלוח ועלות בתיאום.",
+  errorInvalidPhone: "נא להזין מספר נייד ישראלי תקין (05X…).",
+  orderStatusLabel: "סטטוס",
+  orderItems: "פריטים",
+  lineTotal: "סה״כ שורה",
 };

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/components/storefront/CartProvider";
 import { createGuestOrder } from "@/lib/actions/orders";
 import { minFulfillmentDate, toDateInputValue } from "@/lib/fulfillment";
+import { computeLineTotal, sumMoney } from "@/lib/pricing";
 import type { Locale, Messages } from "@/lib/i18n";
 
 type Prefill = {
@@ -30,6 +31,9 @@ export function CheckoutForm({
   const [pending, setPending] = useState(false);
   const [fulfillment, setFulfillment] = useState<"pickup" | "delivery">("pickup");
   const minDate = toDateInputValue(minFulfillmentDate());
+  const cartSubtotal = sumMoney(
+    lines.map((l) => computeLineTotal(l.unitPrice, l.quantity)),
+  );
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -76,6 +80,7 @@ export function CheckoutForm({
         required_options: messages.errorRequiredOptions,
         accepted_terms: messages.errorAcceptedTerms,
         delivery_area: messages.errorDeliveryArea,
+        invalid_phone: messages.errorInvalidPhone,
         generic: messages.errorGeneric,
       };
       setError(map[result.error] ?? messages.errorGeneric);
@@ -95,6 +100,35 @@ export function CheckoutForm({
       onSubmit={onSubmit}
       className="mx-auto max-w-lg space-y-4 rounded-2xl border border-mm-line bg-mm-surface p-6 md:p-8"
     >
+      <div className="space-y-2 rounded-xl border border-mm-line bg-mm-soft/50 p-3 text-sm">
+        <p className="font-medium text-mm-primary">{messages.orderItems}</p>
+        <ul className="space-y-2">
+          {lines.map((line) => (
+            <li
+              key={`${line.productId}-${line.optionValueIds.join(",")}`}
+              className="text-mm-secondary"
+            >
+              <span className="text-mm-primary">
+                {line.name} × {line.quantity}
+              </span>
+              {line.optionLabels?.length ? (
+                <span className="mt-0.5 block text-xs">
+                  {line.optionLabels.join(" · ")}
+                </span>
+              ) : null}
+              <span className="mt-0.5 block text-xs">
+                {messages.ils}
+                {computeLineTotal(line.unitPrice, line.quantity).toFixed(2)}
+              </span>
+            </li>
+          ))}
+        </ul>
+        <p className="border-t border-mm-line pt-2 font-medium text-mm-primary">
+          {messages.subtotal}: {messages.ils}
+          {cartSubtotal.toFixed(2)}
+        </p>
+      </div>
+
       <label className="block space-y-1 text-sm text-mm-secondary">
         <span>{messages.fullName}</span>
         <input
@@ -108,9 +142,12 @@ export function CheckoutForm({
         <span>{messages.phone}</span>
         <input
           name="phone"
+          type="tel"
+          inputMode="tel"
           required
           defaultValue={prefill?.phone ?? ""}
           className="mm-field"
+          placeholder="05X-XXXXXXX"
         />
       </label>
       <label className="block space-y-1 text-sm text-mm-secondary">

@@ -41,7 +41,14 @@ export function CartView({ locale, messages }: { locale: Locale; messages: Messa
           >
             <div>
               <p className="font-medium text-mm-primary">{line.name}</p>
-              <p className="text-sm text-mm-cta">
+              {line.optionLabels?.length ? (
+                <ul className="mt-1 space-y-0.5 text-xs text-mm-secondary">
+                  {line.optionLabels.map((label) => (
+                    <li key={label}>{label}</li>
+                  ))}
+                </ul>
+              ) : null}
+              <p className="mt-1 text-sm text-mm-cta">
                 {messages.ils}
                 {line.unitPrice.toFixed(2)}
               </p>

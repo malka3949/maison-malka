@@ -121,4 +121,8 @@ export const en: Messages = {
   errorDeliveryAddress: "Delivery address is required.",
   errorAcceptedTerms: "Please accept the terms and policies before submitting.",
   errorDeliveryArea: "Please confirm the delivery area and arranged cost.",
+  errorInvalidPhone: "Please enter a valid Israeli mobile number (05X…).",
+  orderStatusLabel: "Status",
+  orderItems: "Items",
+  lineTotal: "Line total",
 };

@@ -122,6 +122,10 @@ export type Messages = {
   errorDeliveryAddress: string;
   errorAcceptedTerms: string;
   errorDeliveryArea: string;
+  errorInvalidPhone: string;
+  orderStatusLabel: string;
+  orderItems: string;
+  lineTotal: string;
 };
 
 import { he } from "@/messages/he";

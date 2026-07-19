@@ -13,6 +13,7 @@ import { getSessionUser, syncUserFromAuth } from "@/lib/auth";
 import { validateFulfillmentDate } from "@/lib/fulfillment";
 import { checkoutTrustGateError } from "@/lib/checkout-gates";
 import { computeLineTotal, computeUnitPrice, sumMoney } from "@/lib/pricing";
+import { normalizeIsraeliMobile } from "@/lib/validation/phone";
 import { createClient } from "@/lib/supabase/server";
 import type { Locale } from "@/lib/i18n";
 import { sendOrderAdminNew, sendOrderReceived } from "@/lib/notifications/resend";
@@ -73,10 +74,14 @@ export async function createGuestOrder(
   }
 
   const name = input.customerName.trim();
-  const phone = input.customerPhone.trim();
+  const phoneRaw = input.customerPhone.trim();
+  const phone = normalizeIsraeliMobile(phoneRaw);
   const email = input.customerEmail.trim().toLowerCase();
-  if (!name || !phone || !email) {
+  if (!name || !email) {
     return { ok: false, error: "generic" };
+  }
+  if (!phone) {
+    return { ok: false, error: "invalid_phone" };
   }
 
   const productIds = [...new Set(input.lines.map((l) => l.productId))];

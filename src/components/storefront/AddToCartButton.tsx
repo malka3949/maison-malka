@@ -72,11 +72,19 @@ export function AddToCartButton({
     }
     setError(null);
     const optionValueIds = options.map((opt) => selected[opt.id]).filter(Boolean);
+    const optionLabels = options
+      .map((opt) => {
+        const val = opt.values.find((v) => v.id === selected[opt.id]);
+        if (!val) return null;
+        return `${opt.nameKey}: ${val.labelKey}`;
+      })
+      .filter((x): x is string => Boolean(x));
     addLine({
       productId,
       name: productName,
       unitPrice,
       optionValueIds,
+      optionLabels,
       quantity: 1,
     });
     router.push(`/${locale}/cart`);

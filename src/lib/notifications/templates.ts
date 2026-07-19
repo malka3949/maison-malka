@@ -351,6 +351,45 @@ export function buildOrderRejectedEmail(payload: OrderEmailPayload) {
   };
 }
 
+export function buildOrderCompletedEmail(payload: OrderEmailPayload) {
+  const shortId = payload.orderId.slice(-8);
+  const en = payload.locale === "en";
+  const name = escapeHtml(payload.customerName);
+  return {
+    subject: en
+      ? `Maison Malka — Order completed (${shortId})`
+      : `Maison Malka — ההזמנה הושלמה (${shortId})`,
+    html: wrapEmail({
+      locale: payload.locale,
+      preheader: en
+        ? `Your order is complete · ${payload.fulfillmentDate}`
+        : `ההזמנה הושלמה · תאריך מילוי ${payload.fulfillmentDate}`,
+      eyebrow: en ? "Thank you" : "תודה",
+      title: en ? "Order completed" : "ההזמנה הושלמה",
+      badge: en ? "Completed" : "הושלם",
+      tone: "success",
+      introHtml: en
+        ? `<p style="margin:0;">Hello <strong style="color:${C.text};">${name}</strong>,</p>
+           <p style="margin:10px 0 0;">Your order has been marked complete. We hope you enjoy every bite.</p>`
+        : `<p style="margin:0;">שלום <strong style="color:${C.text};">${name}</strong>,</p>
+           <p style="margin:10px 0 0;">ההזמנה סומנה כהושלמה. מקווים שתהנו מכל ביס.</p>`,
+      bodyHtml: detailsTable(
+        en
+          ? [
+              ["Order number", escapeHtml(payload.orderId)],
+              ["Fulfillment date", escapeHtml(payload.fulfillmentDate)],
+              ["Total", `₪${escapeHtml(payload.total)}`],
+            ]
+          : [
+              ["מספר הזמנה", escapeHtml(payload.orderId)],
+              ["תאריך מילוי", escapeHtml(payload.fulfillmentDate)],
+              ["סכום", `₪${escapeHtml(payload.total)}`],
+            ],
+      ),
+    }),
+  };
+}
+
 export function buildOrderAdminNewEmail(payload: AdminNewOrderEmailPayload) {
   const fulfillmentLabel =
     payload.fulfillmentType === "delivery" ? "משלוח" : "איסוף עצמי";

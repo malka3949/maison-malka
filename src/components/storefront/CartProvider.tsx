@@ -16,6 +16,8 @@ export type CartLine = {
   optionValueIds: string[];
   /** Display snapshot (not authoritative for totals). */
   name: string;
+  /** Human-readable option labels for cart/checkout display. */
+  optionLabels: string[];
   unitPrice: number;
 };
 
@@ -28,7 +30,7 @@ type CartContextValue = {
   itemCount: number;
 };
 
-const STORAGE_KEY = "maison-malka-cart-v1";
+const STORAGE_KEY = "maison-malka-cart-v2";
 
 function lineKey(productId: string, optionValueIds: string[]): string {
   return `${productId}::${[...optionValueIds].sort().join(",")}`;
@@ -46,7 +48,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
       if (raw) {
         const parsed = JSON.parse(raw) as CartLine[];
         if (Array.isArray(parsed)) {
-          setLines(parsed);
+          setLines(
+            parsed.map((l) => ({
+              ...l,
+              optionLabels: Array.isArray(l.optionLabels) ? l.optionLabels : [],
+            })),
+          );
         }
       }
     } catch {
@@ -73,7 +80,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
         if (existing) {
           return prev.map((l) =>
             lineKey(l.productId, l.optionValueIds) === key
-              ? { ...l, quantity: l.quantity + qty, unitPrice: line.unitPrice, name: line.name }
+              ? {
+                  ...l,
+                  quantity: l.quantity + qty,
+                  unitPrice: line.unitPrice,
+                  name: line.name,
+                  optionLabels: line.optionLabels ?? [],
+                }
               : l,
           );
         }
@@ -84,6 +97,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             quantity: qty,
             optionValueIds: line.optionValueIds,
             name: line.name,
+            optionLabels: line.optionLabels ?? [],
             unitPrice: line.unitPrice,
           },
         ];
