@@ -1,7 +1,12 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState, useTransition } from "react";
 import { upsertProductAction, type ProductFormState } from "@/lib/actions/products";
+import { translateProductNameAction } from "@/lib/actions/product-translate";
+import {
+  suggestProductDescriptions,
+  translateProductNameToEnglish,
+} from "@/lib/ai/product-description";
 import { adminUi } from "@/lib/admin-ui";
 
 const initialState: ProductFormState = {};
@@ -20,14 +25,96 @@ type ProductFormProps = {
 };
 
 export function ProductForm({ categories, product }: ProductFormProps) {
-  const nameHe = product?.translations.find((t) => t.locale === "he")?.name ?? "";
-  const nameEn = product?.translations.find((t) => t.locale === "en")?.name ?? "";
-  const descriptionHe =
+  const initialNameHe =
+    product?.translations.find((t) => t.locale === "he")?.name ?? "";
+  const initialNameEn =
+    product?.translations.find((t) => t.locale === "en")?.name ?? "";
+  const initialDescriptionHe =
     product?.translations.find((t) => t.locale === "he")?.description ?? "";
-  const descriptionEn =
+  const initialDescriptionEn =
     product?.translations.find((t) => t.locale === "en")?.description ?? "";
 
+  const [nameHe, setNameHe] = useState(initialNameHe);
+  const [nameEn, setNameEn] = useState(initialNameEn);
+  const [descriptionHe, setDescriptionHe] = useState(initialDescriptionHe);
+  const [descriptionEn, setDescriptionEn] = useState(initialDescriptionEn);
+  const [categoryId, setCategoryId] = useState(product?.category_id ?? "");
+  const [productType, setProductType] = useState<"standard" | "bundle">(
+    product?.product_type ?? "standard",
+  );
+  const [suggestNote, setSuggestNote] = useState<string | null>(null);
+  const [translatePending, startTranslate] = useTransition();
+
   const [state, formAction, pending] = useActionState(upsertProductAction, initialState);
+
+  function applyLocalNameHint() {
+    if (nameEn.trim()) return;
+    const suggested = translateProductNameToEnglish(nameHe);
+    if (suggested) {
+      setNameEn(suggested);
+      setSuggestNote(null);
+    } else if (nameHe.trim()) {
+      setSuggestNote(
+        "אין תרגום מקומי מדויק — לחצו «תרגם לאנגלית» (מילון או Gemini חינמי) או מלאו ידנית.",
+      );
+    }
+  }
+
+  function handleTranslateName() {
+    if (!nameHe.trim()) {
+      setSuggestNote("מלאו קודם שם בעברית.");
+      return;
+    }
+    if (
+      nameEn.trim() &&
+      !window.confirm("יש כבר שם באנגלית. להחליף בתרגום?")
+    ) {
+      return;
+    }
+
+    startTranslate(async () => {
+      const result = await translateProductNameAction(nameHe);
+      if (!result.ok) {
+        setSuggestNote(result.error);
+        return;
+      }
+      setNameEn(result.nameEn);
+      setSuggestNote(
+        result.source === "local"
+          ? "תורגם מהמילון המקומי (חינמי, בלי רשת)."
+          : "תורגם עם Gemini (שכבה חינמית). אפשר לערוך לפני שמירה.",
+      );
+    });
+  }
+
+  function handleSuggestDescription() {
+    if (!nameHe.trim() && !nameEn.trim()) {
+      setSuggestNote("מלאו קודם שם בעברית או באנגלית.");
+      return;
+    }
+
+    const hasExisting =
+      descriptionHe.trim().length > 0 || descriptionEn.trim().length > 0;
+    if (
+      hasExisting &&
+      !window.confirm("יש כבר תיאור. להחליף בהצעה החדשה?")
+    ) {
+      return;
+    }
+
+    const categoryLabel =
+      categories.find((c) => c.id === categoryId)?.label ?? "";
+    const suggestion = suggestProductDescriptions({
+      nameHe,
+      nameEn,
+      categoryLabel,
+      productType,
+    });
+
+    setDescriptionHe(suggestion.he);
+    setDescriptionEn(suggestion.en);
+    setSuggestNote("הוצעו תיאורים בעברית ובאנגלית. אפשר לערוך לפני שמירה.");
+  }
 
   return (
     <form action={formAction} className={`space-y-4 ${adminUi.card}`}>
@@ -37,7 +124,8 @@ export function ProductForm({ categories, product }: ProductFormProps) {
           <label className="mb-1 block text-sm font-medium text-mm-primary">קטגוריה</label>
           <select
             name="category_id"
-            defaultValue={product?.category_id ?? ""}
+            value={categoryId}
+            onChange={(event) => setCategoryId(event.target.value)}
             required
             className={adminUi.input}
           >
@@ -53,7 +141,10 @@ export function ProductForm({ categories, product }: ProductFormProps) {
           <label className="mb-1 block text-sm font-medium text-mm-primary">סוג מוצר</label>
           <select
             name="product_type"
-            defaultValue={product?.product_type ?? "standard"}
+            value={productType}
+            onChange={(event) =>
+              setProductType(event.target.value as "standard" | "bundle")
+            }
             className={adminUi.input}
           >
             <option value="standard">מוצר רגיל</option>
@@ -66,7 +157,9 @@ export function ProductForm({ categories, product }: ProductFormProps) {
           <label className="mb-1 block text-sm font-medium text-mm-primary">שם (עברית)</label>
           <input
             name="name_he"
-            defaultValue={nameHe}
+            value={nameHe}
+            onChange={(event) => setNameHe(event.target.value)}
+            onBlur={applyLocalNameHint}
             required
             className={adminUi.input}
           />
@@ -75,19 +168,51 @@ export function ProductForm({ categories, product }: ProductFormProps) {
           <label className="mb-1 block text-sm font-medium text-mm-primary">שם (אנגלית)</label>
           <input
             name="name_en"
-            defaultValue={nameEn}
+            value={nameEn}
+            onChange={(event) => setNameEn(event.target.value)}
             required
             className={adminUi.input}
           />
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={handleTranslateName}
+              disabled={translatePending}
+              className={adminUi.btnSecondary}
+            >
+              {translatePending ? "מתרגם..." : "תרגם לאנגלית"}
+            </button>
+            <p className={`text-xs ${adminUi.muted}`}>
+              מילון מקומי חינמי; אם אין התאמה — Gemini חינמי (רק עם GEMINI_API_KEY).
+            </p>
+          </div>
         </div>
       </div>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className={`text-sm ${adminUi.muted}`}>
+          הצעת תיאור מקומית (בלי API) — לפי שם, קטגוריה וסוג מוצר.
+        </p>
+        <button
+          type="button"
+          onClick={handleSuggestDescription}
+          className={adminUi.btnSecondary}
+        >
+          הצע תיאור
+        </button>
+      </div>
+      {suggestNote ? (
+        <p className={`text-sm ${adminUi.muted}`} role="status">
+          {suggestNote}
+        </p>
+      ) : null}
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className="mb-1 block text-sm font-medium text-mm-primary">תיאור (עברית)</label>
           <textarea
             name="description_he"
-            defaultValue={descriptionHe}
-            rows={3}
+            value={descriptionHe}
+            onChange={(event) => setDescriptionHe(event.target.value)}
+            rows={4}
             className={adminUi.input}
           />
         </div>
@@ -95,8 +220,9 @@ export function ProductForm({ categories, product }: ProductFormProps) {
           <label className="mb-1 block text-sm font-medium text-mm-primary">תיאור (אנגלית)</label>
           <textarea
             name="description_en"
-            defaultValue={descriptionEn}
-            rows={3}
+            value={descriptionEn}
+            onChange={(event) => setDescriptionEn(event.target.value)}
+            rows={4}
             className={adminUi.input}
           />
         </div>

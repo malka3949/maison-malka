@@ -47,6 +47,7 @@ npm run dev
 | `RESEND_API_KEY` | Server-only Resend API key (transactional email) |
 | `RESEND_FROM_EMAIL` | Verified sender address for Resend (e.g. `Maison Malka <onboarding@resend.dev>`) |
 | `RESEND_DEV_TO` | Optional: redirect **all** emails to this inbox (for free tier / no domain). Shows original recipient in subject. Remove when domain is verified. |
+| `GEMINI_API_KEY` | Optional, server-only. Free Google AI Studio key for product name HE→EN when the local bakery dictionary misses. Leave empty for dictionary-only. |
 
 ## Scripts
 
