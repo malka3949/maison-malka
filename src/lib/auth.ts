@@ -28,15 +28,18 @@ export async function requireAdmin() {
 }
 
 export async function syncUserFromAuth(authUserId: string, email: string) {
+  const existing = await prisma.user.findUnique({ where: { id: authUserId } });
+  if (existing) {
+    // Never auto-promote/demote on sync — role is DB-managed after create.
+    return prisma.user.update({
+      where: { id: authUserId },
+      data: { email },
+    });
+  }
   const role = resolveUserRole(email, process.env.ADMIN_EMAIL);
-  return prisma.user.upsert({
-    where: { id: authUserId },
-    create: {
+  return prisma.user.create({
+    data: {
       id: authUserId,
-      email,
-      role,
-    },
-    update: {
       email,
       role,
     },

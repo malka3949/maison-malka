@@ -28,14 +28,17 @@ export type Messages = {
   heroSubtitle: string;
   heroCta: string;
   heroSecondaryCta: string;
+  heroImageAlt: string;
   promoCatalogLabel: string;
   promoCatalogTitle: string;
   promoCatalogBody: string;
   promoCatalogCta: string;
+  promoCatalogImageAlt: string;
   promoGiftLabel: string;
   promoGiftTitle: string;
   promoGiftBody: string;
   promoGiftCta: string;
+  promoGiftImageAlt: string;
   categoriesTitle: string;
   categoriesSubtitle: string;
   seeFullCatalog: string;
@@ -123,6 +126,7 @@ export type Messages = {
   errorAcceptedTerms: string;
   errorDeliveryArea: string;
   errorInvalidPhone: string;
+  errorRateLimited: string;
   orderStatusLabel: string;
   orderItems: string;
   lineTotal: string;

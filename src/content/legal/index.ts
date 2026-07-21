@@ -6,6 +6,9 @@ import {
 import { privacyEn, privacyHe, type LegalDocument } from "@/content/legal/privacy";
 import { termsEn, termsHe } from "@/content/legal/terms";
 
+/** Bump when legal templates change in a material way (stored on orders at consent). */
+export const LEGAL_CONSENT_VERSION = "2026-07-22";
+
 export type LegalSlug = "privacy" | "terms" | "cancellation";
 
 export function getLegalDocument(

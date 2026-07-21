@@ -2,8 +2,10 @@
 
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
+import { decideCategoryDelete } from "@/lib/catalog/delete-rules";
 import { slugify } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { Locale } from "@prisma/client";
 
 export type CategoryFormState = {
@@ -104,4 +106,67 @@ export async function toggleCategoryActiveFormAction(formData: FormData) {
   const id = String(formData.get("id") ?? "");
   const isActive = formData.get("is_active") === "true";
   await toggleCategoryActiveAction(id, !isActive);
+}
+
+export type DeleteCategoryState = {
+  error?: string;
+  success?: boolean;
+};
+
+export async function deleteCategoryAction(
+  _prev: DeleteCategoryState,
+  formData: FormData,
+): Promise<DeleteCategoryState> {
+  const admin = await requireAdmin();
+  if (!admin) {
+    return { error: "אין הרשאה" };
+  }
+
+  const id = String(formData.get("id") ?? "").trim();
+  const targetCategoryId = String(formData.get("target_category_id") ?? "").trim() || null;
+
+  if (!id) {
+    return { error: "קטגוריה לא נמצאה" };
+  }
+
+  const category = await prisma.category.findUnique({
+    where: { id },
+    include: { _count: { select: { products: true } } },
+  });
+  if (!category) {
+    return { error: "קטגוריה לא נמצאה" };
+  }
+
+  let targetExists = false;
+  if (targetCategoryId) {
+    const target = await prisma.category.findUnique({ where: { id: targetCategoryId } });
+    targetExists = Boolean(target);
+  }
+
+  const decision = decideCategoryDelete({
+    productCount: category._count.products,
+    targetCategoryId,
+    sourceCategoryId: id,
+    targetExists,
+  });
+
+  if (!decision.ok) {
+    return { error: decision.error };
+  }
+
+  if (decision.mode === "empty") {
+    await prisma.category.delete({ where: { id } });
+  } else {
+    await prisma.$transaction([
+      prisma.product.updateMany({
+        where: { category_id: id },
+        data: { category_id: decision.targetCategoryId },
+      }),
+      prisma.category.delete({ where: { id } }),
+    ]);
+  }
+
+  revalidatePath("/admin/categories");
+  revalidatePath("/admin/products");
+  redirect("/admin/categories");
 }

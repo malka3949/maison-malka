@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { prisma } from "@/lib/prisma";
 import { toggleProductAvailabilityFormAction } from "@/lib/actions/products";
 import { CategoryFilter } from "@/components/admin/CategoryFilter";
+import { ProductDeleteListButton } from "@/components/admin/ProductDeleteListButton";
 import { adminUi } from "@/lib/admin-ui";
 
 export const dynamic = "force-dynamic";
@@ -96,9 +97,12 @@ export default async function ProductsPage({
                     </form>
                   </td>
                   <td className="px-4 py-3">
-                    <Link href={`/admin/products/${product.id}`} className={adminUi.link}>
-                      עריכה
-                    </Link>
+                    <div className="flex flex-col items-start gap-1">
+                      <Link href={`/admin/products/${product.id}`} className={adminUi.link}>
+                        עריכה
+                      </Link>
+                      <ProductDeleteListButton productId={product.id} />
+                    </div>
                   </td>
                 </tr>
               );

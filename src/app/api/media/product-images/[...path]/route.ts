@@ -6,6 +6,7 @@ import {
   localUploadExists,
   writeLocalProductImage,
 } from "@/lib/local-product-images";
+import { sanitizeStorageKeyFromSegments } from "@/lib/safe-upload-path";
 
 export const runtime = "nodejs";
 
@@ -19,35 +20,29 @@ function guessContentType(storagePath: string): string {
   return "application/octet-stream";
 }
 
-/**
- * Same-origin image delivery for Supabase Storage.
- * Prefer local disk cache under public/uploads (NetFree-friendly static).
- * Otherwise fetch from Supabase, reject non-image responses (filter block pages),
- * cache locally, then stream.
- */
 export async function GET(
   _request: Request,
   context: { params: Promise<{ path: string[] }> },
 ) {
   const { path: segments } = await context.params;
-  const safe = (segments ?? []).filter(
-    (s) => s.length > 0 && !s.includes("..") && !s.includes("\\") && !s.includes("\0"),
-  );
-  if (safe.length === 0) {
+  const storagePath = sanitizeStorageKeyFromSegments(segments ?? []);
+  if (!storagePath) {
     return NextResponse.json({ error: "Missing path" }, { status: 400 });
   }
 
-  const storagePath = safe.map(decodeURIComponent).join("/");
-
-  if (await localUploadExists(storagePath)) {
-    const buf = await readFile(localUploadAbsolutePath(storagePath));
-    return new NextResponse(buf, {
-      status: 200,
-      headers: {
-        "Content-Type": guessContentType(storagePath),
-        "Cache-Control": "public, max-age=86400, stale-while-revalidate=604800",
-      },
-    });
+  try {
+    if (await localUploadExists(storagePath)) {
+      const buf = await readFile(localUploadAbsolutePath(storagePath));
+      return new NextResponse(buf, {
+        status: 200,
+        headers: {
+          "Content-Type": guessContentType(storagePath),
+          "Cache-Control": "public, max-age=86400, stale-while-revalidate=604800",
+        },
+      });
+    }
+  } catch {
+    return NextResponse.json({ error: "Invalid path" }, { status: 400 });
   }
 
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -55,7 +50,10 @@ export async function GET(
     return NextResponse.json({ error: "Storage not configured" }, { status: 500 });
   }
 
-  const upstream = `${base.replace(/\/$/, "")}/storage/v1/object/public/${BUCKET}/${storagePath}`;
+  const upstream = `${base.replace(/\/$/, "")}/storage/v1/object/public/${BUCKET}/${storagePath
+    .split("/")
+    .map(encodeURIComponent)
+    .join("/")}`;
 
   let response: Response;
   try {
@@ -73,12 +71,7 @@ export async function GET(
 
   const contentType = response.headers.get("content-type");
   if (!isImageContentType(contentType)) {
-    // Typical when NetFree (or similar) returns an HTML/block interstitial
-    console.error(
-      "[media] upstream was not an image:",
-      contentType,
-      storagePath,
-    );
+    console.error("[media] upstream was not an image:", contentType, storagePath);
     return NextResponse.json(
       {
         error:

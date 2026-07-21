@@ -65,12 +65,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  if (isLoginPage && user) {
-    const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = "/admin";
-    redirectUrl.search = "";
-    return NextResponse.redirect(redirectUrl);
-  }
+  // Do not auto-redirect authenticated non-admins from /admin/login → /admin
+  // (role is enforced in admin layout via requireAdmin). Avoid redirect loops.
 
   return supabaseResponse;
 }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { OrderApproveRejectActions } from "@/components/admin/OrderApproveRejectActions";
+import { OrderPrivacyActions } from "@/components/admin/OrderPrivacyActions";
 import { OrderStatusBadge } from "@/components/admin/OrderFilters";
 import { prisma } from "@/lib/prisma";
 import { adminUi } from "@/lib/admin-ui";
@@ -167,8 +168,9 @@ export default async function AdminOrderDetailPage({
 
       <section className={adminUi.section}>
         <h2 className={adminUi.h2}>פעולות</h2>
-        <div className="mt-4">
+        <div className="mt-4 space-y-4">
           <OrderApproveRejectActions orderId={order.id} status={order.status} />
+          <OrderPrivacyActions orderId={order.id} />
         </div>
       </section>
     </div>

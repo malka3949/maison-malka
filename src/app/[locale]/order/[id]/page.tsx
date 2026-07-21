@@ -7,19 +7,22 @@ import { orderStatusLabel } from "@/lib/orders/status";
 
 export default async function OrderConfirmationPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string; id: string }>;
+  searchParams: Promise<{ t?: string }>;
 }) {
   const { locale: localeParam, id } = await params;
-  if (!isLocale(localeParam)) {
+  const { t: accessToken } = await searchParams;
+  if (!isLocale(localeParam) || !accessToken?.trim()) {
     notFound();
   }
   const locale = localeParam as Locale;
   const messages = getMessages(locale);
   const prismaLocale = locale === "en" ? PrismaLocale.en : PrismaLocale.he;
 
-  const order = await prisma.order.findUnique({
-    where: { id },
+  const order = await prisma.order.findFirst({
+    where: { id, access_token: accessToken.trim() },
     select: {
       id: true,
       status: true,

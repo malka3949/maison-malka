@@ -40,7 +40,31 @@ export default async function RegisterPage({
             <span>{messages.password}</span>
             <input name="password" type="password" required minLength={6} className="mm-field" />
           </label>
-          {error ? <p className="text-sm text-red-700">{messages.errorGeneric}</p> : null}
+          <label className="flex cursor-pointer items-start gap-2 text-sm text-mm-secondary">
+            <input
+              type="checkbox"
+              name="acceptedTerms"
+              required
+              className="mt-1"
+            />
+            <span>
+              {messages.acceptTerms}{" "}
+              <Link
+                href={`/${locale}/privacy`}
+                className="text-mm-primary underline"
+              >
+                {messages.legalPrivacy}
+              </Link>
+              {" · "}
+              <Link
+                href={`/${locale}/terms`}
+                className="text-mm-primary underline"
+              >
+                {messages.legalTerms}
+              </Link>
+            </span>
+          </label>
+          {error ? <p className="text-sm text-red-700">{messages.errorAcceptedTerms}</p> : null}
           <button type="submit" className="mm-btn">
             {messages.registerSubmit}
           </button>

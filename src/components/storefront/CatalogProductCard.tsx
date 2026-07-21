@@ -17,6 +17,9 @@ type Props = {
   ils: string;
   inCartLabel: string;
   addToCartLabel: string;
+  viewProductLabel: string;
+  /** `grid` for catalog; `scroll` for home horizontal scroller */
+  layout?: "grid" | "scroll";
 };
 
 export function CatalogProductCard({
@@ -31,6 +34,8 @@ export function CatalogProductCard({
   ils,
   inCartLabel,
   addToCartLabel,
+  viewProductLabel,
+  layout = "grid",
 }: Props) {
   const { lines } = useCart();
   const qtyInCart = lines
@@ -40,7 +45,9 @@ export function CatalogProductCard({
   return (
     <Link
       href={`/${locale}/products/${productId}`}
-      className="mm-product-card mm-product-card--grid group relative cursor-pointer"
+      className={`mm-product-card group relative cursor-pointer${
+        layout === "grid" ? " mm-product-card--grid" : ""
+      }`}
     >
       <div className="mm-product-img">
         {imageUrl ? (
@@ -64,6 +71,7 @@ export function CatalogProductCard({
         {priceFrom}
         {formatIls(basePrice, ils)}
       </p>
+      <span className="mm-product-action">{viewProductLabel}</span>
     </Link>
   );
 }

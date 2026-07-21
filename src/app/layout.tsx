@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import { Great_Vibes, Heebo } from "next/font/google";
+import { Cormorant, Heebo } from "next/font/google";
 import "./globals.css";
 
-/** Elegant Latin script — English headings + brand wordmark. */
-const greatVibes = Great_Vibes({
+/** Refined editorial serif — brand wordmark + English display. */
+const cormorant = Cormorant({
   subsets: ["latin", "latin-ext"],
-  variable: "--font-great-vibes",
-  weight: "400",
+  variable: "--font-cormorant",
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
-/** Clean Hebrew UI + organized Hebrew headings. */
+/** Clean Hebrew UI + Hebrew headings. */
 const heebo = Heebo({
   subsets: ["hebrew", "latin"],
   variable: "--font-heebo",
@@ -33,7 +33,7 @@ export default function RootLayout({
       lang="he"
       dir="rtl"
       suppressHydrationWarning
-      className={`${greatVibes.variable} ${heebo.variable}`}
+      className={`${cormorant.variable} ${heebo.variable}`}
     >
       <body className="font-sans antialiased bg-mm-bg text-mm-text">
         {children}

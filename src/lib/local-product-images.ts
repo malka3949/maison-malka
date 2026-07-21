@@ -1,13 +1,21 @@
 import { mkdir, writeFile, access } from "fs/promises";
 import path from "path";
 import { constants as fsConstants } from "fs";
+import { resolveSafeUploadPath } from "@/lib/safe-upload-path";
 
 const BUCKET_FOLDER = "product-images";
 
-/** Absolute path under public/uploads/product-images/... */
+function uploadsRoot(): string {
+  return path.join(process.cwd(), "public", "uploads", BUCKET_FOLDER);
+}
+
+/** Absolute path under public/uploads/product-images/... (sandboxed). */
 export function localUploadAbsolutePath(storageKey: string): string {
-  const parts = storageKey.split("/").filter(Boolean);
-  return path.join(process.cwd(), "public", "uploads", BUCKET_FOLDER, ...parts);
+  const abs = resolveSafeUploadPath(uploadsRoot(), storageKey);
+  if (!abs) {
+    throw new Error("Invalid storage path");
+  }
+  return abs;
 }
 
 /** Browser URL for a local cached upload (same-origin static file). */

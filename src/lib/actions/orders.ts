@@ -1,5 +1,7 @@
 "use server";
 
+import { headers } from "next/headers";
+import { randomBytes } from "crypto";
 import {
   FulfillmentType,
   Locale as PrismaLocale,
@@ -17,6 +19,10 @@ import { normalizeIsraeliMobile } from "@/lib/validation/phone";
 import { createClient } from "@/lib/supabase/server";
 import type { Locale } from "@/lib/i18n";
 import { sendOrderAdminNew, sendOrderReceived } from "@/lib/notifications/resend";
+import { clientIpFromHeaders, rateLimitConsume } from "@/lib/rate-limit";
+import { LEGAL_CONSENT_VERSION } from "@/content/legal";
+
+const MAX_LINE_QTY = 99;
 
 export type CheckoutCartLineInput = {
   productId: string;
@@ -40,12 +46,19 @@ export type CheckoutFormInput = {
 };
 
 export type CheckoutResult =
-  | { ok: true; orderId: string }
+  | { ok: true; orderId: string; accessToken: string }
   | { ok: false; error: string };
 
 export async function createGuestOrder(
   input: CheckoutFormInput,
 ): Promise<CheckoutResult> {
+  const hdrs = await headers();
+  const ip = clientIpFromHeaders(hdrs);
+  const limited = rateLimitConsume(`checkout:${ip}`, 12, 15 * 60 * 1000);
+  if (!limited.ok) {
+    return { ok: false, error: "rate_limited" };
+  }
+
   if (!input.lines.length) {
     return { ok: false, error: "empty_cart" };
   }
@@ -115,7 +128,11 @@ export async function createGuestOrder(
   }[] = [];
 
   for (const line of input.lines) {
-    if (line.quantity < 1) {
+    if (
+      !Number.isInteger(line.quantity) ||
+      line.quantity < 1 ||
+      line.quantity > MAX_LINE_QTY
+    ) {
       return { ok: false, error: "generic" };
     }
     const product = productMap.get(line.productId);
@@ -181,6 +198,7 @@ export async function createGuestOrder(
 
   const order = await prisma.order.create({
     data: {
+      access_token: randomBytes(24).toString("hex"),
       user_id: userId,
       status: OrderStatus.pending_approval,
       customer_name: name,
@@ -201,6 +219,8 @@ export async function createGuestOrder(
           ? PaymentMethod.bank_transfer
           : PaymentMethod.on_pickup,
       customer_notes: input.customerNotes?.trim() || null,
+      terms_accepted_at: new Date(),
+      legal_consent_version: LEGAL_CONSENT_VERSION,
       subtotal,
       total,
       items: {
@@ -234,7 +254,7 @@ export async function createGuestOrder(
     }
   });
 
-  return { ok: true, orderId: order.id };
+  return { ok: true, orderId: order.id, accessToken: order.access_token };
 }
 
 export async function registerCustomer(formData: FormData) {
@@ -244,9 +264,11 @@ export async function registerCustomer(formData: FormData) {
     .toLowerCase();
   const password = String(formData.get("password") || "");
   const fullName = String(formData.get("fullName") || "").trim();
-  const phone = String(formData.get("phone") || "").trim();
+  const phoneRaw = String(formData.get("phone") || "").trim();
+  const phone = normalizeIsraeliMobile(phoneRaw);
+  const acceptedTerms = formData.get("acceptedTerms") === "on";
 
-  if (!email || !password || !fullName || !phone) {
+  if (!email || !password || !fullName || !phone || !acceptedTerms) {
     redirect(`/${locale}/register?error=1`);
   }
 
@@ -255,6 +277,13 @@ export async function registerCustomer(formData: FormData) {
     process.env.ADMIN_EMAIL &&
     email === process.env.ADMIN_EMAIL.trim().toLowerCase()
   ) {
+    redirect(`/${locale}/register?error=1`);
+  }
+
+  const hdrs = await headers();
+  const ip = clientIpFromHeaders(hdrs);
+  const limited = rateLimitConsume(`register:${ip}`, 6, 60 * 60 * 1000);
+  if (!limited.ok) {
     redirect(`/${locale}/register?error=1`);
   }
 
@@ -281,12 +310,12 @@ export async function registerCustomer(formData: FormData) {
     where: { user_id: data.user.id },
     create: {
       user_id: data.user.id,
-      full_name: fullName,
+      full_name: fullName.slice(0, 120),
       phone,
       email,
     },
     update: {
-      full_name: fullName,
+      full_name: fullName.slice(0, 120),
       phone,
       email,
     },

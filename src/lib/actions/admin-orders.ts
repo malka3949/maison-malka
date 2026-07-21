@@ -2,6 +2,7 @@
 
 import { OrderStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import { writeAccessAudit } from "@/lib/access-audit";
 import { requireAdmin } from "@/lib/auth";
 import {
   sendOrderApproved,
@@ -29,6 +30,12 @@ export async function updateOrderStatus(
 ): Promise<UpdateOrderStatusResult> {
   const admin = await requireAdmin();
   if (!admin) {
+    await writeAccessAudit({
+      action: "order.status_update",
+      resource: `order:${orderId}`,
+      detail: newStatus,
+      success: false,
+    });
     return { ok: false, error: "unauthorized" };
   }
 
@@ -54,6 +61,14 @@ export async function updateOrderStatus(
       rejection_reason_custom:
         newStatus === OrderStatus.rejected ? rejectionReason!.custom : null,
     },
+  });
+
+  await writeAccessAudit({
+    actorId: admin.appUser.id,
+    actorEmail: admin.appUser.email,
+    action: "order.status_update",
+    resource: `order:${orderId}`,
+    detail: `${order.status}->${newStatus}`,
   });
 
   let emailMessageId: string | undefined;
@@ -132,4 +147,108 @@ export async function rejectOrderFormAction(
 export async function completeOrderFormAction(formData: FormData) {
   const id = String(formData.get("id") || "");
   await updateOrderStatus(id, OrderStatus.completed);
+}
+
+/** Privacy: anonymize customer PII on an order (admin DSAR/erasure support). */
+export async function anonymizeOrderPiiAction(
+  orderId: string,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const admin = await requireAdmin();
+  if (!admin) {
+    await writeAccessAudit({
+      action: "order.anonymize_pii",
+      resource: `order:${orderId}`,
+      success: false,
+    });
+    return { ok: false, error: "unauthorized" };
+  }
+  const order = await prisma.order.findUnique({ where: { id: orderId } });
+  if (!order) {
+    return { ok: false, error: "not_found" };
+  }
+  await prisma.order.update({
+    where: { id: orderId },
+    data: {
+      customer_name: "[נמחק]",
+      customer_phone: "0000000000",
+      customer_email: `deleted-${orderId.slice(0, 8)}@invalid.local`,
+      delivery_address: null,
+      customer_notes: null,
+    },
+  });
+  await writeAccessAudit({
+    actorId: admin.appUser.id,
+    actorEmail: admin.appUser.email,
+    action: "order.anonymize_pii",
+    resource: `order:${orderId}`,
+  });
+  revalidatePath(`/admin/orders/${orderId}`);
+  revalidatePath("/admin/orders");
+  return { ok: true };
+}
+
+/** Privacy: export order personal data JSON for admin-assisted access requests. */
+export async function exportOrderPiiAction(
+  orderId: string,
+): Promise<{ ok: true; data: unknown } | { ok: false; error: string }> {
+  const admin = await requireAdmin();
+  if (!admin) {
+    await writeAccessAudit({
+      action: "order.export_pii",
+      resource: `order:${orderId}`,
+      success: false,
+    });
+    return { ok: false, error: "unauthorized" };
+  }
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+    include: {
+      items: {
+        include: {
+          options: true,
+          product: { include: { translations: true } },
+        },
+      },
+    },
+  });
+  if (!order) {
+    return { ok: false, error: "not_found" };
+  }
+  await writeAccessAudit({
+    actorId: admin.appUser.id,
+    actorEmail: admin.appUser.email,
+    action: "order.export_pii",
+    resource: `order:${orderId}`,
+  });
+  return {
+    ok: true,
+    data: {
+      exported_at: new Date().toISOString(),
+      order_id: order.id,
+      status: order.status,
+      customer_name: order.customer_name,
+      customer_phone: order.customer_phone,
+      customer_email: order.customer_email,
+      delivery_address: order.delivery_address,
+      customer_notes: order.customer_notes,
+      locale: order.locale,
+      fulfillment_type: order.fulfillment_type,
+      requested_fulfillment_date: order.requested_fulfillment_date,
+      payment_method: order.payment_method,
+      totals: { subtotal: order.subtotal, total: order.total },
+      items: order.items.map((item) => ({
+        quantity: item.quantity,
+        unit_price: item.unit_price,
+        line_total: item.line_total,
+        product_names: item.product.translations.map((t) => ({
+          locale: t.locale,
+          name: t.name,
+        })),
+        options: item.options.map((o) => ({
+          name: o.option_name_snapshot,
+          value: o.option_value_snapshot,
+        })),
+      })),
+    },
+  };
 }

@@ -17,15 +17,16 @@
 }
 
 /*
-  Fonts: next/font injects --font-great-vibes / --font-heebo on <html>.
+  Fonts: next/font injects --font-cormorant / --font-heebo on <html>.
   Do NOT put those behind @theme tokens — @theme resolves on :root and
-  breaks the chain so Great Vibes never applies.
+  breaks the chain so Cormorant never applies.
 */
 .font-brand {
-  font-family: var(--font-great-vibes), cursive;
-  font-weight: 400;
+  font-family: var(--font-cormorant), Georgia, "Times New Roman", serif;
+  font-weight: 500;
   font-style: normal;
   font-synthesis: none;
+  letter-spacing: 0.06em;
 }
 
 .font-heading {
@@ -43,18 +44,27 @@ body {
   line-height: 1.55;
 }
 
-/* English: Great Vibes headings (weight 400 only). */
+/* English page titles: Cormorant for quiet luxury, not script. */
 [data-locale="en"] .font-heading,
 :lang(en) .font-heading,
 [data-locale="en"] .font-heading.font-medium,
 :lang(en) .font-heading.font-medium,
 [data-locale="en"] .font-heading.font-semibold,
 :lang(en) .font-heading.font-semibold {
-  font-family: var(--font-great-vibes), cursive;
-  font-weight: 400;
+  font-family: var(--font-cormorant), Georgia, "Times New Roman", serif;
+  font-weight: 500;
   font-style: normal;
   font-synthesis: none;
   letter-spacing: 0.02em;
+}
+
+[data-locale="en"] .font-display,
+:lang(en) .font-display {
+  font-family: var(--font-cormorant), Georgia, "Times New Roman", serif;
+  font-weight: 500;
+  font-style: normal;
+  font-synthesis: none;
+  letter-spacing: 0.04em;
 }
 
 [data-locale="he"] .font-heading,
@@ -107,6 +117,28 @@ button {
 
 .mm-btn-outline:hover {
   background: rgba(255, 255, 255, 0.12);
+}
+
+.mm-btn-hero-primary {
+  background: #f3eee4;
+  border-color: #f3eee4;
+  color: #1a1814;
+}
+
+.mm-btn-hero-primary:hover {
+  background: #fff;
+  border-color: #fff;
+  color: #111;
+}
+
+.mm-btn:focus-visible,
+.mm-btn-outline:focus-visible,
+.mm-btn-hero-primary:focus-visible,
+.mm-btn-outline-dark:focus-visible,
+.mm-catalog-filter:focus-visible,
+.mm-product-card:focus-visible {
+  outline: 2px solid var(--color-mm-cta);
+  outline-offset: 3px;
 }
 
 .mm-btn-outline-dark {
@@ -276,12 +308,12 @@ button {
 
 [data-locale="en"] .mm-frame-word,
 :lang(en) .mm-frame-word {
-  font-family: var(--font-great-vibes), cursive;
-  font-weight: 400;
-  font-style: normal;
+  font-family: var(--font-cormorant), Georgia, "Times New Roman", serif;
+  font-weight: 500;
+  font-style: italic;
   font-synthesis: none;
-  letter-spacing: 0.02em;
-  text-transform: lowercase;
+  letter-spacing: 0.04em;
+  text-transform: none;
 }
 
 [data-locale="he"] .mm-frame-word,
@@ -471,6 +503,22 @@ button {
   color: #666;
 }
 
+.mm-product-card .mm-product-action {
+  display: inline-block;
+  margin-top: 0.55rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--color-mm-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: opacity 180ms;
+}
+
+.mm-product-card:hover .mm-product-action {
+  opacity: 0.7;
+}
+
 .mm-product-card .mm-product-cat {
   margin-top: 0.75rem;
   font-size: 0.68rem;
@@ -567,6 +615,14 @@ button {
   }
 }
 
+/* Always show a clear action cue on coarse pointers / small screens */
+@media (max-width: 767px) {
+  .mm-product-card .mm-add-hint {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .mm-section-label {
   font-size: clamp(2rem, 4vw, 2.8rem);
   color: var(--color-mm-word);
@@ -575,8 +631,8 @@ button {
 
 [data-locale="en"] .mm-section-label,
 :lang(en) .mm-section-label {
-  font-family: var(--font-great-vibes), cursive;
-  font-weight: 400;
+  font-family: var(--font-cormorant), Georgia, "Times New Roman", serif;
+  font-weight: 500;
   font-synthesis: none;
   letter-spacing: 0.02em;
 }

@@ -1,12 +1,20 @@
 import { mkdir, writeFile, access, unlink } from "fs/promises";
 import path from "path";
 import { constants as fsConstants } from "fs";
+import { resolveSafeUploadPath } from "@/lib/safe-upload-path";
 
 const BUCKET_FOLDER = "site-media";
 
+function uploadsRoot(): string {
+  return path.join(process.cwd(), "public", "uploads", BUCKET_FOLDER);
+}
+
 export function localSiteMediaAbsolutePath(storageKey: string): string {
-  const parts = storageKey.split("/").filter(Boolean);
-  return path.join(process.cwd(), "public", "uploads", BUCKET_FOLDER, ...parts);
+  const abs = resolveSafeUploadPath(uploadsRoot(), storageKey);
+  if (!abs) {
+    throw new Error("Invalid storage path");
+  }
+  return abs;
 }
 
 export function localSiteMediaPublicUrl(storageKey: string): string {

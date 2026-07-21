@@ -12,6 +12,7 @@ import { getMessages } from "@/lib/i18n";
 import { loadSiteSettingsMap } from "@/lib/site-cms";
 import { resolveBusinessContact } from "@/lib/site-content";
 import { getRejectionReasonText } from "@/lib/orders/rejection-reasons";
+import { redactEmail } from "@/lib/rate-limit";
 
 type ResendApiResponse = { id?: string; message?: string };
 
@@ -54,7 +55,7 @@ export async function sendTransactionalEmail(input: {
 
   if (dest.subjectPrefix) {
     console.info(
-      `[notifications] RESEND_DEV_TO redirect: ${input.to} → ${dest.to}`,
+      `[notifications] RESEND_DEV_TO redirect: ${redactEmail(input.to)} → ${redactEmail(dest.to)}`,
     );
   }
 

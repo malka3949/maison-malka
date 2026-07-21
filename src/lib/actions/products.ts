@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
+import { decideProductDelete } from "@/lib/catalog/delete-rules";
 import { parsePrice } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -122,6 +123,69 @@ export async function toggleProductAvailabilityFormAction(formData: FormData) {
   const id = String(formData.get("id") ?? "");
   const isAvailable = formData.get("is_available") === "true";
   await toggleProductAvailabilityAction(id, !isAvailable);
+}
+
+export type DeleteProductState = {
+  error?: string;
+};
+
+export async function deleteProductAction(
+  _prev: DeleteProductState,
+  formData: FormData,
+): Promise<DeleteProductState> {
+  const admin = await requireAdmin();
+  if (!admin) {
+    return { error: "אין הרשאה" };
+  }
+
+  const id = String(formData.get("id") ?? "").trim();
+  if (!id) {
+    return { error: "מוצר לא נמצא" };
+  }
+
+  const product = await prisma.product.findUnique({
+    where: { id },
+    include: {
+      images: true,
+      _count: {
+        select: {
+          order_items: true,
+          in_bundles: true,
+        },
+      },
+    },
+  });
+
+  if (!product) {
+    return { error: "מוצר לא נמצא" };
+  }
+
+  const decision = decideProductDelete({
+    orderItemCount: product._count.order_items,
+    bundleMembershipCount: product._count.in_bundles,
+  });
+
+  if (!decision.ok) {
+    return { error: decision.error };
+  }
+
+  const storagePaths = product.images.map((image) => image.storage_path);
+
+  await prisma.product.delete({ where: { id } });
+
+  if (storagePaths.length > 0) {
+    try {
+      const { createServiceClient } = await import("@/lib/supabase/admin");
+      const supabase = createServiceClient();
+      await supabase.storage.from("product-images").remove(storagePaths);
+    } catch {
+      // Storage cleanup best-effort when env not configured
+    }
+  }
+
+  revalidatePath("/admin/products");
+  revalidatePath("/admin/categories");
+  redirect("/admin/products");
 }
 
 export async function addProductOptionAction(formData: FormData) {

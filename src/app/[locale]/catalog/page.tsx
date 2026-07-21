@@ -30,7 +30,7 @@ export default async function CatalogPage({
     <div className="mm-wrap space-y-8 pt-10 pb-6">
       <div className="border-b border-mm-line pb-6">
         <p className="mm-section-label italic">{messages.promoCatalogLabel}</p>
-        <h1 className="mt-2 text-3xl font-bold text-mm-primary md:text-4xl">
+        <h1 className="mt-2 font-heading text-3xl text-mm-primary md:text-4xl">
           {activeCategory ? activeCategory.name : messages.catalogTitle}
         </h1>
         <p className="mt-2 max-w-xl text-sm text-mm-secondary">
@@ -76,6 +76,7 @@ export default async function CatalogPage({
               ils={messages.ils}
               inCartLabel={messages.inCart}
               addToCartLabel={messages.addToCart}
+              viewProductLabel={messages.viewProduct}
             />
           ))}
         </div>

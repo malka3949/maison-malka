@@ -6,6 +6,7 @@ import {
   localSiteMediaExists,
   writeLocalSiteMedia,
 } from "@/lib/local-site-media";
+import { sanitizeStorageKeyFromSegments } from "@/lib/safe-upload-path";
 
 export const runtime = "nodejs";
 
@@ -24,25 +25,24 @@ export async function GET(
   context: { params: Promise<{ path: string[] }> },
 ) {
   const { path: segments } = await context.params;
-  const safe = (segments ?? []).filter(
-    (s) =>
-      s.length > 0 && !s.includes("..") && !s.includes("\\") && !s.includes("\0"),
-  );
-  if (safe.length === 0) {
+  const storagePath = sanitizeStorageKeyFromSegments(segments ?? []);
+  if (!storagePath) {
     return NextResponse.json({ error: "Missing path" }, { status: 400 });
   }
 
-  const storagePath = safe.map(decodeURIComponent).join("/");
-
-  if (await localSiteMediaExists(storagePath)) {
-    const buf = await readFile(localSiteMediaAbsolutePath(storagePath));
-    return new NextResponse(buf, {
-      status: 200,
-      headers: {
-        "Content-Type": guessContentType(storagePath),
-        "Cache-Control": "public, max-age=86400, stale-while-revalidate=604800",
-      },
-    });
+  try {
+    if (await localSiteMediaExists(storagePath)) {
+      const buf = await readFile(localSiteMediaAbsolutePath(storagePath));
+      return new NextResponse(buf, {
+        status: 200,
+        headers: {
+          "Content-Type": guessContentType(storagePath),
+          "Cache-Control": "public, max-age=86400, stale-while-revalidate=604800",
+        },
+      });
+    }
+  } catch {
+    return NextResponse.json({ error: "Invalid path" }, { status: 400 });
   }
 
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -50,7 +50,10 @@ export async function GET(
     return NextResponse.json({ error: "Storage not configured" }, { status: 500 });
   }
 
-  const upstream = `${base.replace(/\/$/, "")}/storage/v1/object/public/${BUCKET}/${storagePath}`;
+  const upstream = `${base.replace(/\/$/, "")}/storage/v1/object/public/${BUCKET}/${storagePath
+    .split("/")
+    .map(encodeURIComponent)
+    .join("/")}`;
 
   let response: Response;
   try {

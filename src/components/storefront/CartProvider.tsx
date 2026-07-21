@@ -71,7 +71,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addLine = useCallback(
     (line: Omit<CartLine, "quantity"> & { quantity?: number }) => {
-      const qty = line.quantity ?? 1;
+      const qty = Math.min(99, Math.max(1, line.quantity ?? 1));
       setLines((prev) => {
         const key = lineKey(line.productId, line.optionValueIds);
         const existing = prev.find(
@@ -114,7 +114,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
           return prev.filter((l) => lineKey(l.productId, l.optionValueIds) !== key);
         }
         return prev.map((l) =>
-          lineKey(l.productId, l.optionValueIds) === key ? { ...l, quantity } : l,
+          lineKey(l.productId, l.optionValueIds) === key
+            ? { ...l, quantity: Math.min(99, quantity) }
+            : l,
         );
       });
     },

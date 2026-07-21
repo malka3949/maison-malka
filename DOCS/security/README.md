@@ -1,12 +1,13 @@
 # Security Audit Reports
 
-This folder holds **read-only audit outputs** from Cursor security skills.
+This folder holds audit outputs from Cursor security skills and launch ops checklists.
 
-| Skill | Report file |
+| Skill / doc | Report file |
 |---|---|
 | `secure-code-review` | `SOFTWARE-SECURITY-FINDINGS.md` |
 | `israel-privacy-compliance` | `PRIVACY-COMPLIANCE-AMENDMENT13.md` |
 | `infra-security-review` | `INFRA-SECURITY-FINDINGS.md` |
+| Production cutover | `PRODUCTION-LAUNCH.md` |
+| Real content fill | `CONTENT-CHECKLIST.md` |
 
-Reports are created when audits run (typically Phase 4).  
-Source skills: `.cursor/skills/` — lecturer archive is not duplicated here.
+Source skills: `.cursor/skills/`.

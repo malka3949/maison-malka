@@ -8,10 +8,20 @@ import { syncUserFromAuth } from "@/lib/auth";
 export async function loginAction(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
-  const next = String(formData.get("next") ?? "/admin");
+  const nextRaw = String(formData.get("next") ?? "/admin");
+  const next =
+    nextRaw === "/admin" || nextRaw.startsWith("/admin/")
+      ? nextRaw.split("?")[0]
+      : "/admin";
 
   if (!email || !password) {
     return { error: "נא למלא אימייל וסיסמה" };
+  }
+
+  const { rateLimitConsume } = await import("@/lib/rate-limit");
+  const limited = rateLimitConsume(`admin-login:${email.toLowerCase()}`, 8, 15 * 60 * 1000);
+  if (!limited.ok) {
+    return { error: "נסיונות רבים מדי. נסו שוב בעוד כמה דקות." };
   }
 
   const supabase = await createClient();
@@ -32,7 +42,7 @@ export async function loginAction(formData: FormData) {
     return { error: "אין הרשאות מנהל לחשבון זה." };
   }
 
-  redirect(next.startsWith("/admin") ? next : "/admin");
+  redirect(next);
 }
 
 export async function logoutAction() {
@@ -42,6 +52,11 @@ export async function logoutAction() {
 }
 
 export async function revalidateAdminPaths() {
+  const { requireAdmin } = await import("@/lib/auth");
+  const admin = await requireAdmin();
+  if (!admin) {
+    throw new Error("Unauthorized");
+  }
   revalidatePath("/admin");
   revalidatePath("/admin/categories");
   revalidatePath("/admin/products");

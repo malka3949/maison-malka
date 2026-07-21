@@ -81,6 +81,7 @@ export function CheckoutForm({
         accepted_terms: messages.errorAcceptedTerms,
         delivery_area: messages.errorDeliveryArea,
         invalid_phone: messages.errorInvalidPhone,
+        rate_limited: messages.errorRateLimited,
         generic: messages.errorGeneric,
       };
       setError(map[result.error] ?? messages.errorGeneric);
@@ -88,7 +89,7 @@ export function CheckoutForm({
     }
 
     clear();
-    router.push(`/${locale}/order/${result.orderId}`);
+    router.push(`/${locale}/order/${result.orderId}?t=${encodeURIComponent(result.accessToken)}`);
   }
 
   if (lines.length === 0) {

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
+import { sniffImageMime } from "@/lib/image-magic";
 import { prisma } from "@/lib/prisma";
 import { createServiceClient } from "@/lib/supabase/admin";
 import { writeLocalSiteMedia } from "@/lib/local-site-media";
@@ -8,21 +9,12 @@ import {
   ALLOWED_IMAGE_TYPES,
   MAX_IMAGE_SIZE_BYTES,
   MAX_IMAGE_SIZE_MB,
-  isAllowedImageType,
   sanitizeFilename,
 } from "@/lib/utils";
 
 export const runtime = "nodejs";
 
 const BUCKET = "site-media";
-
-function mimeFromName(name: string): string | null {
-  const ext = name.split(".").pop()?.toLowerCase();
-  if (ext === "jpg" || ext === "jpeg") return "image/jpeg";
-  if (ext === "png") return "image/png";
-  if (ext === "webp") return "image/webp";
-  return null;
-}
 
 async function ensureSiteMediaBucket(
   supabase: ReturnType<typeof createServiceClient>,
@@ -73,21 +65,6 @@ export async function POST(request: Request) {
 
     const fileName =
       raw instanceof File && raw.name ? raw.name : "site-image.png";
-    const contentType =
-      (raw.type && raw.type !== "application/octet-stream"
-        ? raw.type
-        : null) ??
-      mimeFromName(fileName) ??
-      "";
-
-    if (!isAllowedImageType(contentType)) {
-      return NextResponse.json(
-        {
-          error: `סוג קובץ לא נתמך (${contentType || "ריק"}). מותר: ${ALLOWED_IMAGE_TYPES.join(", ")}`,
-        },
-        { status: 400 },
-      );
-    }
 
     if (raw.size > MAX_IMAGE_SIZE_BYTES) {
       return NextResponse.json(
@@ -98,11 +75,26 @@ export async function POST(request: Request) {
       );
     }
 
-    const ext = fileName.split(".").pop()?.toLowerCase() ?? "png";
+    const buffer = Buffer.from(await raw.arrayBuffer());
+    const contentType = sniffImageMime(buffer);
+    if (!contentType) {
+      return NextResponse.json(
+        {
+          error: `סוג קובץ לא נתמך. מותר: ${ALLOWED_IMAGE_TYPES.join(", ")}`,
+        },
+        { status: 400 },
+      );
+    }
+
+    const ext =
+      contentType === "image/jpeg"
+        ? "jpg"
+        : contentType === "image/png"
+          ? "png"
+          : "webp";
     const safeName = sanitizeFilename(fileName);
     const storagePath = `${Date.now()}-${safeName || `image.${ext}`}`;
 
-    const buffer = Buffer.from(await raw.arrayBuffer());
     const supabase = createServiceClient();
     await ensureSiteMediaBucket(supabase);
 
@@ -114,8 +106,9 @@ export async function POST(request: Request) {
       });
 
     if (uploadError) {
+      console.error("[site-upload] storage:", uploadError.message);
       return NextResponse.json(
-        { error: `העלאה ל-Storage נכשלה: ${uploadError.message}` },
+        { error: "העלאה ל-Storage נכשלה" },
         { status: 500 },
       );
     }
@@ -141,7 +134,6 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     console.error("[site-upload] fatal:", err);
-    const message = err instanceof Error ? err.message : "שגיאה בהעלאה";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json({ error: "שגיאה בהעלאה" }, { status: 500 });
   }
 }

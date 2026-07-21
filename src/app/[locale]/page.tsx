@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { CatalogProductCard } from "@/components/storefront/CatalogProductCard";
 import { HorizontalScroller } from "@/components/storefront/HorizontalScroller";
 import { Ticker } from "@/components/storefront/Ticker";
 import { getActiveCategories, getAvailableProducts } from "@/lib/catalog";
 import { isLocale, type Locale } from "@/lib/i18n";
-import { formatIls, getProductImagePublicUrl } from "@/lib/storefront";
+import { getProductImagePublicUrl } from "@/lib/storefront";
 import {
   loadHomeMediaFromCms,
   loadMergedStorefrontMessages,
@@ -52,23 +53,29 @@ export default async function HomePage({
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={heroImg}
-          alt=""
+          alt={messages.heroImageAlt}
           className="mm-hero-zoom absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,16,12,0.25)_0%,rgba(20,16,12,0.15)_45%,rgba(20,16,12,0.62)_100%)]" />
         <div className="relative z-[2] flex min-h-[min(72vh,620px)] flex-col items-center justify-end px-5 pb-10 text-center md:pb-14">
-          <h1 className="font-heading text-[clamp(3rem,10vw,6.5rem)] leading-[0.9] tracking-[0.04em] text-[#f3eee4]">
+          <p className="font-brand text-[clamp(2.75rem,8vw,4.75rem)] leading-none tracking-[0.04em] text-[#f3eee4]">
+            {messages.brand}
+          </p>
+          <h1 className="mt-4 max-w-xl font-heading text-[clamp(1.35rem,3.5vw,2rem)] font-semibold leading-snug tracking-[0.02em] text-[#f3eee4]">
             {messages.heroTitle}
           </h1>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Link href={`/${locale}/catalog`} className="mm-btn mm-btn-outline">
+          <p className="mt-3 max-w-md text-sm leading-relaxed text-white/85 md:text-[0.95rem]">
+            {messages.heroSubtitle}
+          </p>
+          <div className="mt-7 flex flex-wrap justify-center gap-3">
+            <Link href={`/${locale}/catalog`} className="mm-btn mm-btn-hero-primary">
               {messages.heroCta}
             </Link>
             <Link
-              href={`/${locale}/catalog?category=boxes`}
+              href={`/${locale}/#popular`}
               className="mm-btn mm-btn-outline"
             >
-              {messages.promoGiftTitle}
+              {messages.heroSecondaryCta}
             </Link>
           </div>
           <p className="mt-8 flex items-center gap-3 text-[0.7rem] uppercase tracking-[0.28em] text-white/75">
@@ -93,7 +100,10 @@ export default async function HomePage({
               </div>
               <div className="mm-frame-media">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={promoCatalogImg} alt="" />
+                <img
+                  src={promoCatalogImg}
+                  alt={messages.promoCatalogImageAlt}
+                />
               </div>
             </div>
           </Link>
@@ -111,29 +121,29 @@ export default async function HomePage({
               </div>
               <div className="mm-frame-media">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={promoGiftImg} alt="" />
+                <img src={promoGiftImg} alt={messages.promoGiftImageAlt} />
               </div>
             </div>
           </Link>
         </div>
       </section>
 
-      <section className="mm-wrap mt-8 pb-4">
-        <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+      <section className="mm-wrap mt-12 pb-6 md:mt-16">
+        <div className="mb-7 flex flex-wrap items-end justify-between gap-3">
           <div>
             <p className="mm-section-label">{messages.categoriesTitle}</p>
-            <p className="mt-1 text-sm text-mm-secondary">{messages.categoriesSubtitle}</p>
+            <p className="mt-2 text-sm text-mm-secondary">{messages.categoriesSubtitle}</p>
           </div>
           <Link
             href={`/${locale}/catalog`}
-            className="cursor-pointer text-sm underline underline-offset-4"
+            className="cursor-pointer text-sm underline underline-offset-4 transition-opacity hover:opacity-70"
           >
             {messages.seeFullCatalog}
           </Link>
         </div>
 
         {categoriesWithImage.length === 0 ? (
-          <p className="text-mm-secondary">{messages.emptyCatalog}</p>
+          <p className="py-12 text-center text-mm-secondary">{messages.emptyCatalog}</p>
         ) : (
           <HorizontalScroller
             ariaLabelPrev={messages.scrollPrev}
@@ -148,7 +158,7 @@ export default async function HomePage({
                 <div className="mm-cat-img">
                   {c.imageUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={c.imageUrl} alt="" />
+                    <img src={c.imageUrl} alt={c.name} />
                   ) : (
                     <div className="flex h-full items-center justify-center text-sm text-mm-secondary">
                       {messages.brand}
@@ -162,60 +172,51 @@ export default async function HomePage({
         )}
       </section>
 
-      <section id="popular" className="mm-wrap mt-6 scroll-mt-28 pb-6">
-        <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+      <section id="popular" className="mm-wrap mt-10 scroll-mt-28 pb-8 md:mt-14">
+        <div className="mb-7 flex flex-wrap items-end justify-between gap-3">
           <div>
             <p className="mm-section-label">{messages.featuredTitle}</p>
-            <p className="mt-1 max-w-xl text-sm text-mm-secondary">
+            <p className="mt-2 max-w-xl text-sm text-mm-secondary">
               {messages.featuredSubtitle}
             </p>
           </div>
           <Link
             href={`/${locale}/catalog`}
-            className="cursor-pointer text-sm underline underline-offset-4"
+            className="cursor-pointer text-sm underline underline-offset-4 transition-opacity hover:opacity-70"
           >
             {messages.seeAllProducts}
           </Link>
         </div>
 
         {featured.length === 0 ? (
-          <p className="text-mm-secondary">{messages.emptyCatalog}</p>
+          <p className="py-12 text-center text-mm-secondary">{messages.emptyCatalog}</p>
         ) : (
           <HorizontalScroller
             ariaLabelPrev={messages.scrollPrev}
             ariaLabelNext={messages.scrollNext}
           >
-            {featured.map((p) => {
-              const img = p.imagePath ? getProductImagePublicUrl(p.imagePath) : null;
-              return (
-                <Link
-                  key={p.id}
-                  href={`/${locale}/products/${p.id}`}
-                  className="mm-product-card group cursor-pointer"
-                >
-                  <div className="mm-product-img">
-                    {img ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={img} alt={p.name} />
-                    ) : (
-                      <div className="flex h-full items-center justify-center text-sm text-mm-secondary">
-                        {messages.brand}
-                      </div>
-                    )}
-                    <span className="mm-add-hint">{messages.addToCart}</span>
-                  </div>
-                  <h3 className="mt-3 text-base font-semibold text-mm-primary">{p.name}</h3>
-                  <p className="mt-1 text-sm text-mm-secondary">
-                    {messages.priceFrom}
-                    {formatIls(p.basePrice, messages.ils)}
-                  </p>
-                </Link>
-              );
-            })}
+            {featured.map((p) => (
+              <CatalogProductCard
+                key={p.id}
+                locale={locale}
+                productId={p.id}
+                name={p.name}
+                categoryName={p.categoryName}
+                basePrice={p.basePrice}
+                imageUrl={p.imagePath ? getProductImagePublicUrl(p.imagePath) : null}
+                brand={messages.brand}
+                priceFrom={messages.priceFrom}
+                ils={messages.ils}
+                inCartLabel={messages.inCart}
+                addToCartLabel={messages.addToCart}
+                viewProductLabel={messages.viewProduct}
+                layout="scroll"
+              />
+            ))}
           </HorizontalScroller>
         )}
 
-        <div className="mt-10 grid gap-5 border-y border-mm-line py-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-6 border-y border-mm-line py-10 sm:grid-cols-2 lg:grid-cols-4">
           {[
             [messages.trustDelivery, messages.trustDeliverySub],
             [messages.trustPickup, messages.trustPickupSub],
@@ -230,10 +231,12 @@ export default async function HomePage({
         </div>
       </section>
 
-      <section className="border-t border-mm-line bg-mm-surface px-6 py-14 text-center md:px-12">
+      <section className="border-t border-mm-line bg-mm-surface px-6 py-16 text-center md:px-12 md:py-20">
         <p className="mm-section-label">{messages.ctaFinalTitle}</p>
-        <p className="mx-auto mt-3 max-w-xl text-sm text-mm-secondary">{messages.ctaFinalBody}</p>
-        <Link href={`/${locale}/catalog`} className="mm-btn mt-7">
+        <p className="mx-auto mt-4 max-w-xl text-sm text-mm-secondary md:text-base">
+          {messages.ctaFinalBody}
+        </p>
+        <Link href={`/${locale}/catalog`} className="mm-btn mt-8">
           {messages.ctaFinalButton}
         </Link>
       </section>

@@ -164,6 +164,7 @@ model CustomerProfile {
 
 model Order {
   id                         String          @id @default(cuid())
+  access_token               String          @unique @default(cuid())
   user_id                    String?
   status                     OrderStatus     @default(pending_approval)
   customer_name              String
@@ -177,6 +178,10 @@ model Order {
   customer_notes             String?
   rejection_reason_code      String?
   rejection_reason_custom    String?
+  /// When the customer accepted terms/privacy/cancellation at checkout.
+  terms_accepted_at          DateTime?
+  /// Snapshot of LEGAL_CONSENT_VERSION at acceptance time.
+  legal_consent_version      String?
   subtotal                   Decimal         @db.Decimal(10, 2)
   total                      Decimal         @db.Decimal(10, 2)
   created_at                 DateTime        @default(now())
@@ -184,6 +189,21 @@ model Order {
 
   user  User?       @relation(fields: [user_id], references: [id], onDelete: SetNull)
   items OrderItem[]
+}
+
+/// Admin / sensitive-action audit trail (keep ≥24 months operationally).
+model AccessAuditLog {
+  id          String   @id @default(cuid())
+  actor_id    String?
+  actor_email String?
+  action      String
+  resource    String?
+  detail      String?
+  success     Boolean  @default(true)
+  created_at  DateTime @default(now())
+
+  @@index([created_at])
+  @@index([action])
 }
 
 model OrderItem {

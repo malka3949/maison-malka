@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { ProductForm } from "@/components/admin/ProductForm";
+import { ProductDeleteForm } from "@/components/admin/ProductDeleteForm";
 import { ImageUploadSection } from "@/components/admin/ImageUploadSection";
 import { ProductOptionsSection } from "@/components/admin/ProductOptionsSection";
 import { BundleItemsSection } from "@/components/admin/BundleItemsSection";
@@ -119,6 +120,7 @@ export default async function EditProductPage({
           standardProducts={standardProductOptions}
         />
       )}
+      <ProductDeleteForm productId={product.id} />
     </div>
   );
 }
