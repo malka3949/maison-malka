@@ -285,6 +285,9 @@ export async function registerCustomer(formData: FormData) {
   if (!email || !password || !fullName) {
     fail("generic");
   }
+  if (password.length < 6) {
+    fail("generic");
+  }
   if (!phoneRaw) {
     fail("generic");
   }
@@ -322,7 +325,7 @@ export async function registerCustomer(formData: FormData) {
     },
     update: {
       email,
-      role: UserRole.customer,
+      // Never demote/promote via public register
     },
   });
 

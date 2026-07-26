@@ -9,10 +9,14 @@ export async function loginAction(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
   const nextRaw = String(formData.get("next") ?? "/admin");
-  const next =
-    nextRaw === "/admin" || nextRaw.startsWith("/admin/")
-      ? nextRaw.split("?")[0]
+  const nextPath = nextRaw.split("?")[0].split("#")[0];
+  // Normalize and allow only under /admin (blocks /admin/../he etc.)
+  const segments = nextPath.split("/").filter((s) => s && s !== ".");
+  const safe =
+    segments[0] === "admin" && !segments.includes("..")
+      ? `/${segments.join("/")}`
       : "/admin";
+  const next = safe === "/admin" || safe.startsWith("/admin/") ? safe : "/admin";
 
   if (!email || !password) {
     return { error: "נא למלא אימייל וסיסמה" };
