@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { registerCustomer } from "@/lib/actions/orders";
-import { getMessages, isLocale, type Locale, type Messages } from "@/lib/i18n";
+import { isLocale, type Locale, type Messages } from "@/lib/i18n";
+import { loadMergedStorefrontMessages } from "@/lib/site-cms";
 
 function registerErrorMessage(
   code: string | undefined,
@@ -35,7 +36,7 @@ export default async function RegisterPage({
     notFound();
   }
   const locale = localeParam as Locale;
-  const messages = getMessages(locale);
+  const messages = await loadMergedStorefrontMessages(locale);
   const errorText = registerErrorMessage(error, messages);
 
   return (

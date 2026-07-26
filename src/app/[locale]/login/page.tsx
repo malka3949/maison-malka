@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loginCustomer } from "@/lib/actions/orders";
-import { getMessages, isLocale, type Locale } from "@/lib/i18n";
+import { isLocale, type Locale } from "@/lib/i18n";
+import { loadMergedStorefrontMessages } from "@/lib/site-cms";
 
 export default async function LoginPage({
   params,
@@ -16,7 +17,7 @@ export default async function LoginPage({
     notFound();
   }
   const locale = localeParam as Locale;
-  const messages = getMessages(locale);
+  const messages = await loadMergedStorefrontMessages(locale);
 
   return (
     <div className="mm-wrap pt-8">

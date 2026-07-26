@@ -2,8 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Locale as PrismaLocale } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { getMessages, isLocale, type Locale } from "@/lib/i18n";
+import { isLocale, type Locale } from "@/lib/i18n";
 import { orderStatusLabel } from "@/lib/orders/status";
+import { loadMergedStorefrontMessages } from "@/lib/site-cms";
 
 export default async function OrderConfirmationPage({
   params,
@@ -18,7 +19,7 @@ export default async function OrderConfirmationPage({
     notFound();
   }
   const locale = localeParam as Locale;
-  const messages = getMessages(locale);
+  const messages = await loadMergedStorefrontMessages(locale);
   const prismaLocale = locale === "en" ? PrismaLocale.en : PrismaLocale.he;
 
   const order = await prisma.order.findFirst({

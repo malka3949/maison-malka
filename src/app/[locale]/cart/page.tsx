@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { CartView } from "@/components/storefront/CartView";
-import { getMessages, isLocale, type Locale } from "@/lib/i18n";
+import { isLocale, type Locale } from "@/lib/i18n";
+import { loadMergedStorefrontMessages } from "@/lib/site-cms";
 
 export default async function CartPage({
   params,
@@ -12,7 +13,7 @@ export default async function CartPage({
     notFound();
   }
   const locale = localeParam as Locale;
-  const messages = getMessages(locale);
+  const messages = await loadMergedStorefrontMessages(locale);
 
   return (
     <div className="mm-wrap space-y-6 pt-8">

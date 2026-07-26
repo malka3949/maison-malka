@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import { CheckoutForm } from "@/components/storefront/CheckoutForm";
 import { getCustomerProfileForCheckout } from "@/lib/actions/orders";
-import { getMessages, isLocale, type Locale } from "@/lib/i18n";
+import { isLocale, type Locale } from "@/lib/i18n";
+import { loadMergedStorefrontMessages } from "@/lib/site-cms";
 
 export default async function CheckoutPage({
   params,
@@ -13,7 +14,7 @@ export default async function CheckoutPage({
     notFound();
   }
   const locale = localeParam as Locale;
-  const messages = getMessages(locale);
+  const messages = await loadMergedStorefrontMessages(locale);
   const prefill = await getCustomerProfileForCheckout();
 
   return (

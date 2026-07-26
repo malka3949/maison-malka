@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AddToCartButton } from "@/components/storefront/AddToCartButton";
 import { getProductDetail } from "@/lib/catalog";
-import { getMessages, isLocale, type Locale } from "@/lib/i18n";
+import { isLocale, type Locale } from "@/lib/i18n";
+import { loadMergedStorefrontMessages } from "@/lib/site-cms";
 import { getProductImagePublicUrl } from "@/lib/storefront";
 
 export default async function ProductPage({
@@ -15,7 +16,7 @@ export default async function ProductPage({
     notFound();
   }
   const locale = localeParam as Locale;
-  const messages = getMessages(locale);
+  const messages = await loadMergedStorefrontMessages(locale);
   const product = await getProductDetail(id, locale);
   if (!product) {
     notFound();
