@@ -3,7 +3,7 @@ import type { Messages } from "@/lib/i18n";
 export const he: Messages = {
   brand: "Maison Malka",
   brandTagline: "קונדיטוריה בוטיק · ירושלים",
-  brandSince: "ירושלים",
+  brandSince: "הזמנה מראש",
   announcement: "משלוחים בירושלים · איסוף עצמי · אישור הזמנה ידני",
   navHome: "דף הבית",
   navCatalog: "קטלוג",

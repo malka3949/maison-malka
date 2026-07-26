@@ -2,8 +2,8 @@ import type { Messages } from "@/lib/i18n";
 
 export const en: Messages = {
   brand: "Maison Malka",
-  brandTagline: "Jerusalem bakery",
-  brandSince: "Jerusalem · Made to order",
+  brandTagline: "Boutique bakery · Jerusalem",
+  brandSince: "Made to order",
   announcement: "Jerusalem delivery · Self-pickup · Manual order approval",
   navHome: "Home",
   navCatalog: "Catalog",
@@ -47,7 +47,7 @@ export const en: Messages = {
   trustHandmade: "Handmade",
   trustHandmadeSub: "Fresh every day",
   trustApproval: "Manual approval",
-  trustApprovalSub: "No online payment",
+  trustApprovalSub: "For every order",
   ctaFinalTitle: "Ready to place your order?",
   ctaFinalBody:
     "Choose from the catalog — we’ll confirm your request and guide you through pickup or delivery.",
