@@ -97,8 +97,9 @@ export const en: Messages = {
     "I confirm the address is in the Jerusalem area and understand delivery cost is arranged",
   bankTransferNextSteps:
     "You chose bank transfer. After we approve the order, payment instructions will be emailed to you.",
-  fallbackPhone: "050-000-0000 (draft — update)",
-  fallbackPickupAddress: "Jerusalem (sample pickup address — update)",
+  // Empty until CMS settings are filled — never show fake draft contact publicly.
+  fallbackPhone: "",
+  fallbackPickupAddress: "",
   fallbackBusinessHours: "Hours by prior arrangement",
   orderSuccess: "Order received",
   orderSuccessBody: "Your order request was saved and is pending approval.",

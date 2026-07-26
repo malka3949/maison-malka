@@ -93,8 +93,9 @@ export const he: Messages = {
   deliveryAreaConfirm: "אני מאשר/ת שהכתובת באזור ירושלים ומבין/ה שעלות המשלוח בתיאום",
   bankTransferNextSteps:
     "בחרתם העברה בנקאית. לאחר אישור ההזמנה נשלח אליכם (באימייל) הוראות תשלום.",
-  fallbackPhone: "050-000-0000 (טיוטה — לעדכון)",
-  fallbackPickupAddress: "ירושלים (כתובת איסוף לדוגמה — לעדכון)",
+  // Empty until CMS settings are filled — never show fake draft contact publicly.
+  fallbackPhone: "",
+  fallbackPickupAddress: "",
   fallbackBusinessHours: "שעות פעילות בתיאום מראש",
   orderSuccess: "ההזמנה התקבלה",
   orderSuccessBody: "בקשת ההזמנה נשמרה וממתינה לאישור.",

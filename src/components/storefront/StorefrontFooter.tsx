@@ -42,10 +42,14 @@ export function StorefrontFooter({
             {messages.contactLabel}
           </p>
           <p className="mt-3 text-sm text-mm-secondary">{contact.hours}</p>
-          <p className="mt-2 text-sm text-mm-primary" dir="ltr">
-            {contact.phone}
-          </p>
-          <p className="mt-2 text-sm text-mm-secondary">{contact.address}</p>
+          {contact.phone ? (
+            <p className="mt-2 text-sm text-mm-primary" dir="ltr">
+              {contact.phone}
+            </p>
+          ) : null}
+          {contact.address ? (
+            <p className="mt-2 text-sm text-mm-secondary">{contact.address}</p>
+          ) : null}
           <nav className="mt-4 flex flex-col gap-2 text-sm">
             <Link
               href={`/${locale}/catalog`}
