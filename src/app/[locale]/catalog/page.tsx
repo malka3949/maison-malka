@@ -76,7 +76,6 @@ export default async function CatalogPage({
               priceFrom={messages.priceFrom}
               ils={messages.ils}
               inCartLabel={messages.inCart}
-              addToCartLabel={messages.addToCart}
               viewProductLabel={messages.viewProduct}
             />
           ))}
