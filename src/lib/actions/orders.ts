@@ -268,8 +268,21 @@ export async function registerCustomer(formData: FormData) {
   const phone = normalizeIsraeliMobile(phoneRaw);
   const acceptedTerms = formData.get("acceptedTerms") === "on";
 
-  if (!email || !password || !fullName || !phone || !acceptedTerms) {
-    redirect(`/${locale}/register?error=1`);
+  const fail = (code: string): never => {
+    redirect(`/${locale}/register?error=${encodeURIComponent(code)}`);
+  };
+
+  if (!acceptedTerms) {
+    fail("accepted_terms");
+  }
+  if (!email || !password || !fullName) {
+    fail("generic");
+  }
+  if (!phoneRaw) {
+    fail("generic");
+  }
+  if (!phone) {
+    fail("invalid_phone");
   }
 
   // Never grant admin via public register
@@ -277,20 +290,20 @@ export async function registerCustomer(formData: FormData) {
     process.env.ADMIN_EMAIL &&
     email === process.env.ADMIN_EMAIL.trim().toLowerCase()
   ) {
-    redirect(`/${locale}/register?error=1`);
+    fail("generic");
   }
 
   const hdrs = await headers();
   const ip = clientIpFromHeaders(hdrs);
   const limited = rateLimitConsume(`register:${ip}`, 6, 60 * 60 * 1000);
   if (!limited.ok) {
-    redirect(`/${locale}/register?error=1`);
+    fail("rate_limited");
   }
 
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({ email, password });
   if (error || !data.user) {
-    redirect(`/${locale}/register?error=1`);
+    fail("generic");
   }
 
   await prisma.user.upsert({

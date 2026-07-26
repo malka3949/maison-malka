@@ -1,7 +1,26 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { registerCustomer } from "@/lib/actions/orders";
-import { getMessages, isLocale, type Locale } from "@/lib/i18n";
+import { getMessages, isLocale, type Locale, type Messages } from "@/lib/i18n";
+
+function registerErrorMessage(
+  code: string | undefined,
+  messages: Messages,
+): string | null {
+  if (!code) return null;
+  switch (code) {
+    case "accepted_terms":
+      return messages.errorAcceptedTerms;
+    case "invalid_phone":
+      return messages.errorInvalidPhone;
+    case "rate_limited":
+      return messages.errorRateLimited;
+    case "1": // legacy query param
+    case "generic":
+    default:
+      return messages.errorGeneric;
+  }
+}
 
 export default async function RegisterPage({
   params,
@@ -17,6 +36,7 @@ export default async function RegisterPage({
   }
   const locale = localeParam as Locale;
   const messages = getMessages(locale);
+  const errorText = registerErrorMessage(error, messages);
 
   return (
     <div className="mm-wrap pt-8">
@@ -62,9 +82,16 @@ export default async function RegisterPage({
               >
                 {messages.legalTerms}
               </Link>
+              {" · "}
+              <Link
+                href={`/${locale}/cancellation`}
+                className="text-mm-primary underline"
+              >
+                {messages.legalCancellation}
+              </Link>
             </span>
           </label>
-          {error ? <p className="text-sm text-red-700">{messages.errorAcceptedTerms}</p> : null}
+          {errorText ? <p className="text-sm text-red-700">{errorText}</p> : null}
           <button type="submit" className="mm-btn">
             {messages.registerSubmit}
           </button>
