@@ -13,6 +13,7 @@ const initial: SiteFormState = {};
 const LABELS: Record<SiteSettingsKey, string> = {
   pickup_address: "כתובת איסוף",
   phone: "טלפון",
+  contact_email: "אימייל ליצירת קשר",
   business_hours: "שעות פעילות",
   lead_time_note: "הערת זמן אספקה (שיווק)",
   bank_transfer_details: "פרטי העברה בנקאית (ללקוח לאחר אישור)",

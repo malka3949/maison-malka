@@ -98,6 +98,7 @@ export type Messages = {
   deliveryAreaConfirm: string;
   bankTransferNextSteps: string;
   fallbackPhone: string;
+  fallbackContactEmail: string;
   fallbackPickupAddress: string;
   fallbackBusinessHours: string;
   orderSuccess: string;
@@ -117,6 +118,16 @@ export type Messages = {
   footerNote: string;
   contactLabel: string;
   hoursLabel: string;
+  contactWriteUs: string;
+  contactYourName: string;
+  contactYourEmail: string;
+  contactMessage: string;
+  contactSend: string;
+  contactSending: string;
+  contactSent: string;
+  contactClose: string;
+  contactSendFailed: string;
+  contactNotConfigured: string;
   errorGeneric: string;
   errorRequiredOptions: string;
   errorEmptyCart: string;

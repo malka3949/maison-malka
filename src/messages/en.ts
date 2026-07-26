@@ -99,6 +99,7 @@ export const en: Messages = {
     "You chose bank transfer. After we approve the order, payment instructions will be emailed to you.",
   // Empty until CMS settings are filled — never show fake draft contact publicly.
   fallbackPhone: "",
+  fallbackContactEmail: "ms0534113949@gmail.com",
   fallbackPickupAddress: "",
   fallbackBusinessHours: "Hours by prior arrangement",
   orderSuccess: "Order received",
@@ -118,6 +119,18 @@ export const en: Messages = {
   footerNote: "Boutique bakery · Jerusalem",
   contactLabel: "Contact",
   hoursLabel: "Hours by arrangement",
+  contactWriteUs: "Send a message",
+  contactYourName: "Your name",
+  contactYourEmail: "Your email (for reply)",
+  contactMessage: "Message",
+  contactSend: "Send",
+  contactSending: "Sending…",
+  contactSent: "Message sent. We’ll get back to you soon.",
+  contactClose: "Close",
+  contactSendFailed:
+    "Sending failed. Verify the Resend sending domain, or set RESEND_DEV_TO to the shop inbox.",
+  contactNotConfigured:
+    "Email sending is not configured yet. Please try later or call us.",
   errorGeneric: "Something went wrong. Please try again.",
   errorRequiredOptions: "Please select all required options.",
   errorEmptyCart: "Your cart is empty.",

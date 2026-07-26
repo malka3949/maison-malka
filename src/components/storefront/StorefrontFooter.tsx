@@ -1,9 +1,6 @@
 import Link from "next/link";
 import type { Locale, Messages } from "@/lib/i18n";
-import {
-  resolveBusinessContact,
-  type SiteSettingsMap,
-} from "@/lib/site-content";
+import type { SiteSettingsMap } from "@/lib/site-content";
 
 export function StorefrontFooter({
   locale,
@@ -14,7 +11,6 @@ export function StorefrontFooter({
   messages: Messages;
   settings?: SiteSettingsMap;
 }) {
-  const contact = resolveBusinessContact(settings, messages);
   const lead = settings.lead_time_note?.trim();
 
   return (
@@ -38,19 +34,7 @@ export function StorefrontFooter({
         </div>
 
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-mm-word">
-            {messages.contactLabel}
-          </p>
-          <p className="mt-3 text-sm text-mm-secondary">{contact.hours}</p>
-          {contact.phone ? (
-            <p className="mt-2 text-sm text-mm-primary" dir="ltr">
-              {contact.phone}
-            </p>
-          ) : null}
-          {contact.address ? (
-            <p className="mt-2 text-sm text-mm-secondary">{contact.address}</p>
-          ) : null}
-          <nav className="mt-4 flex flex-col gap-2 text-sm">
+          <nav className="flex flex-col gap-2 text-sm">
             <Link
               href={`/${locale}/catalog`}
               className="cursor-pointer text-mm-primary hover:opacity-70"
@@ -62,6 +46,12 @@ export function StorefrontFooter({
               className="cursor-pointer text-mm-primary hover:opacity-70"
             >
               {messages.navCart}
+            </Link>
+            <Link
+              href={`/${locale}/contact`}
+              className="cursor-pointer text-mm-primary hover:opacity-70"
+            >
+              {messages.contactLabel}
             </Link>
             <Link
               href={`/${locale}/privacy`}

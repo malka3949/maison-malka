@@ -46,6 +46,7 @@ export type SiteImageSlotKey = (typeof SITE_IMAGE_SLOT_KEYS)[number];
 export const SITE_SETTINGS_KEYS = [
   "pickup_address",
   "phone",
+  "contact_email",
   "business_hours",
   "lead_time_note",
   "bank_transfer_details",
@@ -204,6 +205,7 @@ export function mergeSettings(
 
 export type BusinessContact = {
   phone: string;
+  email: string;
   address: string;
   hours: string;
 };
@@ -215,11 +217,15 @@ export function resolveBusinessContact(
   settings: SiteSettingsMap,
   messages: Pick<
     Messages,
-    "fallbackPhone" | "fallbackPickupAddress" | "fallbackBusinessHours"
+    | "fallbackPhone"
+    | "fallbackContactEmail"
+    | "fallbackPickupAddress"
+    | "fallbackBusinessHours"
   >,
 ): BusinessContact {
   return {
     phone: settings.phone?.trim() || messages.fallbackPhone,
+    email: settings.contact_email?.trim() || messages.fallbackContactEmail,
     address: settings.pickup_address?.trim() || messages.fallbackPickupAddress,
     hours:
       settings.business_hours?.trim() || messages.fallbackBusinessHours,

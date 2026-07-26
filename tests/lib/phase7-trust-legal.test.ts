@@ -53,17 +53,24 @@ describe("resolveBusinessContact", () => {
       resolveBusinessContact({}, he),
     ).toEqual({
       phone: he.fallbackPhone,
+      email: he.fallbackContactEmail,
       address: he.fallbackPickupAddress,
       hours: he.fallbackBusinessHours,
     });
 
     expect(
       resolveBusinessContact(
-        { phone: "02-123", pickup_address: "Addr", business_hours: "9-17" },
+        {
+          phone: "02-123",
+          contact_email: "shop@example.com",
+          pickup_address: "Addr",
+          business_hours: "9-17",
+        },
         he,
       ),
     ).toEqual({
       phone: "02-123",
+      email: "shop@example.com",
       address: "Addr",
       hours: "9-17",
     });
