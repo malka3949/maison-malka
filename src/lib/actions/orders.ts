@@ -286,6 +286,7 @@ export async function registerCustomer(formData: FormData) {
 
   const fail = (code: string): never => {
     redirect(`/${locale}/register?error=${encodeURIComponent(code)}`);
+    throw new Error("unreachable");
   };
 
   if (!acceptedTerms) {
@@ -324,11 +325,14 @@ export async function registerCustomer(formData: FormData) {
   if (error || !data.user) {
     fail("generic");
   }
+  // Assert after guards: `fail()` is `never`, but tsc does not always narrow through it.
+  const authUser = data.user!;
+  const safePhone = phone!;
 
   await prisma.user.upsert({
-    where: { id: data.user.id },
+    where: { id: authUser.id },
     create: {
-      id: data.user.id,
+      id: authUser.id,
       email,
       role: UserRole.customer,
     },
@@ -339,16 +343,16 @@ export async function registerCustomer(formData: FormData) {
   });
 
   await prisma.customerProfile.upsert({
-    where: { user_id: data.user.id },
+    where: { user_id: authUser.id },
     create: {
-      user_id: data.user.id,
+      user_id: authUser.id,
       full_name: fullName.slice(0, 120),
-      phone,
+      phone: safePhone,
       email,
     },
     update: {
       full_name: fullName.slice(0, 120),
-      phone,
+      phone: safePhone,
       email,
     },
   });
