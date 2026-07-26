@@ -1,6 +1,6 @@
 "use server";
 
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { randomBytes } from "crypto";
 import {
   FulfillmentType,
@@ -46,7 +46,7 @@ export type CheckoutFormInput = {
 };
 
 export type CheckoutResult =
-  | { ok: true; orderId: string; accessToken: string }
+  | { ok: true; orderId: string }
   | { ok: false; error: string };
 
 export async function createGuestOrder(
@@ -261,7 +261,16 @@ export async function createGuestOrder(
     }
   });
 
-  return { ok: true, orderId: order.id, accessToken: order.access_token };
+  const cookieStore = await cookies();
+  cookieStore.set(`mm_order_access_${order.id}`, order.access_token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 90,
+  });
+
+  return { ok: true, orderId: order.id };
 }
 
 export async function registerCustomer(formData: FormData) {

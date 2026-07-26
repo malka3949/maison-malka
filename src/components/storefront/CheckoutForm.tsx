@@ -89,7 +89,7 @@ export function CheckoutForm({
     }
 
     clear();
-    router.push(`/${locale}/order/${result.orderId}?t=${encodeURIComponent(result.accessToken)}`);
+    router.push(`/${locale}/order/${result.orderId}`);
   }
 
   if (lines.length === 0) {
