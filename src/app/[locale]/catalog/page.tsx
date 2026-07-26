@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CatalogProductCard } from "@/components/storefront/CatalogProductCard";
 import { getActiveCategories, getAvailableProducts } from "@/lib/catalog";
-import { getMessages, isLocale, type Locale } from "@/lib/i18n";
+import { isLocale, type Locale } from "@/lib/i18n";
+import { loadMergedStorefrontMessages } from "@/lib/site-cms";
 import { getProductImagePublicUrl } from "@/lib/storefront";
 
 export default async function CatalogPage({
@@ -18,7 +19,7 @@ export default async function CatalogPage({
     notFound();
   }
   const locale = localeParam as Locale;
-  const messages = getMessages(locale);
+  const messages = await loadMergedStorefrontMessages(locale);
   const [categories, products] = await Promise.all([
     getActiveCategories(locale),
     getAvailableProducts(locale, category || undefined),
@@ -75,7 +76,6 @@ export default async function CatalogPage({
               priceFrom={messages.priceFrom}
               ils={messages.ils}
               inCartLabel={messages.inCart}
-              addToCartLabel={messages.addToCart}
               viewProductLabel={messages.viewProduct}
             />
           ))}

@@ -1,6 +1,6 @@
 "use server";
 
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { randomBytes } from "crypto";
 import {
   FulfillmentType,
@@ -46,7 +46,7 @@ export type CheckoutFormInput = {
 };
 
 export type CheckoutResult =
-  | { ok: true; orderId: string; accessToken: string }
+  | { ok: true; orderId: string }
   | { ok: false; error: string };
 
 export async function createGuestOrder(
@@ -84,6 +84,13 @@ export async function createGuestOrder(
 
   if (input.fulfillmentType === "delivery" && !input.deliveryAddress?.trim()) {
     return { ok: false, error: "delivery_address" };
+  }
+
+  if (
+    input.fulfillmentType === "delivery" &&
+    input.paymentMethod === "on_pickup"
+  ) {
+    return { ok: false, error: "generic" };
   }
 
   const name = input.customerName.trim();
@@ -254,7 +261,16 @@ export async function createGuestOrder(
     }
   });
 
-  return { ok: true, orderId: order.id, accessToken: order.access_token };
+  const cookieStore = await cookies();
+  cookieStore.set(`mm_order_access_${order.id}`, order.access_token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 90,
+  });
+
+  return { ok: true, orderId: order.id };
 }
 
 export async function registerCustomer(formData: FormData) {
@@ -268,8 +284,24 @@ export async function registerCustomer(formData: FormData) {
   const phone = normalizeIsraeliMobile(phoneRaw);
   const acceptedTerms = formData.get("acceptedTerms") === "on";
 
-  if (!email || !password || !fullName || !phone || !acceptedTerms) {
-    redirect(`/${locale}/register?error=1`);
+  const fail = (code: string): never => {
+    redirect(`/${locale}/register?error=${encodeURIComponent(code)}`);
+  };
+
+  if (!acceptedTerms) {
+    fail("accepted_terms");
+  }
+  if (!email || !password || !fullName) {
+    fail("generic");
+  }
+  if (password.length < 6) {
+    fail("generic");
+  }
+  if (!phoneRaw) {
+    fail("generic");
+  }
+  if (!phone) {
+    fail("invalid_phone");
   }
 
   // Never grant admin via public register
@@ -277,20 +309,20 @@ export async function registerCustomer(formData: FormData) {
     process.env.ADMIN_EMAIL &&
     email === process.env.ADMIN_EMAIL.trim().toLowerCase()
   ) {
-    redirect(`/${locale}/register?error=1`);
+    fail("generic");
   }
 
   const hdrs = await headers();
   const ip = clientIpFromHeaders(hdrs);
   const limited = rateLimitConsume(`register:${ip}`, 6, 60 * 60 * 1000);
   if (!limited.ok) {
-    redirect(`/${locale}/register?error=1`);
+    fail("rate_limited");
   }
 
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({ email, password });
   if (error || !data.user) {
-    redirect(`/${locale}/register?error=1`);
+    fail("generic");
   }
 
   await prisma.user.upsert({
@@ -302,7 +334,7 @@ export async function registerCustomer(formData: FormData) {
     },
     update: {
       email,
-      role: UserRole.customer,
+      // Never demote/promote via public register
     },
   });
 
@@ -330,6 +362,17 @@ export async function loginCustomer(formData: FormData) {
     .trim()
     .toLowerCase();
   const password = String(formData.get("password") || "");
+
+  const hdrs = await headers();
+  const ip = clientIpFromHeaders(hdrs);
+  const limited = rateLimitConsume(
+    `customer-login:${ip}:${email || "unknown"}`,
+    8,
+    15 * 60 * 1000,
+  );
+  if (!limited.ok) {
+    redirect(`/${locale}/login?error=rate_limited`);
+  }
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });

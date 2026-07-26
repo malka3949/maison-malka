@@ -11,8 +11,7 @@ export type LegalDocument = {
 
 export const privacyHe: LegalDocument = {
   title: "מדיניות פרטיות",
-  draftNotice:
-    "מסמך תבנית מקצועי — יש לאשר מול יועץ משפטי לפני השקה ציבורית ולהתאים לפרטי העסק בפועל.",
+  draftNotice: "",
   sections: [
     {
       heading: "מי אנחנו",
@@ -60,8 +59,7 @@ export const privacyHe: LegalDocument = {
 
 export const privacyEn: LegalDocument = {
   title: "Privacy Policy",
-  draftNotice:
-    "Professional template — obtain counsel review and adapt to your business before public launch.",
+  draftNotice: "",
   sections: [
     {
       heading: "Who we are",

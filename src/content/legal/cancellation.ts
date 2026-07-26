@@ -2,8 +2,7 @@ import type { LegalDocument } from "./privacy";
 
 export const cancellationHe: LegalDocument = {
   title: "מדיניות ביטולים",
-  draftNotice:
-    "מסמך תבנית מקצועי — יש לאשר מול יועץ משפטי לפני השקה ציבורית ולהתאים לפרטי העסק בפועל.",
+  draftNotice: "",
   sections: [
     {
       heading: "לפני אישור",
@@ -34,8 +33,7 @@ export const cancellationHe: LegalDocument = {
 
 export const cancellationEn: LegalDocument = {
   title: "Cancellation Policy",
-  draftNotice:
-    "Professional template — obtain counsel review and adapt to your business before public launch.",
+  draftNotice: "",
   sections: [
     {
       heading: "Before approval",

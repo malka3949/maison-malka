@@ -16,7 +16,6 @@ type Props = {
   priceFrom: string;
   ils: string;
   inCartLabel: string;
-  addToCartLabel: string;
   viewProductLabel: string;
   /** `grid` for catalog; `scroll` for home horizontal scroller */
   layout?: "grid" | "scroll";
@@ -33,7 +32,6 @@ export function CatalogProductCard({
   priceFrom,
   ils,
   inCartLabel,
-  addToCartLabel,
   viewProductLabel,
   layout = "grid",
 }: Props) {
@@ -63,7 +61,6 @@ export function CatalogProductCard({
             {inCartLabel}: {qtyInCart}
           </span>
         ) : null}
-        <span className="mm-add-hint">{addToCartLabel}</span>
       </div>
       <p className="mm-product-cat">{categoryName}</p>
       <h2 className="mm-product-name">{name}</h2>

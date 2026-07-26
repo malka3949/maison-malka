@@ -12,11 +12,13 @@ type Props = {
 
 export function CartBadge({ locale, label, iconOnly = false }: Props) {
   const { itemCount } = useCart();
+  const ariaLabel =
+    itemCount > 0 ? `${label} (${itemCount})` : label;
 
   return (
     <Link
       href={`/${locale}/cart`}
-      aria-label={label}
+      aria-label={ariaLabel}
       className="relative inline-flex cursor-pointer items-center gap-1.5 text-sm text-mm-primary transition-opacity hover:opacity-70"
     >
       <span className="relative inline-flex h-7 w-7 items-center justify-center" aria-hidden="true">
@@ -24,9 +26,11 @@ export function CartBadge({ locale, label, iconOnly = false }: Props) {
           <path d="M4 7h16l-1.2 11.2a2 2 0 0 1-2 1.8H7.2a2 2 0 0 1-2-1.8L4 7Z" />
           <path d="M8 7a4 4 0 0 1 8 0" />
         </svg>
-        <span className="absolute -bottom-0.5 -end-0.5 flex h-[1.05rem] min-w-[1.05rem] items-center justify-center rounded-full bg-mm-announce px-1 text-[0.62rem] font-semibold leading-none text-mm-primary">
-          {itemCount}
-        </span>
+        {itemCount > 0 ? (
+          <span className="absolute -bottom-0.5 -end-0.5 flex h-[1.05rem] min-w-[1.05rem] items-center justify-center rounded-full bg-mm-announce px-1 text-[0.62rem] font-semibold leading-none text-mm-primary">
+            {itemCount}
+          </span>
+        ) : null}
       </span>
       {!iconOnly ? <span className="hidden sm:inline">{label}</span> : null}
     </Link>

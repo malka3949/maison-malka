@@ -2,8 +2,7 @@ import type { LegalDocument } from "./privacy";
 
 export const termsHe: LegalDocument = {
   title: "תנאי שימוש",
-  draftNotice:
-    "מסמך תבנית מקצועי — יש לאשר מול יועץ משפטי לפני השקה ציבורית ולהתאים לפרטי העסק בפועל.",
+  draftNotice: "",
   sections: [
     {
       heading: "כללי",
@@ -48,8 +47,7 @@ export const termsHe: LegalDocument = {
 
 export const termsEn: LegalDocument = {
   title: "Terms of Use",
-  draftNotice:
-    "Professional template — obtain counsel review and adapt to your business before public launch.",
+  draftNotice: "",
   sections: [
     {
       heading: "General",

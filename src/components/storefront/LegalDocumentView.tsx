@@ -7,7 +7,9 @@ export function LegalDocumentView({ doc }: { doc: LegalDocument }) {
         <h1 className="font-heading text-4xl text-mm-primary md:text-5xl">
           {doc.title}
         </h1>
-        <p className="mt-3 text-sm text-mm-secondary">{doc.draftNotice}</p>
+        {doc.draftNotice ? (
+          <p className="mt-3 text-sm text-mm-secondary">{doc.draftNotice}</p>
+        ) : null}
       </header>
       {doc.sections.map((section) => (
         <section key={section.heading} className="space-y-3">

@@ -1,9 +1,11 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { Locale as PrismaLocale } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { getMessages, isLocale, type Locale } from "@/lib/i18n";
+import { isLocale, type Locale } from "@/lib/i18n";
 import { orderStatusLabel } from "@/lib/orders/status";
+import { loadMergedStorefrontMessages } from "@/lib/site-cms";
 
 export default async function OrderConfirmationPage({
   params,
@@ -13,16 +15,25 @@ export default async function OrderConfirmationPage({
   searchParams: Promise<{ t?: string }>;
 }) {
   const { locale: localeParam, id } = await params;
-  const { t: accessToken } = await searchParams;
-  if (!isLocale(localeParam) || !accessToken?.trim()) {
+  const { t: tokenFromQuery } = await searchParams;
+  if (!isLocale(localeParam)) {
     notFound();
   }
+
+  const cookieStore = await cookies();
+  const tokenFromCookie = cookieStore.get(`mm_order_access_${id}`)?.value;
+  // Prefer HttpOnly cookie (checkout). Optional ?t= kept for intentional deep links only.
+  const accessToken = (tokenFromCookie || tokenFromQuery || "").trim();
+  if (!accessToken) {
+    notFound();
+  }
+
   const locale = localeParam as Locale;
-  const messages = getMessages(locale);
+  const messages = await loadMergedStorefrontMessages(locale);
   const prismaLocale = locale === "en" ? PrismaLocale.en : PrismaLocale.he;
 
   const order = await prisma.order.findFirst({
-    where: { id, access_token: accessToken.trim() },
+    where: { id, access_token: accessToken },
     select: {
       id: true,
       status: true,

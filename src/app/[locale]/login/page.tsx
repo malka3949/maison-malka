@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loginCustomer } from "@/lib/actions/orders";
-import { getMessages, isLocale, type Locale } from "@/lib/i18n";
+import { isLocale, type Locale } from "@/lib/i18n";
+import { loadMergedStorefrontMessages } from "@/lib/site-cms";
 
 export default async function LoginPage({
   params,
@@ -16,7 +17,13 @@ export default async function LoginPage({
     notFound();
   }
   const locale = localeParam as Locale;
-  const messages = getMessages(locale);
+  const messages = await loadMergedStorefrontMessages(locale);
+  const errorText =
+    error === "rate_limited"
+      ? messages.errorRateLimited
+      : error
+        ? messages.errorGeneric
+        : null;
 
   return (
     <div className="mm-wrap pt-8">
@@ -32,7 +39,7 @@ export default async function LoginPage({
             <span>{messages.password}</span>
             <input name="password" type="password" required className="mm-field" />
           </label>
-          {error ? <p className="text-sm text-red-700">{messages.errorGeneric}</p> : null}
+          {errorText ? <p className="text-sm text-red-700">{errorText}</p> : null}
           <button type="submit" className="mm-btn">
             {messages.loginSubmit}
           </button>

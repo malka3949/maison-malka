@@ -23,6 +23,17 @@ export function StorefrontHeader({ locale, messages, isLoggedIn }: Props) {
     };
   }, [open]);
 
+  useEffect(() => {
+    if (!open) return;
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open]);
+
+  const menuLabel = locale === "he" ? "תפריט" : "Menu";
+
   return (
     <header className="sticky top-0 z-40 border-b border-mm-line bg-mm-bg">
       <div className="mm-wrap relative grid min-h-[4.35rem] grid-cols-[1fr_auto_1fr] items-center gap-2 py-2.5">
@@ -39,8 +50,8 @@ export function StorefrontHeader({ locale, messages, isLoggedIn }: Props) {
           <span className="font-brand text-[1.85rem] leading-none tracking-[0.04em] text-mm-primary md:text-[2.15rem]">
             {messages.brand}
           </span>
-          <span className="mt-1 max-w-[11rem] text-[0.52rem] font-medium uppercase leading-tight tracking-[0.14em] text-mm-secondary">
-            {messages.brandTagline} · {messages.brandSince}
+          <span className="mt-1 max-w-[14rem] text-[0.52rem] font-medium uppercase leading-tight tracking-[0.14em] text-mm-secondary">
+            {messages.brandTagline}
           </span>
         </Link>
 
@@ -55,7 +66,7 @@ export function StorefrontHeader({ locale, messages, isLoggedIn }: Props) {
             type="button"
             aria-expanded={open}
             aria-controls="mm-mobile-nav"
-            aria-label="Menu"
+            aria-label={menuLabel}
             onClick={() => setOpen((v) => !v)}
             className="flex h-10 w-10 cursor-pointer flex-col items-center justify-center gap-1.5"
           >

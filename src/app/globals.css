@@ -461,33 +461,6 @@ button {
   transform: scale(1.04);
 }
 
-.mm-product-card .mm-add-hint {
-  position: absolute;
-  inset-inline: 10%;
-  bottom: 1rem;
-  background: var(--color-mm-line);
-  color: #111;
-  padding: 0.65rem 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 220ms, transform 220ms, background-color 200ms, color 200ms;
-}
-
-.mm-product-card:hover .mm-add-hint,
-.mm-product-card:focus-visible .mm-add-hint {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.mm-product-card:hover .mm-add-hint:hover {
-  background: #000;
-  color: var(--color-mm-line);
-}
-
 .mm-product-card .mm-product-name {
   margin-top: 0.85rem;
   font-family: var(--font-heebo), system-ui, sans-serif;
@@ -608,21 +581,6 @@ button {
   color: #111;
 }
 
-@media (hover: none) {
-  .mm-product-card .mm-add-hint {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-/* Always show a clear action cue on coarse pointers / small screens */
-@media (max-width: 767px) {
-  .mm-product-card .mm-add-hint {
-    opacity: 1;
-    transform: none;
-  }
-}
-
 .mm-section-label {
   font-size: clamp(2rem, 4vw, 2.8rem);
   color: var(--color-mm-word);
@@ -655,10 +613,5 @@ button {
   .mm-product-card img {
     animation: none !important;
     transition: none !important;
-  }
-
-  .mm-product-card .mm-add-hint {
-    opacity: 1;
-    transform: none;
   }
 }

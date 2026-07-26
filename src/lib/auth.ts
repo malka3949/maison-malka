@@ -1,3 +1,4 @@
+import { UserRole } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { resolveUserRole } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/server";
@@ -36,7 +37,16 @@ export async function syncUserFromAuth(authUserId: string, email: string) {
       data: { email },
     });
   }
-  const role = resolveUserRole(email, process.env.ADMIN_EMAIL);
+
+  // Bootstrap only: first admin when the DB has none yet and email matches ADMIN_EMAIL.
+  // Later admins must be granted explicitly in the DB (never via public signup alone).
+  const adminCount = await prisma.user.count({ where: { role: "admin" } });
+  const role =
+    adminCount === 0 &&
+    resolveUserRole(email, process.env.ADMIN_EMAIL) === "admin"
+      ? UserRole.admin
+      : UserRole.customer;
+
   return prisma.user.create({
     data: {
       id: authUserId,

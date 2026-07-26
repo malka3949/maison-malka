@@ -15,7 +15,7 @@ export function OrderPrivacyActions({ orderId }: { orderId: string }) {
     <div className={`space-y-2 ${adminUi.card}`}>
       <h2 className={adminUi.h2}>פרטיות / בקשות נושא מידע</h2>
       <p className={`text-sm ${adminUi.muted}`}>
-        ייצוא או התמתת PII לפי פנייה של הלקוח. התמה אינה הפיכה.
+        ייצוא או התמה של PII לפי פנייה של הלקוח. התמה אינה הפיכה.
       </p>
       <div className="flex flex-wrap gap-2">
         <button
@@ -58,12 +58,12 @@ export function OrderPrivacyActions({ orderId }: { orderId: string }) {
             }
             start(async () => {
               const result = await anonymizeOrderPiiAction(orderId);
-              setMessage(result.ok ? "הפרטים הוסתו" : "התמה נכשלה");
+              setMessage(result.ok ? "הפרטים הוסתרו" : "התמה נכשלה");
               if (result.ok) window.location.reload();
             });
           }}
         >
-          התמתת PII
+          התמת פרטים
         </button>
       </div>
       {message ? <p className="text-sm text-mm-secondary">{message}</p> : null}
