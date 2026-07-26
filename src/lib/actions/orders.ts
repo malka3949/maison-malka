@@ -86,6 +86,13 @@ export async function createGuestOrder(
     return { ok: false, error: "delivery_address" };
   }
 
+  if (
+    input.fulfillmentType === "delivery" &&
+    input.paymentMethod === "on_pickup"
+  ) {
+    return { ok: false, error: "generic" };
+  }
+
   const name = input.customerName.trim();
   const phoneRaw = input.customerPhone.trim();
   const phone = normalizeIsraeliMobile(phoneRaw);

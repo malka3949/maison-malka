@@ -225,8 +225,17 @@ export function CheckoutForm({
 
       <label className="block space-y-1 text-sm text-mm-secondary">
         <span>{messages.paymentMethod}</span>
-        <select name="paymentMethod" className="mm-field" defaultValue="on_pickup">
-          <option value="on_pickup">{messages.onPickup}</option>
+        <select
+          key={fulfillment}
+          name="paymentMethod"
+          className="mm-field"
+          defaultValue={
+            fulfillment === "delivery" ? "bank_transfer" : "on_pickup"
+          }
+        >
+          {fulfillment === "pickup" ? (
+            <option value="on_pickup">{messages.onPickup}</option>
+          ) : null}
           <option value="bank_transfer">{messages.bankTransfer}</option>
         </select>
       </label>
