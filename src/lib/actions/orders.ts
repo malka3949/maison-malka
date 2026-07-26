@@ -351,6 +351,17 @@ export async function loginCustomer(formData: FormData) {
     .toLowerCase();
   const password = String(formData.get("password") || "");
 
+  const hdrs = await headers();
+  const ip = clientIpFromHeaders(hdrs);
+  const limited = rateLimitConsume(
+    `customer-login:${ip}:${email || "unknown"}`,
+    8,
+    15 * 60 * 1000,
+  );
+  if (!limited.ok) {
+    redirect(`/${locale}/login?error=rate_limited`);
+  }
+
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {

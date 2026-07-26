@@ -18,6 +18,12 @@ export default async function LoginPage({
   }
   const locale = localeParam as Locale;
   const messages = await loadMergedStorefrontMessages(locale);
+  const errorText =
+    error === "rate_limited"
+      ? messages.errorRateLimited
+      : error
+        ? messages.errorGeneric
+        : null;
 
   return (
     <div className="mm-wrap pt-8">
@@ -33,7 +39,7 @@ export default async function LoginPage({
             <span>{messages.password}</span>
             <input name="password" type="password" required className="mm-field" />
           </label>
-          {error ? <p className="text-sm text-red-700">{messages.errorGeneric}</p> : null}
+          {errorText ? <p className="text-sm text-red-700">{errorText}</p> : null}
           <button type="submit" className="mm-btn">
             {messages.loginSubmit}
           </button>
