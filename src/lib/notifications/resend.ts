@@ -40,6 +40,10 @@ export async function sendTransactionalEmail(input: {
   to: string;
   subject: string;
   html: string;
+  /** Customer reply address (contact form, etc.). */
+  replyTo?: string;
+  /** Send to `to` even when RESEND_DEV_TO is set (e.g. shop contact inbox). */
+  bypassDevRedirect?: boolean;
 }): Promise<SendEmailResult> {
   const apiKey = process.env.RESEND_API_KEY?.trim();
   const from = process.env.RESEND_FROM_EMAIL?.trim();
@@ -49,7 +53,9 @@ export async function sendTransactionalEmail(input: {
     return { ok: false, error: "not_configured", skipped: true };
   }
 
-  const dest = resolveEmailDestination(input.to);
+  const dest = input.bypassDevRedirect
+    ? { to: input.to, subjectPrefix: "", htmlNote: "" }
+    : resolveEmailDestination(input.to);
   const subject = `${dest.subjectPrefix}${input.subject}`;
   const html = dest.htmlNote ? `${dest.htmlNote}${input.html}` : input.html;
 
@@ -60,18 +66,24 @@ export async function sendTransactionalEmail(input: {
   }
 
   try {
+    const payload: Record<string, unknown> = {
+      from,
+      to: [dest.to],
+      subject,
+      html,
+    };
+    const replyTo = input.replyTo?.trim();
+    if (replyTo) {
+      payload.reply_to = replyTo;
+    }
+
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        from,
-        to: [dest.to],
-        subject,
-        html,
-      }),
+      body: JSON.stringify(payload),
     });
 
     const body = (await res.json()) as ResendApiResponse;
