@@ -7,7 +7,7 @@
 | ID | Severity | Status |
 |---|---|---|
 | SCR-001 / SCR-002 | critical | **Fixed** — `resolveSafeUploadPath` / `sanitizeStorageKeyFromSegments` |
-| SCR-003 | high | **Fixed** — `Order.access_token` + confirm page `?t=` |
+| SCR-003 | high | **Fixed** — `Order.access_token`; confirm page prefers HttpOnly cookie `mm_order_access_*` (`?t=` optional deep link) |
 | SCR-005 | high | **Fixed** — `revalidateAdminPaths` requires admin |
 | SCR-006 | high | **Fixed** — qty cap 99 |
 | SCR-007 | high | **Fixed** — register phone normalize |

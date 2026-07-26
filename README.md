@@ -29,6 +29,7 @@ npm run dev
 
 - Storefront (Hebrew default): [http://localhost:3000/he](http://localhost:3000/he)
 - English: [http://localhost:3000/en](http://localhost:3000/en)
+- Contact: [http://localhost:3000/he/contact](http://localhost:3000/he/contact)
 - Admin: [http://localhost:3000/admin/login](http://localhost:3000/admin/login)
 - Admin orders: [http://localhost:3000/admin/orders](http://localhost:3000/admin/orders)
 - Site CMS: [http://localhost:3000/admin/site](http://localhost:3000/admin/site) · [media](http://localhost:3000/admin/media) · [settings](http://localhost:3000/admin/settings)
@@ -82,9 +83,10 @@ Locale switcher: HE (RTL) ↔ EN (LTR). Optional customer register/login prefill
 
 ## Trust & Legal (pre-launch)
 
-- Public legal pages under `/[locale]/privacy|terms|cancellation` (draft copy — replace before public launch).
-- Footer always shows phone / pickup address / hours (CMS settings or message fallbacks).
+- Public legal pages under `/[locale]/privacy|terms|cancellation` (counsel-owned wording before public launch).
+- Footer links to **Contact** (`/[locale]/contact`) — phone, email, address, hours come from CMS settings (`contact_email` included). Contact form sends via Resend to the shop inbox.
 - Admin settings: save multiline `bank_transfer_details` for approved bank-transfer orders.
+- Launch ops: [DOCS/security/PRODUCTION-LAUNCH.md](DOCS/security/PRODUCTION-LAUNCH.md) · content fill: [DOCS/security/CONTENT-CHECKLIST.md](DOCS/security/CONTENT-CHECKLIST.md).
 
 ## Scope
 
@@ -94,9 +96,11 @@ Locale switcher: HE (RTL) ↔ EN (LTR). Optional customer register/login prefill
 
 ## Vercel deployment
 
-1. Import this repository in Vercel.
-2. Set all environment variables from `.env.example`.
-3. Deploy — preview should serve `/he` and `/admin/login`.
+1. Import this repository in Vercel (Production branch: usually `develop` until you freeze `main`).
+2. Set Production env vars from `.env.example` — especially `NEXT_PUBLIC_APP_URL`, `RESEND_FROM_EMAIL`, and leave `RESEND_DEV_TO` **empty** in Production.
+3. Run `npx prisma migrate deploy` against the production database.
+4. Deploy — open `/he`, `/he/contact`, and `/admin/login`.
+5. Follow the full checklist: [DOCS/security/PRODUCTION-LAUNCH.md](DOCS/security/PRODUCTION-LAUNCH.md).
 
 ## Project structure
 
