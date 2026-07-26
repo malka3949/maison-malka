@@ -8,7 +8,7 @@
 |---|---|
 | Global security headers (HSTS, XFO, Referrer-Policy, Permissions-Policy, nosniff) | **Fixed** in `next.config.ts` |
 | `.env.production` / `.env.development` gitignore | **Fixed** |
-| CSP | **Residual** — optional follow-up (Supabase/Auth/Storage allowlist) |
+| CSP | **Fixed** — baseline CSP in `next.config.ts` (Next + Supabase allowlist; still includes `'unsafe-inline'`/`'unsafe-eval'` for Next.js) |
 | Production env separation / Resend domain | **Operator** — see `PRODUCTION-LAUNCH.md` |
 
 ---
