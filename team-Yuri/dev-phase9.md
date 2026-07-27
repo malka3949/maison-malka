@@ -81,7 +81,14 @@ None.
 |---|---|
 | Branch | `phase-9/campaign-media` |
 | Base | `develop` |
-| Push | PENDING |
+| Push | PUSHED |
+| Remote | `origin` |
+
+### Commits
+
+| SHA (short) | Message |
+|---|---|
+| `161ad6d` | `phase9: add optional campaign image and PDF attachments` |
 
 ## Known Issues / Limitations
 
