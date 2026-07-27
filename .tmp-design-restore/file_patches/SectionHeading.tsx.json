@@ -1,0 +1,13 @@
+[
+  {
+    "line": 34,
+    "write": true,
+    "contents": "import Link from \"next/link\";\n\ntype Props = {\n  title: string;\n  subtitle?: string;\n  moreHref?: string;\n  moreLabel?: string;\n};\n\nexport function SectionHeading({ title, subtitle, moreHref, moreLabel }: Props) {\n  return (\n    <div className=\"mm-section-head\">\n      <div>\n        <h2 className=\"mm-page-title font-heading\" style={{ fontSize: \"clamp(1.85rem, 4vw, 2.75rem)\" }}>\n          {title}\n        </h2>\n        {subtitle ? <p className=\"mt-1 text-sm text-mm-secondary\">{subtitle}</p> : null}\n      </div>\n      {moreHref && moreLabel ? (\n        <Link href={moreHref} className=\"mm-section-link\">\n          {moreLabel}\n        </Link>\n      ) : null}\n    </div>\n  );\n}\n"
+  },
+  {
+    "line": 35,
+    "old": "        <h2 className=\"mm-page-title font-heading\" style={{ fontSize: \"clamp(1.85rem, 4vw, 2.75rem)\" }}>\n          {title}\n        </h2>",
+    "new": "        <h2 className=\"mm-section-title font-heading\">{title}</h2>",
+    "all": null
+  }
+]

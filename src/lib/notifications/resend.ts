@@ -44,6 +44,8 @@ export async function sendTransactionalEmail(input: {
   replyTo?: string;
   /** Send to `to` even when RESEND_DEV_TO is set (e.g. shop contact inbox). */
   bypassDevRedirect?: boolean;
+  /** Optional Resend attachments (base64 content). */
+  attachments?: Array<{ filename: string; contentBase64: string }>;
 }): Promise<SendEmailResult> {
   const apiKey = process.env.RESEND_API_KEY?.trim();
   const from = process.env.RESEND_FROM_EMAIL?.trim();
@@ -76,6 +78,12 @@ export async function sendTransactionalEmail(input: {
     if (replyTo) {
       payload.reply_to = replyTo;
     }
+    if (input.attachments?.length) {
+      payload.attachments = input.attachments.map((a) => ({
+        filename: a.filename,
+        content: a.contentBase64,
+      }));
+    }
 
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -101,6 +109,16 @@ export async function sendTransactionalEmail(input: {
     console.error("[notifications] Resend request failed", err);
     return { ok: false, error: "network_error" };
   }
+}
+
+/** Pure helper for tests — shapes Resend attachment objects. */
+export function toResendAttachmentPayload(
+  attachments: Array<{ filename: string; contentBase64: string }>,
+): Array<{ filename: string; content: string }> {
+  return attachments.map((a) => ({
+    filename: a.filename,
+    content: a.contentBase64,
+  }));
 }
 
 async function sendOrderEmail(

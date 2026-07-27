@@ -302,6 +302,11 @@ model EmailCampaign {
   created_by_user_id  String?
   status              EmailCampaignStatus @default(draft)
   recipient_count     Int                 @default(0)
+  /// Optional promo image in site-media (campaigns/...).
+  image_storage_path  String?
+  /// Optional PDF in site-media (campaigns/...).
+  pdf_storage_path    String?
+  pdf_filename        String?
   sent_at             DateTime?
   created_at          DateTime            @default(now())
   updated_at          DateTime            @updatedAt

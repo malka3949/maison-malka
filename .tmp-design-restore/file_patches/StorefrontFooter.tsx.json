@@ -1,0 +1,13 @@
+[
+  {
+    "line": 9,
+    "old": "    <footer className=\"mt-auto border-t border-mm-line bg-mm-soft py-12\">",
+    "new": "    <footer className=\"mm-footer mt-auto\">",
+    "all": null
+  },
+  {
+    "line": 34,
+    "write": true,
+    "contents": "import Link from \"next/link\";\nimport type { Locale, Messages } from \"@/lib/i18n\";\nimport type { SiteSettingsMap } from \"@/lib/site-content\";\n\nexport function StorefrontFooter({\n  locale,\n  messages,\n  settings = {},\n}: {\n  locale: Locale;\n  messages: Messages;\n  settings?: SiteSettingsMap;\n}) {\n  const lead = settings.lead_time_note?.trim();\n\n  return (\n    <footer className=\"mm-footer mt-auto\">\n      <div className=\"mm-wrap grid gap-8 text-center md:grid-cols-[1.2fr_1fr] md:text-start\">\n        <div>\n          <p className=\"font-brand text-3xl tracking-tight text-mm-primary\">\n            {messages.brand}\n          </p>\n          <p className=\"mt-1 text-[0.65rem] uppercase tracking-[0.2em] text-mm-secondary\">\n            {messages.brandTagline}\n          </p>\n          <p className=\"mx-auto mt-4 max-w-md text-sm text-mm-secondary md:mx-0\">\n            {messages.footerNote}\n          </p>\n          {lead ? (\n            <p className=\"mx-auto mt-2 max-w-md text-sm text-mm-secondary md:mx-0\">\n              {lead}\n            </p>\n          ) : null}\n        </div>\n\n        <div>\n          <nav className=\"flex flex-col gap-2.5 text-sm\">\n            <Link href={`/${locale}/catalog`} className=\"mm-footer-link\">\n              {messages.navCatalog}\n            </Link>\n            <Link href={`/${locale}/cart`} className=\"mm-footer-link\">\n              {messages.navCart}\n            </Link>\n            <Link href={`/${locale}/contact`} className=\"mm-footer-link\">\n              {messages.contactLabel}\n            </Link>\n            <Link href={`/${locale}/privacy`} className=\"mm-footer-link\">\n              {messages.legalPrivacy}\n            </Link>\n            <Link href={`/${locale}/terms`} className=\"mm-footer-link\">\n              {messages.legalTerms}\n            </Link>\n            <Link href={`/${locale}/cancellation`} className=\"mm-footer-link\">\n              {messages.legalCancellation}\n            </Link>\n          </nav>\n        </div>\n      </div>\n    </footer>\n  );\n}\n"
+  }
+]

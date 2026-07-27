@@ -1,0 +1,38 @@
+[
+  {
+    "path": "c:\\Users\\user1\\Desktop\\Masion-malka\\src\\app\\globals.css",
+    "file": "src\\app\\globals.css",
+    "line": 8,
+    "len": 20282
+  },
+  {
+    "path": "C:\\Users\\user1\\Desktop\\Masion-malka\\src\\app\\layout.tsx",
+    "file": "src\\app\\layout.tsx",
+    "line": 19,
+    "len": 1031
+  },
+  {
+    "path": "C:\\Users\\user1\\Desktop\\Masion-malka\\src\\components\\storefront\\CartView.tsx",
+    "file": "src\\components\\storefront\\CartView.tsx",
+    "line": 32,
+    "len": 3366
+  },
+  {
+    "path": "C:\\Users\\user1\\Desktop\\Masion-malka\\src\\components\\storefront\\LegalDocumentView.tsx",
+    "file": "src\\components\\storefront\\LegalDocumentView.tsx",
+    "line": 34,
+    "len": 774
+  },
+  {
+    "path": "C:\\Users\\user1\\Desktop\\Masion-malka\\src\\components\\storefront\\SectionHeading.tsx",
+    "file": "src\\components\\storefront\\SectionHeading.tsx",
+    "line": 34,
+    "len": 677
+  },
+  {
+    "path": "C:\\Users\\user1\\Desktop\\Masion-malka\\src\\components\\storefront\\StorefrontFooter.tsx",
+    "file": "src\\components\\storefront\\StorefrontFooter.tsx",
+    "line": 34,
+    "len": 2005
+  }
+]

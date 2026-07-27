@@ -1,0 +1,14 @@
+[
+  {
+    "line": 9,
+    "old": "    <header className=\"sticky top-0 z-40 border-b border-mm-line bg-mm-bg\">",
+    "new": "    <header className=\"mm-header sticky top-0 z-40\">",
+    "all": null
+  },
+  {
+    "line": 22,
+    "old": "          <span className=\"font-brand text-[1.85rem] leading-none tracking-[0.04em] text-mm-primary md:text-[2.15rem]\">\n            {messages.brand}\n          </span>",
+    "new": "          <span className=\"font-brand text-[1.85rem] leading-none tracking-tight text-mm-primary md:text-[2.15rem]\">\n            {messages.brand}\n          </span>",
+    "all": null
+  }
+]

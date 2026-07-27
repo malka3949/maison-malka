@@ -1,0 +1,7 @@
+[
+  {
+    "line": 34,
+    "write": true,
+    "contents": "import type { LegalDocument } from \"@/content/legal/privacy\";\n\nexport function LegalDocumentView({ doc }: { doc: LegalDocument }) {\n  return (\n    <article className=\"mm-legal-article space-y-8\">\n      <header>\n        <h1 className=\"mm-page-title font-heading\">{doc.title}</h1>\n        {doc.draftNotice ? (\n          <p className=\"mm-page-lead\">{doc.draftNotice}</p>\n        ) : null}\n      </header>\n      {doc.sections.map((section) => (\n        <section key={section.heading} className=\"space-y-3\">\n          <h2>{section.heading}</h2>\n          {section.paragraphs.map((p) => (\n            <p key={p.slice(0, 48)} className=\"text-sm leading-relaxed text-mm-secondary\">\n              {p}\n            </p>\n          ))}\n        </section>\n      ))}\n    </article>\n  );\n}\n"
+  }
+]

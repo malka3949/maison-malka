@@ -26,6 +26,8 @@ export function buildCampaignEmail(input: {
   body: string;
   recipientEmail: string;
   locale?: "he" | "en";
+  /** Absolute URL for optional promo image. */
+  imageUrl?: string | null;
 }): { subject: string; html: string } | null {
   const token = createUnsubscribeToken(input.recipientEmail);
   if (!token) return null;
@@ -41,6 +43,13 @@ export function buildCampaignEmail(input: {
       ? "You received this because you opted in to Maison Malka updates."
       : "קיבלת הודעה זו כי הסכמת לקבל עדכונים מ-Maison Malka.";
 
+  const imageBlock =
+    input.imageUrl && /^https?:\/\//i.test(input.imageUrl)
+      ? `<div style="margin:0 0 16px;text-align:center;">
+          <img src="${escapeHtml(input.imageUrl)}" alt="" style="max-width:100%;height:auto;border:0;display:block;margin:0 auto;" />
+        </div>`
+      : "";
+
   const html = `<!DOCTYPE html>
 <html lang="${locale}" dir="${dir}">
 <head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/></head>
@@ -52,6 +61,7 @@ export function buildCampaignEmail(input: {
           <div style="font-family:Georgia,serif;font-size:22px;color:#726b4f;">Maison Malka</div>
         </td></tr>
         <tr><td style="padding:24px;">
+          ${imageBlock}
           ${bodyToHtml(input.body)}
         </td></tr>
         <tr><td style="padding:16px 24px 24px;border-top:1px solid #d6d0b3;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#6f6a60;text-align:center;">

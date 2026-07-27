@@ -1,0 +1,14 @@
+[
+  {
+    "line": 35,
+    "old": "      className=\"inline-flex overflow-hidden border border-mm-line bg-mm-surface\"",
+    "new": "      className=\"inline-flex overflow-hidden border border-mm-line bg-mm-surface\"",
+    "all": null
+  },
+  {
+    "line": 36,
+    "old": "          className={`cursor-pointer px-2.5 py-1 text-[0.75rem] font-semibold uppercase tracking-wide transition-colors ${\n            l === locale\n              ? \"bg-mm-dark text-white\"\n              : \"text-mm-secondary hover:text-mm-primary\"\n          }`}",
+    "new": "          className={`cursor-pointer px-2.5 py-1 text-[0.75rem] font-semibold uppercase tracking-wide transition-colors ${\n            l === locale\n              ? \"bg-mm-cta text-mm-primary\"\n              : \"text-mm-secondary hover:text-mm-primary\"\n          }`}",
+    "all": null
+  }
+]

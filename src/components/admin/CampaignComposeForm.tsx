@@ -17,7 +17,11 @@ export function CampaignComposeForm({
   const [state, action, pending] = useActionState(sendCampaignAction, initial);
 
   return (
-    <form action={action} className={`${adminUi.section} max-w-xl space-y-4`}>
+    <form
+      action={action}
+      encType="multipart/form-data"
+      className={`${adminUi.section} max-w-xl space-y-4`}
+    >
       <p className="text-sm text-mm-secondary">
         נמענים עם הסכמת דיוור פעילה:{" "}
         <strong className="text-mm-primary">{recipientCount}</strong>
@@ -43,6 +47,30 @@ export function CampaignComposeForm({
           name="body"
           required
           rows={8}
+          className={adminUi.input}
+          disabled={recipientCount === 0}
+        />
+      </label>
+      <label className="block text-sm">
+        <span className="mb-1 block text-mm-secondary">
+          תמונת פרסומת (אופציונלי, jpeg/png/webp)
+        </span>
+        <input
+          type="file"
+          name="image"
+          accept="image/jpeg,image/png,image/webp"
+          className={adminUi.input}
+          disabled={recipientCount === 0}
+        />
+      </label>
+      <label className="block text-sm">
+        <span className="mb-1 block text-mm-secondary">
+          קובץ PDF (אופציונלי, עד 5MB)
+        </span>
+        <input
+          type="file"
+          name="pdf"
+          accept="application/pdf,.pdf"
           className={adminUi.input}
           disabled={recipientCount === 0}
         />
@@ -81,10 +109,27 @@ export function CampaignComposeForm({
       {state.error === "unauthorized" ? (
         <p className="text-sm text-red-600">אין הרשאה.</p>
       ) : null}
+      {state.error === "image_too_large" || state.error === "pdf_too_large" ? (
+        <p className="text-sm text-red-600">הקובץ גדול מדי.</p>
+      ) : null}
+      {state.error === "image_type" || state.error === "pdf_type" ? (
+        <p className="text-sm text-red-600">סוג קובץ לא נתמך.</p>
+      ) : null}
+      {state.error === "upload_failed" ? (
+        <p className="text-sm text-red-600">העלאה נכשלה. נסו שוב.</p>
+      ) : null}
       {state.error &&
-      !["empty_audience", "confirm_required", "missing_fields", "unauthorized"].includes(
-        state.error,
-      ) ? (
+      ![
+        "empty_audience",
+        "confirm_required",
+        "missing_fields",
+        "unauthorized",
+        "image_too_large",
+        "pdf_too_large",
+        "image_type",
+        "pdf_type",
+        "upload_failed",
+      ].includes(state.error) ? (
         <p className="text-sm text-red-600">שגיאה: {state.error}</p>
       ) : null}
     </form>

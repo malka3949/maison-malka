@@ -1,0 +1,20 @@
+[
+  {
+    "line": 32,
+    "old": "    <form\n      onSubmit={onSubmit}\n      className=\"mx-auto max-w-lg space-y-4 rounded-2xl border border-mm-line bg-mm-surface p-6 md:p-8\"\n    >\n      <div className=\"space-y-2 rounded-xl border border-mm-line bg-mm-soft/50 p-3 text-sm\">\n        <p className=\"font-medium text-mm-primary\">{messages.orderItems}</p>\n        <ul className=\"space-y-2\">\n          {lines.map((line) => (\n            <li\n              key={`${line.productId}-${line.optionValueIds.join(\",\")}`}\n              className=\"text-mm-secondary\"\n            >\n              <span className=\"text-mm-primary\">\n                {line.name} × {line.quantity}\n              </span>\n              {line.optionLabels?.length ? (\n                <span className=\"mt-0.5 block text-xs\">\n                  {line.optionLabels.join(\" · \")}\n                </span>\n              ) : null}\n              <span className=\"mt-0.5 block text-xs\">\n                {messages.ils}\n                {computeLineTotal(line.unitPrice, line.quantity).toFixed(2)}\n              </span>\n            </li>\n          ))}\n        </ul>\n        <p className=\"border-t border-mm-line pt-2 font-medium text-mm-primary\">\n          {messages.subtotal}: {messages.ils}\n          {cartSubtotal.toFixed(2)}\n        </p>\n      </div>",
+    "new": "    <form\n      onSubmit={onSubmit}\n      className=\"mm-auth-shell mm-panel mx-auto space-y-4\"\n    >\n      <div className=\"mm-panel-inset space-y-2 text-sm\">\n        <p className=\"font-medium text-mm-primary\">{messages.orderItems}</p>\n        <ul className=\"space-y-2\">\n          {lines.map((line) => (\n            <li\n              key={`${line.productId}-${line.optionValueIds.join(\",\")}`}\n              className=\"text-mm-secondary\"\n            >\n              <span className=\"text-mm-primary\">\n                {line.name} × {line.quantity}\n              </span>\n              {line.optionLabels?.length ? (\n                <span className=\"mt-0.5 block text-xs\">\n                  {line.optionLabels.join(\" · \")}\n                </span>\n              ) : null}\n              <span className=\"mt-0.5 block text-xs\">\n                {messages.ils}\n                {computeLineTotal(line.unitPrice, line.quantity).toFixed(2)}\n              </span>\n            </li>\n          ))}\n        </ul>\n        <p className=\"border-t border-mm-line pt-2 font-medium text-mm-primary\">\n          {messages.subtotal}: {messages.ils}\n          {cartSubtotal.toFixed(2)}\n        </p>\n      </div>",
+    "all": null
+  },
+  {
+    "line": 34,
+    "old": "          <p className=\"rounded-xl border border-mm-line bg-mm-soft p-3 text-xs leading-relaxed text-mm-secondary\">",
+    "new": "          <p className=\"mm-panel-inset text-xs leading-relaxed text-mm-secondary\">",
+    "all": true
+  },
+  {
+    "line": 34,
+    "old": "      <p className=\"rounded-xl border border-mm-line bg-mm-soft p-3 text-xs leading-relaxed text-mm-secondary\">",
+    "new": "      <p className=\"mm-panel-inset text-xs leading-relaxed text-mm-secondary\">",
+    "all": null
+  }
+]

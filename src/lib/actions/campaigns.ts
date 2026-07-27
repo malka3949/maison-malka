@@ -1,5 +1,6 @@
 "use server";
 
+import { randomBytes } from "crypto";
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -7,12 +8,22 @@ import { countCampaignAudience } from "@/lib/campaigns/consent";
 import { sendMarketingCampaign } from "@/lib/campaigns/send";
 import { revokeMarketingConsent } from "@/lib/campaigns/consent";
 import { verifyUnsubscribeToken } from "@/lib/campaigns/email";
+import {
+  uploadCampaignImage,
+  uploadCampaignPdf,
+} from "@/lib/campaigns/upload";
 
 export type CampaignFormState = {
   error?: string;
   success?: boolean;
   campaignId?: string;
 };
+
+function fileFromForm(formData: FormData, key: string): File | null {
+  const raw = formData.get(key);
+  if (!(raw instanceof File) || raw.size === 0) return null;
+  return raw;
+}
 
 export async function sendCampaignAction(
   _prev: CampaignFormState,
@@ -36,10 +47,39 @@ export async function sendCampaignAction(
     return { error: "empty_audience" };
   }
 
+  const campaignKey = randomBytes(8).toString("hex");
+  const imageFile = fileFromForm(formData, "image");
+  const pdfFile = fileFromForm(formData, "pdf");
+
+  let imageStoragePath: string | null = null;
+  let pdfStoragePath: string | null = null;
+  let pdfFilename: string | null = null;
+  let pdfBuffer: Buffer | null = null;
+
+  if (imageFile) {
+    const up = await uploadCampaignImage(imageFile, campaignKey);
+    if (!up.ok) return { error: up.error };
+    imageStoragePath = up.storagePath;
+  }
+
+  if (pdfFile) {
+    const up = await uploadCampaignPdf(pdfFile, campaignKey);
+    if (!up.ok) return { error: up.error };
+    pdfStoragePath = up.storagePath;
+    pdfFilename = up.filename;
+    pdfBuffer = up.buffer;
+  }
+
   const result = await sendMarketingCampaign({
     subject,
     body,
     createdByUserId: admin.appUser.id,
+    media: {
+      imageStoragePath,
+      pdfStoragePath,
+      pdfFilename,
+      pdfBuffer,
+    },
   });
 
   if (!result.ok) {
@@ -63,6 +103,8 @@ export async function listCampaignsForAdmin() {
       recipient_count: true,
       sent_at: true,
       created_at: true,
+      image_storage_path: true,
+      pdf_storage_path: true,
     },
   });
 }

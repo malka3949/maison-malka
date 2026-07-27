@@ -6,6 +6,8 @@ import { prisma } from "@/lib/prisma";
 import { resolveCampaignAudience } from "@/lib/campaigns/consent";
 import { buildCampaignEmail } from "@/lib/campaigns/templates";
 import { sendTransactionalEmail } from "@/lib/notifications/resend";
+import { getAppBaseUrl } from "@/lib/notifications/templates";
+import { getSiteMediaPublicUrl } from "@/lib/site-media-url";
 import { redactEmail } from "@/lib/rate-limit";
 
 /** Max recipients processed between small yields (Resend free-tier friendly). */
@@ -15,6 +17,21 @@ export type SendCampaignResult =
   | { ok: true; campaignId: string; sent: number; failed: number }
   | { ok: false; error: string };
 
+export type CampaignMediaInput = {
+  imageStoragePath?: string | null;
+  pdfStoragePath?: string | null;
+  pdfFilename?: string | null;
+  /** PDF bytes for Resend attachment (loaded once per campaign). */
+  pdfBuffer?: Buffer | null;
+};
+
+function absoluteMediaUrl(storagePath: string): string {
+  const rel = getSiteMediaPublicUrl(storagePath);
+  const base = getAppBaseUrl().replace(/\/$/, "");
+  if (rel.startsWith("http")) return rel;
+  return `${base}${rel.startsWith("/") ? rel : `/${rel}`}`;
+}
+
 /**
  * Create campaign + CampaignSend rows, then batch-send via Resend.
  * Does not call sendOrder* helpers — only sendTransactionalEmail.
@@ -23,6 +40,7 @@ export async function sendMarketingCampaign(input: {
   subject: string;
   body: string;
   createdByUserId?: string | null;
+  media?: CampaignMediaInput;
 }): Promise<SendCampaignResult> {
   const subject = input.subject.trim();
   const body = input.body.trim();
@@ -35,6 +53,21 @@ export async function sendMarketingCampaign(input: {
     return { ok: false, error: "empty_audience" };
   }
 
+  const media = input.media ?? {};
+  const imageUrl = media.imageStoragePath
+    ? absoluteMediaUrl(media.imageStoragePath)
+    : null;
+
+  const attachments =
+    media.pdfBuffer && media.pdfFilename
+      ? [
+          {
+            filename: media.pdfFilename,
+            contentBase64: media.pdfBuffer.toString("base64"),
+          },
+        ]
+      : undefined;
+
   const campaign = await prisma.emailCampaign.create({
     data: {
       subject,
@@ -42,6 +75,9 @@ export async function sendMarketingCampaign(input: {
       created_by_user_id: input.createdByUserId ?? null,
       status: EmailCampaignStatus.sending,
       recipient_count: audience.length,
+      image_storage_path: media.imageStoragePath ?? null,
+      pdf_storage_path: media.pdfStoragePath ?? null,
+      pdf_filename: media.pdfFilename ?? null,
       sends: {
         create: audience.map((email) => ({
           email,
@@ -62,6 +98,7 @@ export async function sendMarketingCampaign(input: {
       body,
       recipientEmail: row.email,
       locale: "he",
+      imageUrl,
     });
 
     if (!built) {
@@ -80,6 +117,7 @@ export async function sendMarketingCampaign(input: {
       to: row.email,
       subject: built.subject,
       html: built.html,
+      attachments,
     });
 
     if (result.ok) {
@@ -113,7 +151,6 @@ export async function sendMarketingCampaign(input: {
       );
     }
 
-    // Soft yield every batch for free-tier politeness
     if ((i + 1) % CAMPAIGN_BATCH_SIZE === 0) {
       await new Promise((r) => setTimeout(r, 200));
     }

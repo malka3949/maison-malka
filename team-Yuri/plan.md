@@ -108,7 +108,8 @@ Team Yuri phases align with `DOCS/Maison-Malka-Development-Phases-Plan.md`:
 | 5 | Storefront Bakery Scroll UI | Apply approved light bakery design to public Next.js storefront |
 | 6 | Site Content CMS | Admin-editable homepage/chrome texts, site media library, business settings |
 | 7 | Pre-launch Trust & Legal | Legal pages, contact disclosures, checkout consent, delivery disclosure, bank-transfer instructions |
-| 8 | Marketing Email Campaigns | Admin manual promo campaigns via Resend + marketing consent/unsubscribe (product doc Phase 12); payments/loyalty remain deferred |)
+| 8 | Marketing Email Campaigns | Admin manual promo campaigns via Resend + marketing consent/unsubscribe (product doc Phase 12); payments/loyalty remain deferred |
+| 9 | Campaign Media Attachments | Optional promo image in email body + optional PDF attachment on campaigns; keep Phase 8 consent/unsubscribe |)
 
 ## Phase 1: System Foundation
 
@@ -329,6 +330,31 @@ See `team-Yuri/arch-phase8.md`.
 
 ### Deferred Growth (later phase)
 Online payments, loyalty, delivery-zone expansion, WhatsApp — remain TBD after Phase 8 campaigns.
+
+## Phase 9: Campaign Media Attachments
+
+### Goal
+Extend Phase 8 admin campaigns so the administrator can optionally attach a **promo image** (shown in the email) and/or a **PDF** (as email attachment), while keeping plain-text body, consent, and unsubscribe unchanged.
+
+### Scope
+- Optional image upload (jpeg/png/webp) embedded in campaign HTML via absolute public media URL
+- Optional PDF upload attached via Resend `attachments`
+- Subject + body remain required; media is additive
+- Store paths on `EmailCampaign`; reuse `site-media` under `campaigns/` prefix
+- Keep campaign module separate from `sendOrder*`; extend shared Resend send to support attachments
+- Unit tests for template image block + attachment payload shaping
+
+### Out of Scope
+- WYSIWYG / HTML designer
+- Multiple images, galleries, A/B
+- External ESP, payments, loyalty, WhatsApp
+- Changing consent/unsubscribe model
+
+### Functional Testability
+Admin attaches image and/or PDF, sends campaign; email HTML contains image when provided; Resend payload includes PDF attachment when provided; unsubscribe still present.
+
+### Handoff Notes for Phase Design
+See `team-Yuri/arch-phase9.md`.
 
 ## Open Questions
 
