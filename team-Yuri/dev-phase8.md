@@ -112,7 +112,7 @@ Implemented manual marketing email campaigns (M0–M5):
 |---|---|---|
 | `218f47f` | `phase8: add marketing campaigns architecture and product docs` | M0 + docs |
 | `951248a` | `phase8: implement marketing consent, campaigns admin, and Resend send` | M1–M5 |
-| (this commit) | `phase8: record git push evidence in dev report` | M5 evidence |
+| `f52cafb` | `phase8: record git evidence in developer report` | M5 evidence |
 
 ## Known Issues / Limitations
 
