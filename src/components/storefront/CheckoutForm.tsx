@@ -47,6 +47,7 @@ export function CheckoutForm({
     const form = new FormData(e.currentTarget);
     const acceptedTerms = form.get("acceptedTerms") === "on";
     const deliveryAreaConfirmed = form.get("deliveryAreaConfirmed") === "on";
+    const marketingOptIn = form.get("marketingOptIn") === "on";
 
     setPending(true);
     const result = await createGuestOrder({
@@ -62,6 +63,7 @@ export function CheckoutForm({
       customerNotes: String(form.get("notes") || ""),
       acceptedTerms,
       deliveryAreaConfirmed,
+      marketingOptIn,
       lines: lines.map((l) => ({
         productId: l.productId,
         quantity: l.quantity,
@@ -273,6 +275,10 @@ export function CheckoutForm({
         <label className="flex cursor-pointer items-start gap-2">
           <input type="checkbox" name="acceptedTerms" className="mt-1" required />
           <span>{messages.acceptTerms}</span>
+        </label>
+        <label className="flex cursor-pointer items-start gap-2">
+          <input type="checkbox" name="marketingOptIn" className="mt-1" />
+          <span>{messages.marketingOptIn}</span>
         </label>
       </div>
 

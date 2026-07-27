@@ -11,6 +11,7 @@ const navItems = [
   { href: "/admin/categories", label: "קטגוריות" },
   { href: "/admin/products", label: "מוצרים" },
   { href: "/admin/orders", label: "הזמנות" },
+  { href: "/admin/campaigns", label: "קמפיינים" },
   { href: "/admin/site", label: "תוכן אתר" },
   { href: "/admin/media", label: "מדיה" },
   { href: "/admin/settings", label: "הגדרות" },

@@ -91,6 +91,14 @@ export const en: Messages = {
   legalCancellation: "Cancellation Policy",
   acceptTerms:
     "I have read and agree to the Terms of Use, Privacy Policy, and Cancellation Policy",
+  marketingOptIn:
+    "I agree to receive marketing emails from Maison Malka (optional; unsubscribe anytime)",
+  unsubscribeTitle: "Unsubscribe from marketing",
+  unsubscribeSuccess:
+    "You have been unsubscribed from marketing emails. We will not send you further promotions.",
+  unsubscribeInvalid:
+    "This link is invalid or expired. If the problem continues, please contact us.",
+  unsubscribeFailed: "We could not complete unsubscribe right now. Please try again later.",
   deliveryJerusalemNote: "Delivery is available in the Jerusalem area only.",
   deliveryCostArranged: "Delivery cost is arranged with the shop.",
   deliveryAreaConfirm:

@@ -17,6 +17,14 @@ export default function AdminDashboardPage() {
           <h2 className={adminUi.h2}>מוצרים</h2>
           <p className={`${adminUi.muted} mt-2 text-sm`}>מוצרים, תמונות, אפשרויות ומארזים</p>
         </Link>
+        <Link href="/admin/orders" className={adminUi.cardInteractive}>
+          <h2 className={adminUi.h2}>הזמנות</h2>
+          <p className={`${adminUi.muted} mt-2 text-sm`}>רשימה, לוח שנה ואישור</p>
+        </Link>
+        <Link href="/admin/campaigns" className={adminUi.cardInteractive}>
+          <h2 className={adminUi.h2}>קמפיינים</h2>
+          <p className={`${adminUi.muted} mt-2 text-sm`}>דיוור שיווקי ללקוחות שהסכימו</p>
+        </Link>
       </div>
     </div>
   );
