@@ -7,7 +7,7 @@
  * the business supplies final brand photography.
  */
 export const HOME_MEDIA = {
-  hero: "/placeholders/cake.jpg",
+  hero: "/placeholders/tart.jpg",
   promoCatalog: "/placeholders/pastry.jpg",
   promoGift: "/placeholders/giftbox.jpg",
 } as const;

@@ -21,6 +21,7 @@ import type { Locale } from "@/lib/i18n";
 import { sendOrderAdminNew, sendOrderReceived } from "@/lib/notifications/resend";
 import { clientIpFromHeaders, rateLimitConsume } from "@/lib/rate-limit";
 import { LEGAL_CONSENT_VERSION } from "@/content/legal";
+import { upsertMarketingOptIn } from "@/lib/campaigns/consent";
 
 const MAX_LINE_QTY = 99;
 
@@ -41,6 +42,8 @@ export type CheckoutFormInput = {
   customerNotes?: string;
   acceptedTerms: boolean;
   deliveryAreaConfirmed?: boolean;
+  /** Optional marketing (דיוור) opt-in — not required for order. */
+  marketingOptIn?: boolean;
   lines: CheckoutCartLineInput[];
   locale: Locale;
 };
@@ -248,6 +251,14 @@ export async function createGuestOrder(
       },
     },
   });
+
+  if (input.marketingOptIn === true) {
+    try {
+      await upsertMarketingOptIn(email, "checkout");
+    } catch (err) {
+      console.error("[checkout] marketing consent upsert failed", err);
+    }
+  }
 
   void sendOrderReceived(order).then((result) => {
     if (!result.ok && !result.skipped) {

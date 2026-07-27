@@ -135,13 +135,19 @@ Maison Malka משלבת:
 
 # 8. Out of Scope - MVP
 
-- ניהול מלאי אוטומטי.
-- מערכת התאמות מוצר מתקדמת.
-- CRM מתקדם.
-- תוכנית נאמנות.
-- קופונים מורכבים.
-- ניהול ייצור.
-- מוצרים עונתיים (לא ב-MVP; עתידי).
+פריטים אלה **אינם ב-MVP**. סדר הביצוע אחרי ה-MVP מוגדר בגלים — ראו §14 ו־`DOCS/phases/12-post-mvp-waves-roadmap.md`.
+
+- ניהול מלאי אוטומטי (גל 4).
+- מערכת התאמות מוצר מתקדמת (גל 4).
+- CRM מתקדם (גל 4).
+- תוכנית נאמנות (גל 2 — פשוטה; מורכבת בגל 4/CRM).
+- קופונים מורכבים (קופונים בסיסיים — גל 1; מורכבים נדחים).
+- ניהול ייצור (גל 4).
+- מוצרים עונתיים (גל 2).
+- קמפיין מייל שיווקי / דיוור המוני (גל 3 — ראו `DOCS/features/marketing-email-campaigns.md`).
+- תשלום אונליין (גל 1).
+- WhatsApp / SMS (גל 2).
+- הרחבת אזורי משלוח מעבר לירושלים (גל 3).
 
 ---
 
@@ -243,22 +249,38 @@ MVP: ירושלים בלבד.
 
 # 14. Product Roadmap
 
+מקור אמת מפורט ל-Post-MVP: [`DOCS/phases/12-post-mvp-waves-roadmap.md`](phases/12-post-mvp-waves-roadmap.md).
+
 ## Phase 1 - MVP
 
 - אתר מותג.
 - קטלוג.
 - מערכת הזמנות.
 - אזור מנהל בסיסי.
+- Trust & Legal לפני השקה.
 
-## Phase 2
+## Wave 0 — Production (לפני צמיחה)
 
-- שיפור לקוחות חוזרים.
-- מבצעים.
-- המלצות מוצרים.
-- הרחבת ניהול.
+- פריסת Production, Resend חי, אבטחה/גיבוי/ניטור.
+- מיפוי: Team Yuri Phase 4 (חידוש PARKED).
 
-## Phase 3
+## Wave 1 — Conversion (צמיחה)
 
-- הרחבת אזורי משלוח.
-- יכולות מתקדמות להזמנות.
-- אוטומציות שיווק.
+- קופונים בסיסיים, תשלום אונליין, המלצות מוצרים, היסטוריית הזמנות + הזמנה חוזרת.
+- מיפוי: Team Yuri Phase 8 · מסמך מוצר `DOCS/phases/10-growth-and-retention.md`.
+
+## Wave 2 — Retention & ops
+
+- WhatsApp/SMS, דוחות מנהל, מוצרים עונתיים, נאמנות פשוטה.
+- מיפוי: Team Yuri Phase 9 · אותו מסמך פאזה 10 (סעיף גל 2).
+
+## Wave 3 — Scale & automation
+
+- אזורי משלוח + תמחור, cap יומי + חלונות זמן, אוטומציות שיווק.
+- קמפיין מייל ידני (broadcast) עם הסכמה + הסרה — `DOCS/features/marketing-email-campaigns.md`.
+- מיפוי: Team Yuri Phase 10 · `DOCS/phases/11-scale-and-automation.md`.
+
+## Wave 4 — Heavy / deferred
+
+- מלאי אוטומטי, התאמות מתקדמות, CRM מלא, ניהול ייצור.
+- מיפוי: Team Yuri Phase 11+ backlog · `DOCS/phases/13-deferred-heavy-ops.md`.

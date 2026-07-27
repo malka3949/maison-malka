@@ -88,6 +88,12 @@ export const he: Messages = {
   legalTerms: "תנאי שימוש",
   legalCancellation: "מדיניות ביטולים",
   acceptTerms: "קראתי ואני מסכים/ה לתנאי השימוש, מדיניות הפרטיות ומדיניות הביטולים",
+  marketingOptIn:
+    "אני מאשר/ת קבלת עדכונים ופרסומות במייל מ-Maison Malka (אופציונלי; ניתן להסרה בכל עת)",
+  unsubscribeTitle: "הסרה מרשימת דיוור",
+  unsubscribeSuccess: "הוסרת בהצלחה מרשימת הדיוור השיווקי. לא נשלח אליך פרסומות נוספות.",
+  unsubscribeInvalid: "הקישור אינו תקף או שפג תוקפו. אם הבעיה נמשכת, צרו איתנו קשר.",
+  unsubscribeFailed: "לא ניתן להשלים את ההסרה כרגע. נסו שוב מאוחר יותר.",
   deliveryJerusalemNote: "משלוח זמין באזור ירושלים בלבד.",
   deliveryCostArranged: "עלות המשלוח בתיאום עם בית העסק.",
   deliveryAreaConfirm: "אני מאשר/ת שהכתובת באזור ירושלים ומבין/ה שעלות המשלוח בתיאום",

@@ -18,12 +18,10 @@ export default async function CheckoutPage({
   const prefill = await getCustomerProfileForCheckout();
 
   return (
-    <div className="mm-wrap space-y-6 pt-8">
+    <div className="mm-wrap mm-page space-y-6">
       <div>
-        <h1 className="font-heading text-4xl text-mm-primary md:text-5xl">
-          {messages.checkoutTitle}
-        </h1>
-        <p className="mt-2 text-sm text-mm-secondary">{messages.privacyNotice}</p>
+        <h1 className="mm-page-title font-heading">{messages.checkoutTitle}</h1>
+        <p className="mm-page-lead">{messages.privacyNotice}</p>
       </div>
       <CheckoutForm locale={locale} messages={messages} prefill={prefill} />
     </div>

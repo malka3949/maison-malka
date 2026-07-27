@@ -16,10 +16,8 @@ export default async function CartPage({
   const messages = await loadMergedStorefrontMessages(locale);
 
   return (
-    <div className="mm-wrap space-y-6 pt-8">
-      <h1 className="font-heading text-4xl text-mm-primary md:text-5xl">
-        {messages.cartTitle}
-      </h1>
+    <div className="mm-wrap mm-page space-y-6">
+      <h1 className="mm-page-title font-heading">{messages.cartTitle}</h1>
       <CartView locale={locale} messages={messages} />
     </div>
   );

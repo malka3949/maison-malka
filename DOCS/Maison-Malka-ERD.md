@@ -9,7 +9,7 @@ Source Architecture: `DOCS/Maison-Malka-Architecture-Plan.md`
 
 ## 1. Overview
 
-Maison Malka is a transactional e-commerce data model for a premium pastry shop. The core persistent data covers a categorized product catalog (including fixed bundles and basic options), optional customer accounts, order requests with manual approval, and admin-managed content in Hebrew and English. Shopping cart state for guests is handled at application/session level until checkout creates an `Order`.
+Maison Malka is a transactional e-commerce data model for a premium pastry shop. The core persistent data covers a categorized product catalog (including fixed bundles and basic options), optional customer accounts, order requests with manual approval, and admin-managed content in Hebrew and English. Shopping cart state for guests is handled at application/session level until checkout creates an `Order`. Post-MVP (Team Yuri Phase 8 / product Phase 12) adds logical marketing-consent and email-campaign entities for manual admin promo sends.
 
 ---
 
@@ -31,6 +31,8 @@ erDiagram
     PRODUCT ||--o{ ORDER_ITEM : "ordered as"
     ORDER_ITEM ||--o{ ORDER_ITEM_OPTION : "selected"
     PRODUCT_OPTION_VALUE ||--o{ ORDER_ITEM_OPTION : "snapshot of"
+    EMAIL_CAMPAIGN ||--o{ CAMPAIGN_SEND : "delivers"
+    USER ||--o{ EMAIL_CAMPAIGN : "created by"
 
     SITE_MEDIA {
         string id PK
@@ -54,6 +56,39 @@ erDiagram
         string id PK
         string key UK
         string value
+        datetime created_at
+        datetime updated_at
+    }
+
+    MARKETING_CONSENT {
+        string id PK
+        string email UK
+        enum status "opted_in, opted_out"
+        string source
+        datetime opted_in_at
+        datetime opted_out_at
+        datetime created_at
+        datetime updated_at
+    }
+
+    EMAIL_CAMPAIGN {
+        string id PK
+        string subject
+        text body
+        string created_by_user_id FK "nullable"
+        enum status "draft, sending, sent, failed, partial"
+        integer recipient_count
+        datetime sent_at
+        datetime created_at
+        datetime updated_at
+    }
+
+    CAMPAIGN_SEND {
+        string id PK
+        string campaign_id FK
+        string email
+        enum status "pending, sent, failed, skipped"
+        string error_note
         datetime created_at
         datetime updated_at
     }
@@ -492,6 +527,66 @@ erDiagram
 
 ---
 
+## 4c. Marketing Email Campaigns (Post-MVP / Team Yuri Phase 8)
+
+Logical entities for manual admin promo campaigns. Physical Prisma migration is owned by Developer in Phase 8 — this section is the logical contract.
+
+### MarketingConsent
+
+**Purpose:** Per-email marketing (דיוור) opt-in / opt-out; separate from order terms consent.  
+**Source:** `team-Yuri/arch-phase8.md`, `DOCS/phases/12-marketing-email-campaigns.md`
+
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| id | string | yes | Primary key |
+| email | string | yes | Normalized unique email |
+| status | enum: [opted_in, opted_out] | yes | Latest status wins |
+| source | string | yes | e.g. `checkout` |
+| opted_in_at | datetime | no | Set when opted in |
+| opted_out_at | datetime | no | Set when unsubscribed |
+| created_at | datetime | yes | |
+| updated_at | datetime | yes | |
+
+### EmailCampaign
+
+**Purpose:** Admin-authored campaign batch metadata and overall status.  
+**Source:** `team-Yuri/arch-phase8.md`
+
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| id | string | yes | Primary key |
+| subject | string | yes | |
+| body | text | yes | Plain / safe content (escaped in HTML wrapper) |
+| created_by_user_id | reference: User | no | Admin who sent |
+| status | enum: [draft, sending, sent, failed, partial] | yes | |
+| recipient_count | integer | yes | Snapshot at send time |
+| sent_at | datetime | no | |
+| created_at | datetime | yes | |
+| updated_at | datetime | yes | |
+
+### CampaignSend
+
+**Purpose:** Per-recipient delivery attempt for a campaign.  
+**Source:** `team-Yuri/arch-phase8.md`
+
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| id | string | yes | Primary key |
+| campaign_id | reference: EmailCampaign | yes | Cascade delete with campaign |
+| email | string | yes | Recipient snapshot |
+| status | enum: [pending, sent, failed, skipped] | yes | |
+| error_note | string | no | Provider / validation error (no secrets) |
+| created_at | datetime | yes | |
+| updated_at | datetime | yes | |
+
+**Relationships:**
+
+- **EmailCampaign → CampaignSend:** one-to-many (cascade)
+- **User → EmailCampaign:** one-to-many optional (set null)
+- **MarketingConsent** is keyed by email only (no FK to Order); audience joins `Order.customer_email` ∩ opted_in consents
+
+---
+
 ## 5. Coverage Map
 
 | PRD Reference | Capability | Entities Involved |
@@ -517,6 +612,7 @@ erDiagram
 | PRD §8 out | Seasonal products | — (not modeled) |
 | Phase 6 CMS | Site marketing content / media / settings | SiteMedia, SiteContentBlock, SiteSettings |
 | Phase 7 Trust & Legal | Bank transfer instructions in settings | SiteSettings (`bank_transfer_details`) |
+| Phase 12 / TY 8 | Manual marketing campaigns + דיוור consent | MarketingConsent, EmailCampaign, CampaignSend |
 
 ---
 
@@ -533,10 +629,11 @@ Per PRD Out of Scope and Architecture decisions:
 
 - Inventory / stock levels
 - Payment transactions or card data
-- Email notification log (Resend is external)
+- Transactional email notification log (Resend is external; campaign history is modeled Post-MVP via EmailCampaign / CampaignSend)
 - Loyalty, coupons, CRM
 - Seasonal product scheduling
 - Production planning
+- Automated marketing drip sequences (product Phase 11)
 
 ---
 

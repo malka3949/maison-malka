@@ -26,12 +26,9 @@ export default async function ProductPage({
   const mainUrl = mainImage ? getProductImagePublicUrl(mainImage.path) : null;
 
   return (
-    <div className="mm-wrap space-y-8 pt-8 pb-10">
+    <div className="mm-wrap mm-page space-y-8">
       <p>
-        <Link
-          href={`/${locale}/catalog`}
-          className="cursor-pointer text-sm text-mm-secondary underline-offset-4 transition-colors hover:text-mm-primary hover:underline"
-        >
+        <Link href={`/${locale}/catalog`} className="mm-back-link">
           ← {messages.navCatalog}
         </Link>
       </p>
@@ -58,7 +55,7 @@ export default async function ProductPage({
                     key={img.path}
                     src={url}
                     alt={img.alt || product.name}
-                    className="aspect-square border border-mm-line object-cover"
+                    className="mm-thumb"
                   />
                 ) : null;
               })}
@@ -68,24 +65,16 @@ export default async function ProductPage({
 
         <div className="space-y-7 lg:pt-2">
           <div>
-            <p className="text-[0.7rem] font-medium uppercase tracking-[0.16em] text-mm-word">
-              {messages.brand}
-            </p>
-            <h1 className="mt-2 font-heading text-4xl leading-tight text-mm-primary md:text-5xl">
-              {product.name}
-            </h1>
+            <p className="mm-eyebrow">{messages.brand}</p>
+            <h1 className="mm-page-title font-heading mt-2">{product.name}</h1>
             {product.description ? (
-              <p className="mt-4 text-[0.95rem] leading-relaxed text-mm-secondary">
-                {product.description}
-              </p>
+              <p className="mm-page-lead">{product.description}</p>
             ) : null}
           </div>
 
           {product.productType === "bundle" && product.bundleItems.length > 0 ? (
-            <div className="border-y border-mm-line py-4">
-              <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-mm-word">
-                {messages.bundleContains}
-              </h2>
+            <div className="mm-panel-inset space-y-2">
+              <h2 className="mm-eyebrow">{messages.bundleContains}</h2>
               <ul className="space-y-1 text-sm text-mm-primary">
                 {product.bundleItems.map((bi) => (
                   <li key={bi.name}>

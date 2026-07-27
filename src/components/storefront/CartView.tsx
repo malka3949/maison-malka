@@ -13,7 +13,7 @@ export function CartView({ locale, messages }: { locale: Locale; messages: Messa
 
   if (lines.length === 0) {
     return (
-      <div className="space-y-4 rounded-2xl border border-mm-line bg-mm-surface p-6">
+      <div className="mm-panel space-y-4">
         <p className="text-mm-secondary">{messages.cartEmpty}</p>
         <Link href={`/${locale}/catalog`} className="mm-btn inline-flex">
           {messages.continueShopping}
@@ -25,15 +25,12 @@ export function CartView({ locale, messages }: { locale: Locale; messages: Messa
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <Link
-          href={`/${locale}/catalog`}
-          className="cursor-pointer text-sm font-medium text-mm-secondary underline-offset-4 transition-colors hover:text-mm-primary hover:underline"
-        >
+        <Link href={`/${locale}/catalog`} className="mm-back-link">
           ← {messages.continueShopping}
         </Link>
       </div>
 
-      <ul className="divide-y divide-mm-line overflow-hidden rounded-2xl border border-mm-line bg-mm-surface">
+      <ul className="mm-list-panel">
         {lines.map((line) => (
           <li
             key={`${line.productId}-${line.optionValueIds.join(",")}`}
@@ -82,7 +79,7 @@ export function CartView({ locale, messages }: { locale: Locale; messages: Messa
         ))}
       </ul>
 
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-mm-line bg-mm-surface p-5">
+      <div className="mm-panel flex flex-wrap items-center justify-between gap-4">
         <p className="font-heading text-xl text-mm-primary">
           {messages.subtotal}: {messages.ils}
           {subtotal.toFixed(2)}

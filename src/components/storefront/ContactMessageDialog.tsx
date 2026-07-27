@@ -101,11 +101,11 @@ export function ContactMessageDialog({
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
-            className="w-full max-w-md rounded-xl border border-mm-line bg-white p-5 shadow-lg"
+            className="mm-dialog"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-4 flex items-start justify-between gap-3">
-              <h2 id={titleId} className="font-heading text-2xl text-mm-primary">
+              <h2 id={titleId} className="font-heading text-2xl tracking-tight text-mm-primary">
                 {messages.contactWriteUs}
               </h2>
               <button

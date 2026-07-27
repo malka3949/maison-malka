@@ -28,15 +28,13 @@ export default async function CatalogPage({
   const activeCategory = categories.find((c) => c.slug === category);
 
   return (
-    <div className="mm-wrap space-y-8 pt-10 pb-6">
-      <div className="border-b border-mm-line pb-6">
-        <p className="mm-section-label italic">{messages.promoCatalogLabel}</p>
-        <h1 className="mt-2 font-heading text-3xl text-mm-primary md:text-4xl">
+    <div className="mm-wrap mm-page space-y-8">
+      <div className="mm-page-banner">
+        <p className="mm-section-label">{messages.promoCatalogLabel}</p>
+        <h1 className="mm-page-title font-heading mt-2">
           {activeCategory ? activeCategory.name : messages.catalogTitle}
         </h1>
-        <p className="mt-2 max-w-xl text-sm text-mm-secondary">
-          {messages.catalogSubtitle}
-        </p>
+        <p className="mm-page-lead">{messages.catalogSubtitle}</p>
       </div>
 
       <nav className="mm-catalog-filters" aria-label={messages.catalogTitle}>

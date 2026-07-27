@@ -20,6 +20,7 @@ Build Maison Malka — a premium boutique pastry e-commerce platform for Jerusal
 - Manage categories, products, bundles, images, availability (Phase 1 foundation)
 - Review and approve orders (Phase 3+)
 - Edit site marketing content, media, and business settings without developer redeploy (Phase 6+)
+- Send manual promotional emails to consented past customers (Phase 8 / product Phase 12)
 
 ## Facts
 
@@ -107,7 +108,7 @@ Team Yuri phases align with `DOCS/Maison-Malka-Development-Phases-Plan.md`:
 | 5 | Storefront Bakery Scroll UI | Apply approved light bakery design to public Next.js storefront |
 | 6 | Site Content CMS | Admin-editable homepage/chrome texts, site media library, business settings |
 | 7 | Pre-launch Trust & Legal | Legal pages, contact disclosures, checkout consent, delivery disclosure, bank-transfer instructions |
-| 8 | Business Growth | Payments, loyalty, expansion (TBD; was former Phase 7 / earlier Growth slot) |
+| 8 | Marketing Email Campaigns | Admin manual promo campaigns via Resend + marketing consent/unsubscribe (product doc Phase 12); payments/loyalty remain deferred |)
 
 ## Phase 1: System Foundation
 
@@ -292,10 +293,42 @@ User opens legal pages from footer; checkout blocks without consent; delivery sh
 ### Handoff Notes for Phase Design
 See `team-Yuri/arch-phase7.md`.
 
-## Phase 8: Business Growth
+## Phase 8: Marketing Email Campaigns
 
 ### Goal
-Deferred — online payments, loyalty, delivery expansion per business needs (formerly labeled Phase 7; original Growth slot shifted after Trust & Legal insertion).
+Give the business administrator an in-admin way to send a **manual promotional email** to past customers who opted in to marketing, with unsubscribe — without online payments, loyalty, or full marketing automation.
+
+Maps to product doc: `DOCS/phases/12-marketing-email-campaigns.md` (does **not** overwrite product Phase 08 admin-orders).
+
+### Scope
+- Optional marketing opt-in at checkout (separate from required terms consent); persist consent in DB
+- Audience = distinct emails from past orders **with active marketing consent only**
+- Admin UI: compose subject + plain/safe body; preview recipient count; send campaign via Resend
+- Campaign module separate from transactional `sendOrder*` helpers
+- Signed/token unsubscribe link → public page → revoke consent
+- Basic campaign history (subject, time, recipient count, status)
+- Batch sending + respect Resend limits; `RESEND_DEV_TO` in development
+
+### Out of Scope
+- Online card payments, loyalty, coupons, WhatsApp, CRM
+- Automated drip / triggered marketing sequences (remain in product Phase 11)
+- Freeform HTML page builder / rich WYSIWYG for campaigns
+- External ESP (Mailchimp etc.) — optional later if volume outgrows Resend
+- Phase 4 Production cutover / live Resend production proof as phase gate
+
+### Architectural Direction
+- New logical entities: MarketingConsent, EmailCampaign, CampaignSend (see ERD)
+- Delivery via existing Resend provider; campaign path must not mix with order notification helpers
+- Legal terms consent ≠ marketing consent
+
+### Functional Testability
+Admin opens campaigns screen, sends a campaign to consented test address; recipient receives email with working unsubscribe; unsubscribed email is excluded from next audience.
+
+### Handoff Notes for Phase Design
+See `team-Yuri/arch-phase8.md`.
+
+### Deferred Growth (later phase)
+Online payments, loyalty, delivery-zone expansion, WhatsApp — remain TBD after Phase 8 campaigns.
 
 ## Open Questions
 

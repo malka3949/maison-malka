@@ -261,3 +261,65 @@ model SiteSettings {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
+
+enum MarketingConsentStatus {
+  opted_in
+  opted_out
+}
+
+enum EmailCampaignStatus {
+  draft
+  sending
+  sent
+  failed
+  partial
+}
+
+enum CampaignSendStatus {
+  pending
+  sent
+  failed
+  skipped
+}
+
+/// Per-email marketing (דיוור) opt-in / opt-out — separate from order terms consent.
+model MarketingConsent {
+  id           String                  @id @default(cuid())
+  email        String                  @unique
+  status       MarketingConsentStatus
+  source       String
+  opted_in_at  DateTime?
+  opted_out_at DateTime?
+  created_at   DateTime                @default(now())
+  updated_at   DateTime                @updatedAt
+}
+
+/// Admin-authored marketing campaign batch.
+model EmailCampaign {
+  id                  String              @id @default(cuid())
+  subject             String
+  body                String
+  created_by_user_id  String?
+  status              EmailCampaignStatus @default(draft)
+  recipient_count     Int                 @default(0)
+  sent_at             DateTime?
+  created_at          DateTime            @default(now())
+  updated_at          DateTime            @updatedAt
+
+  sends CampaignSend[]
+}
+
+/// Per-recipient delivery attempt for a campaign.
+model CampaignSend {
+  id          String             @id @default(cuid())
+  campaign_id String
+  email       String
+  status      CampaignSendStatus @default(pending)
+  error_note  String?
+  created_at  DateTime           @default(now())
+  updated_at  DateTime           @updatedAt
+
+  campaign EmailCampaign @relation(fields: [campaign_id], references: [id], onDelete: Cascade)
+
+  @@index([campaign_id])
+}

@@ -93,6 +93,11 @@ export type Messages = {
   legalTerms: string;
   legalCancellation: string;
   acceptTerms: string;
+  marketingOptIn: string;
+  unsubscribeTitle: string;
+  unsubscribeSuccess: string;
+  unsubscribeInvalid: string;
+  unsubscribeFailed: string;
   deliveryJerusalemNote: string;
   deliveryCostArranged: string;
   deliveryAreaConfirm: string;
