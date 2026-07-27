@@ -123,7 +123,7 @@ export function AddToCartButton({
         </fieldset>
       ))}
 
-      <p className="text-2xl font-semibold tracking-wide text-mm-primary">
+      <p className="font-heading text-2xl tracking-tight text-mm-primary">
         {messages.ils}
         {unitPrice.toFixed(2)}
       </p>

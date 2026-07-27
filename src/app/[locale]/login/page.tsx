@@ -26,9 +26,9 @@ export default async function LoginPage({
         : null;
 
   return (
-    <div className="mm-wrap pt-8">
-      <div className="mx-auto max-w-md space-y-6 rounded-2xl border border-mm-line bg-mm-surface p-6 md:p-8">
-        <h1 className="font-heading text-4xl text-mm-primary">{messages.loginTitle}</h1>
+    <div className="mm-wrap mm-page">
+      <div className="mm-auth-shell mm-panel space-y-6">
+        <h1 className="mm-page-title font-heading">{messages.loginTitle}</h1>
         <form action={loginCustomer} className="space-y-4">
           <input type="hidden" name="locale" value={locale} />
           <label className="block space-y-1 text-sm text-mm-secondary">
@@ -47,13 +47,13 @@ export default async function LoginPage({
         <div className="flex flex-col gap-2 text-sm">
           <Link
             href={`/${locale}/register`}
-            className="cursor-pointer text-mm-primary hover:underline"
+            className="mm-section-link w-fit"
           >
             {messages.navRegister}
           </Link>
           <Link
             href={`/${locale}/checkout`}
-            className="cursor-pointer text-mm-primary hover:underline"
+            className="mm-section-link w-fit"
           >
             {messages.continueAsGuest}
           </Link>

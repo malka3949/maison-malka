@@ -40,9 +40,9 @@ export default async function RegisterPage({
   const errorText = registerErrorMessage(error, messages);
 
   return (
-    <div className="mm-wrap pt-8">
-      <div className="mx-auto max-w-md space-y-6 rounded-2xl border border-mm-line bg-mm-surface p-6 md:p-8">
-        <h1 className="font-heading text-4xl text-mm-primary">{messages.registerTitle}</h1>
+    <div className="mm-wrap mm-page">
+      <div className="mm-auth-shell mm-panel space-y-6">
+        <h1 className="mm-page-title font-heading">{messages.registerTitle}</h1>
         <form action={registerCustomer} className="space-y-4">
           <input type="hidden" name="locale" value={locale} />
           <label className="block space-y-1 text-sm text-mm-secondary">
@@ -97,7 +97,7 @@ export default async function RegisterPage({
             {messages.registerSubmit}
           </button>
         </form>
-        <Link href={`/${locale}/login`} className="cursor-pointer text-sm text-mm-primary hover:underline">
+        <Link href={`/${locale}/login`} className="mm-section-link w-fit text-sm">
           {messages.navLogin}
         </Link>
       </div>

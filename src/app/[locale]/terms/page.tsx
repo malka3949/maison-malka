@@ -12,7 +12,7 @@ export default async function TermsPage({
   if (!isLocale(localeParam)) notFound();
   const locale = localeParam as Locale;
   return (
-    <div className="mm-wrap py-10 pb-16">
+    <div className="mm-wrap mm-page">
       <LegalDocumentView doc={getLegalDocument("terms", locale)} />
     </div>
   );

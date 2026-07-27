@@ -1,20 +1,20 @@
 import type { Metadata } from "next";
-import { Cormorant, Heebo } from "next/font/google";
+import { Rubik, Syne } from "next/font/google";
 import "./globals.css";
 
-/** Refined editorial serif — brand wordmark + English display. */
-const cormorant = Cormorant({
+/** Contemporary display — brand wordmark + English headlines. */
+const syne = Syne({
   subsets: ["latin", "latin-ext"],
-  variable: "--font-cormorant",
-  weight: ["400", "500", "600", "700"],
+  variable: "--font-display",
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 
-/** Clean Hebrew UI + Hebrew headings. */
-const heebo = Heebo({
-  subsets: ["hebrew", "latin"],
-  variable: "--font-heebo",
-  weight: ["300", "400", "500", "600", "700"],
+/** Modern geometric Hebrew + UI body. */
+const rubik = Rubik({
+  subsets: ["hebrew", "latin", "latin-ext"],
+  variable: "--font-sans",
+  weight: ["300", "400", "500", "600", "700", "800"],
   display: "swap",
 });
 
@@ -33,7 +33,7 @@ export default function RootLayout({
       lang="he"
       dir="rtl"
       suppressHydrationWarning
-      className={`${cormorant.variable} ${heebo.variable}`}
+      className={`${syne.variable} ${rubik.variable}`}
     >
       <body className="font-sans antialiased bg-mm-bg text-mm-text">
         {children}

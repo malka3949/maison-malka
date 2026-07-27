@@ -20,7 +20,7 @@ export function LanguageSwitcher({ locale }: { locale: Locale }) {
           href={`/${l}${rest}`}
           className={`cursor-pointer px-2.5 py-1 text-[0.75rem] font-semibold uppercase tracking-wide transition-colors ${
             l === locale
-              ? "bg-mm-dark text-white"
+              ? "bg-mm-cta text-mm-primary"
               : "text-mm-secondary hover:text-mm-primary"
           }`}
         >

@@ -35,7 +35,7 @@ export function StorefrontHeader({ locale, messages, isLoggedIn }: Props) {
   const menuLabel = locale === "he" ? "תפריט" : "Menu";
 
   return (
-    <header className="sticky top-0 z-40 border-b border-mm-line bg-mm-bg">
+    <header className="mm-header sticky top-0 z-40">
       <div className="mm-wrap relative grid min-h-[4.35rem] grid-cols-[1fr_auto_1fr] items-center gap-2 py-2.5">
         <div className="flex items-center gap-3">
           <CartBadge locale={locale} label={messages.navCart} iconOnly />
@@ -47,7 +47,7 @@ export function StorefrontHeader({ locale, messages, isLoggedIn }: Props) {
           className="flex flex-col items-center text-center cursor-pointer"
           onClick={() => setOpen(false)}
         >
-          <span className="font-brand text-[1.85rem] leading-none tracking-[0.04em] text-mm-primary md:text-[2.15rem]">
+          <span className="font-brand text-[1.85rem] leading-none tracking-tight text-mm-primary md:text-[2.15rem]">
             {messages.brand}
           </span>
           <span className="mt-1 max-w-[14rem] text-[0.52rem] font-medium uppercase leading-tight tracking-[0.14em] text-mm-secondary">

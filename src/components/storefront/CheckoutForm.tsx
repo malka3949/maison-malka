@@ -101,9 +101,9 @@ export function CheckoutForm({
   return (
     <form
       onSubmit={onSubmit}
-      className="mx-auto max-w-lg space-y-4 rounded-2xl border border-mm-line bg-mm-surface p-6 md:p-8"
+      className="mm-auth-shell mm-panel mx-auto space-y-4"
     >
-      <div className="space-y-2 rounded-xl border border-mm-line bg-mm-soft/50 p-3 text-sm">
+      <div className="mm-panel-inset space-y-2 text-sm">
         <p className="font-medium text-mm-primary">{messages.orderItems}</p>
         <ul className="space-y-2">
           {lines.map((line) => (
@@ -188,7 +188,7 @@ export function CheckoutForm({
 
       {fulfillment === "delivery" ? (
         <div className="space-y-3">
-          <p className="rounded-xl border border-mm-line bg-mm-soft p-3 text-xs leading-relaxed text-mm-secondary">
+          <p className="mm-panel-inset text-xs leading-relaxed text-mm-secondary">
             {messages.deliveryJerusalemNote} {messages.deliveryCostArranged}
           </p>
           <label className="block space-y-1 text-sm text-mm-secondary">
@@ -247,7 +247,7 @@ export function CheckoutForm({
         <textarea name="notes" className="mm-field" rows={2} />
       </label>
 
-      <p className="rounded-xl border border-mm-line bg-mm-soft p-3 text-xs leading-relaxed text-mm-secondary">
+      <p className="mm-panel-inset text-xs leading-relaxed text-mm-secondary">
         {messages.privacyNotice}
       </p>
 

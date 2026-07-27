@@ -69,12 +69,10 @@ export default async function OrderConfirmationPage({
   }
 
   return (
-    <div className="mm-wrap pt-8 pb-12">
-      <div className="mx-auto max-w-lg space-y-4 rounded-2xl border border-mm-line bg-mm-surface p-8">
+    <div className="mm-wrap mm-page">
+      <div className="mm-auth-shell mm-panel space-y-5">
         <div className="space-y-2 text-center">
-          <h1 className="font-heading text-4xl text-mm-primary">
-            {messages.orderSuccess}
-          </h1>
+          <h1 className="mm-page-title font-heading">{messages.orderSuccess}</h1>
           <p className="text-mm-secondary">{messages.orderSuccessBody}</p>
           <p className="text-sm text-mm-secondary">
             {messages.orderId}:{" "}
@@ -98,7 +96,7 @@ export default async function OrderConfirmationPage({
               return (
                 <li
                   key={`${order.id}-${idx}`}
-                  className="rounded-xl border border-mm-line bg-mm-soft/40 p-3 text-sm"
+                  className="mm-panel-inset text-sm"
                 >
                   <p className="font-medium text-mm-primary">
                     {name} × {item.quantity}
@@ -127,7 +125,7 @@ export default async function OrderConfirmationPage({
         </div>
 
         {order.payment_method === "bank_transfer" ? (
-          <p className="rounded-xl border border-mm-line bg-mm-soft p-3 text-sm leading-relaxed text-mm-secondary">
+          <p className="mm-panel-inset text-sm leading-relaxed text-mm-secondary">
             {messages.bankTransferNextSteps}
           </p>
         ) : null}
