@@ -4,7 +4,7 @@
 PHASE=8
 
 ## Status
-STATUS: READY_FOR_MANAGER
+STATUS: APPROVED
 
 ## Phase Goal
 
@@ -137,12 +137,53 @@ Deliver **manual marketing email campaigns** for the business administrator: opt
 - Git: branch `phase-8/marketing-email-campaigns` from latest `develop` (after Phase 7 merge if not yet merged Γאפ stop and escalate if base unclear)
 
 ## Architect Review
-ARCHITECT_REVIEW_STATUS: NOT_REVIEWED
+ARCHITECT_REVIEW_STATUS: APPROVED
 
 ### Review Notes
 
-(Not reviewed Γאפ awaiting Manager plan and Developer evidence.)
+Architect Review of Phase 8 Marketing Email Campaigns (2026-07-28).
+
+Upstream: `manager-phase8.md` MANAGER_REVIEW_STATUS: APPROVED; `dev-phase8.md` STATUS: COMPLETE / READY_FOR_MANAGER_REVIEW.
+
+#### Architecture alignment — PASS
+
+| Decision / constraint | Verdict | Evidence |
+|---|---|---|
+| Campaigns only (not Growth payments/loyalty) | Pass | Dev scope compliance; Manager approval |
+| Separate campaign module vs `sendOrder*` | Pass | `src/lib/campaigns/`; uses `sendTransactionalEmail` only |
+| Consented audience only | Pass | MarketingConsent + Order email intersection |
+| Terms ≠ marketing opt-in | Pass | Optional checkout `marketingOptIn` |
+| Unsubscribe token path | Pass | HMAC + `/[locale]/unsubscribe` |
+| Plain text body (no WYSIWYG/PDF) | Pass | Admin textarea + escaped HTML wrapper |
+| Branch from develop + pushed | Pass | `phase-8/marketing-email-campaigns` on origin |
+| Product Phase 12 mapping | Pass | Docs updated; Phase 08 admin-orders untouched |
+| Lint + unit tests | Pass | `npm run lint` / `npm test` — 79 tests, 6 Phase 8 |
+| Live Resend production inbox | N/A | Explicitly out of phase gate |
+
+#### Manager gate — PASS
+
+Acceptance criteria all checked; residuals (inbox E2E) accepted correctly.
+
+#### Developer evidence — PASS
+
+Milestones M0–M5 complete; files, lint, tests, git SHAs (`218f47f`…`4e17016`), batch strategy, and declaration present.
+
+#### Functional testability — PASS (accepted residual)
+
+Checkout opt-in, admin campaigns UI, unsubscribe covered by unit/code-path evidence. Full interactive Resend inbox path optional — same residual pattern as prior email phases.
+
+#### Accepted residuals for Phase 8 close
+
+| Item | Disposition |
+|---|---|
+| Live Resend production / inbox E2E | Out of gate; smoke with `RESEND_DEV_TO` recommended before merge |
+| PDF / rich media campaigns | Explicitly out of scope — future Architect amendment if requested |
+| Unchecked marketing checkbox does not revoke prior consent | Per Manager shape; acceptable |
+
+**Architect APPROVED.** Phase 8 complete architecturally. Do **not** update `PHASE.md` without explicit user instruction.
+
+Next choices for user: merge `phase-8/marketing-email-campaigns` → `develop` (PR preferred); optional smoke of admin send + unsubscribe; or request Architect design for media/PDF campaign extension as a later phase.
 
 ### Required Corrections
 
-None yet.
+None.

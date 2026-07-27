@@ -4,7 +4,7 @@
 PHASE=8
 
 ## Status
-STATUS: READY_FOR_DEVELOPER
+STATUS: READY_FOR_ARCHITECT_REVIEW
 
 ## Phase Goal
 
@@ -116,21 +116,21 @@ Implement manual marketing email campaigns for the administrator: optional marke
 
 ## Acceptance / Gating Criteria
 
-- [ ] Branch `phase-8/marketing-email-campaigns` named in `dev-phase8.md`
-- [ ] Prisma models + migration for MarketingConsent, EmailCampaign, CampaignSend
-- [ ] Checkout optional marketing opt-in persists consent; order works without it
-- [ ] Terms/legal consent is not used as marketing opt-in
-- [ ] Audience = distinct past-order emails with active marketing consent only
-- [ ] Unsubscribe token route revokes consent; invalid token safe
-- [ ] `/admin/campaigns` compose + history + nav entry
-- [ ] Confirm-before-send shows recipient count; empty audience blocked
-- [ ] Campaign send via separate module; no `sendOrder*` coupling
-- [ ] Campaign HTML includes unsubscribe link; body escaped
-- [ ] `RESEND_DEV_TO` respected for campaigns
-- [ ] Campaign history stores subject, time, recipient count, status
-- [ ] `npm run lint` PASS; `npm test` PASS
-- [ ] Functional evidence in `dev-phase8.md`
-- [ ] No payments / loyalty / WhatsApp / drip automation / ESP dependency added
+- [x] Branch `phase-8/marketing-email-campaigns` named in `dev-phase8.md`
+- [x] Prisma models + migration for MarketingConsent, EmailCampaign, CampaignSend
+- [x] Checkout optional marketing opt-in persists consent; order works without it
+- [x] Terms/legal consent is not used as marketing opt-in
+- [x] Audience = distinct past-order emails with active marketing consent only
+- [x] Unsubscribe token route revokes consent; invalid token safe
+- [x] `/admin/campaigns` compose + history + nav entry
+- [x] Confirm-before-send shows recipient count; empty audience blocked
+- [x] Campaign send via separate module; no `sendOrder*` coupling
+- [x] Campaign HTML includes unsubscribe link; body escaped
+- [x] `RESEND_DEV_TO` respected for campaigns
+- [x] Campaign history stores subject, time, recipient count, status
+- [x] `npm run lint` PASS; `npm test` PASS
+- [x] Functional evidence in `dev-phase8.md`
+- [x] No payments / loyalty / WhatsApp / drip automation / ESP dependency added
 
 ## Functional Testability Criteria
 
@@ -181,12 +181,30 @@ Document in `team-Yuri/dev-phase8.md`:
 | Admin body with markup | XSS in email clients | Escape text; no raw HTML from admin |
 
 ## Manager Review
-MANAGER_REVIEW_STATUS: NOT_REVIEWED
+MANAGER_REVIEW_STATUS: APPROVED
 
 ### Review Notes
 
-(Not reviewed Γאפ awaiting Developer evidence in `dev-phase8.md`.)
+Reviewed `dev-phase8.md` against checklist and Manager acceptance criteria (2026-07-28).
+
+| Check | Verdict | Notes |
+|---|---|---|
+| Phase identifier | Pass | PHASE=8 aligned |
+| Implementation summary + files | Pass | M0–M5 Yes; files table present |
+| Lint | Pass | `npm run lint` PASS |
+| Unit tests | Pass | `npm test` PASS — 79 tests / 6 Phase 8 |
+| Functional evidence | Pass (accepted residual) | Unit + code-path; full Resend inbox E2E optional per arch (not a gate) |
+| Docs | Pass | Phase 12 + product sync + `.env.example` |
+| Git | Pass | Branch `phase-8/marketing-email-campaigns` pushed (`218f47f`…`4e17016` on origin) |
+| Scope | Pass | Plain text campaigns only; no payments/loyalty/WhatsApp/WYSIWYG/PDF |
+| Architecture | Pass | Separate `src/lib/campaigns/`; uses `sendTransactionalEmail` only; consent ≠ terms |
+
+Spot-checked: Prisma models present; checkout `marketingOptIn`; admin nav `קמפיינים`; send module imports `sendTransactionalEmail` not `sendOrder*`.
+
+Accepted residual: live Resend production inbox not exercised (explicitly out of phase gate). Unrelated local WIP on storefront files outside phase commits — ignored for this review.
+
+**Manager APPROVED.** Ready for Architect review.
 
 ### Required Corrections
 
-None yet.
+None.
