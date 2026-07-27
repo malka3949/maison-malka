@@ -103,14 +103,16 @@ Implemented manual marketing email campaigns (M0–M5):
 |---|---|
 | Branch | `phase-8/marketing-email-campaigns` |
 | Base | `develop` (`b49f8ba`) |
-| Push | PENDING |
-| Remote | `origin` |
+| Push | PUSHED |
+| Remote | `origin` (`https://github.com/malka3949/maison-malka`) |
 
 ### Commits
 
 | SHA (short) | Message | Milestone |
 |---|---|---|
-| TBD | `phase8: ...` | M0–M5 — filled after git commit |
+| `218f47f` | `phase8: add marketing campaigns architecture and product docs` | M0 + docs |
+| `951248a` | `phase8: implement marketing consent, campaigns admin, and Resend send` | M1–M5 |
+| (this commit) | `phase8: record git push evidence in dev report` | M5 evidence |
 
 ## Known Issues / Limitations
 
