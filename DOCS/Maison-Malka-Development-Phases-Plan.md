@@ -183,46 +183,76 @@ Prepare the system for real customer usage.
   - Keep bank transfer; admin-stored payment instructions shown after order approval.
   - No ע.מ./ח.פ. display required in this wave.
 
-> **Team Yuri mapping:** Trust & Legal is executed as Team Yuri `PHASE=7`. Product roadmap phase docs fold this into MVP launch readiness (`DOCS/phases/09-…`), not a new Phase 12.
+> **Team Yuri mapping:** Trust & Legal is executed as Team Yuri `PHASE=7`. Product roadmap phase docs fold this into MVP launch readiness (`DOCS/phases/09-…`). Production cutover itself is **Wave 0** in `DOCS/phases/12-post-mvp-waves-roadmap.md` and resumes Team Yuri Phase 4 (PARKED until go-live).
 
 ### Completion Criteria
 
 Phase 4 is complete when:
 
-- System is deployed.
+- System is deployed to Production.
 - Customer data is protected.
 - Backup process exists.
 - Operational risks are documented.
 - Trust & Legal wave above is live (or explicitly deferred with documented owner approval).
+- Live Resend order notifications are proven on Production.
 
 ---
 
-## Phase 5 — Business Growth
+## Phase 5 — Post-MVP Growth Waves
 
 ### Objective
 
-Expand system capabilities based on business needs.
+Expand system capabilities in ordered waves after Production. Canonical map: `DOCS/phases/12-post-mvp-waves-roadmap.md`.
 
-### Possible Features
+**Prerequisite:** Wave 0 / Phase 4 Production before taking real paying traffic on Growth features (especially online payments).
 
-- Online payments.
-- WhatsApp notifications.
-- Customer accounts improvements.
-- Loyalty program.
-- Promotions.
-- Seasonal products.
-- Delivery automation.
-- Capacity management.
+### Wave 1 — Conversion (Team Yuri Phase 8 — planned)
 
-
-### Possible additions:
-
+- Basic coupons/promotions.
 - Online payment provider integration.
-- Additional administrators.
-- Advanced permission management.
+- Product recommendations.
+- Order history + reorder for registered customers.
+
+Product doc: `DOCS/phases/10-growth-and-retention.md` (Wave 1 section).
+
+### Wave 2 — Retention & ops (Team Yuri Phase 9 — planned)
+
+- WhatsApp and/or SMS notifications.
+- Basic admin reports.
+- Seasonal product availability windows.
+- Simple loyalty (not full CRM).
+
+Product doc: `DOCS/phases/10-growth-and-retention.md` (Wave 2 section).
+
+### Wave 3 — Scale & automation (Team Yuri Phase 10 — planned)
+
+- Delivery zones beyond Jerusalem + zone pricing.
+- Daily order caps + delivery time windows.
+- Marketing automations (reminders / sequences as approved).
+- **Manual marketing email campaigns** (consent + unsubscribe) — `DOCS/features/marketing-email-campaigns.md`.
+
+Product doc: `DOCS/phases/11-scale-and-automation.md`.
+
+### Wave 4 — Heavy / deferred (Team Yuri Phase 11+ backlog)
+
+- Automated inventory.
+- Advanced product customization.
+- Full CRM.
+- Production / kitchen planning.
+
+Product doc: `DOCS/phases/13-deferred-heavy-ops.md`.
+
+### Possible later additions (within waves as approved)
+
+- Additional administrators / advanced permissions (usually with ops growth).
+
 ### Completion Criteria
 
-Defined separately based on business growth requirements.
+Per-wave acceptance criteria in the product phase docs and Team Yuri phase artifacts when execution is approved. Documentation lock alone does **not** start implementation.
+
+### Supersedes
+
+Earlier drafts that placed “manual marketing email” as Development Phase 12 / Team Yuri Phase 8 are superseded; campaigns belong to Wave 3 / Team Yuri Phase 10.
 
 ---
 

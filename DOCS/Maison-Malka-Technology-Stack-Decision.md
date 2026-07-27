@@ -213,23 +213,27 @@ Requirements:
 
 Resend
 
-**Used for:**
+### Used for:
 
 - Order received notification.
 - Approval notification.
 - Rejection notification.
+- **Post-MVP (Team Yuri Phase 8 / product Phase 12):** manual admin marketing campaigns to consented recipients only.
 
-**Requirements:**
+### Requirements:
 
 - Email delivery logic must remain separated from order logic.
 - Transactional emails only in MVP (not marketing campaigns).
+- Marketing campaigns (when enabled) use a **separate campaign module**; must not call order `sendOrder*` helpers.
+- Marketing sends require active marketing consent + unsubscribe link in every campaign email.
 
-**Growth strategy:**
+### Growth strategy:
 
 - Start on Resend free tier for MVP.
 - As business volume grows, upgrade to a paid Resend plan on the same provider.
 - Provider replacement is not the default growth path.
-- If marketing automation or mass campaigns are needed later, add a separate marketing tool while keeping Resend for order-related emails.
+- **Manual** marketing campaigns may use Resend in-app (Phase 8 / product 12) with batching and consent gates.
+- If marketing **automation** or high-volume ESP features are needed later, add a separate marketing tool while keeping Resend for order-related emails.
 
 ---
 

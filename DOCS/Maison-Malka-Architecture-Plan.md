@@ -321,7 +321,8 @@ Resend
 - MVP: Resend free tier.
 - Growth: upgrade Resend plan as email volume increases.
 - Keep Resend for transactional order emails.
-- Add separate marketing tooling later only if needed.
+- Manual admin marketing campaigns (consented audience + unsubscribe) may use Resend via a separate campaign module (Team Yuri Phase 8 / product Phase 12).
+- Add separate marketing tooling later if automation or volume outgrows Resend.
 
 **Future channels:** WhatsApp, SMS.
 
@@ -402,10 +403,12 @@ Resend
 Purpose:
 - Send transactional order emails.
 - Support MVP on free tier.
+- Post-MVP: send manual marketing campaigns to consented recipients (separate module).
 
 Growth:
 - Upgrade Resend plan as business volume grows.
 - Do not replace provider by default.
+- External ESP optional if automation/volume requires it.
 
 ## 13. Security Requirements
 
@@ -483,7 +486,7 @@ The system must:
 | Catalog | Categories + products + fixed bundles |
 | Orders view | List + calendar |
 | Capacity limits | Manual control |
-| Notifications | Resend (transactional email) |
+| Notifications | Resend (transactional email; manual consented campaigns Post-MVP) |
 | Admin model | Future multi-admin support |
 
 ---
